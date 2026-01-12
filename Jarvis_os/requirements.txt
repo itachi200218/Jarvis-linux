@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+psutil
+pyautogui
+pymongo
+python-dotenv
+python-jose
+passlib[bcrypt]
+email-validator
+python-multipart
+requests
+rapidfuzz
+bcrypt
+dnspython

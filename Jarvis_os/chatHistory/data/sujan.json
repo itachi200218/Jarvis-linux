@@ -1,0 +1,28 @@
+[
+  {
+    "id": "4d4245eb-f179-4c4d-98dd-47afd79782d5",
+    "started_at": "2026-01-12T10:13:40.673685",
+    "messages": [
+      {
+        "role": "user",
+        "text": "hi",
+        "time": "2026-01-12T10:13:41.674973"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello! How can I assist you today?",
+        "time": "2026-01-12T10:13:41.675187"
+      },
+      {
+        "role": "user",
+        "text": "hi",
+        "time": "2026-01-12T10:14:52.179367"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello! How can I assist you today?",
+        "time": "2026-01-12T10:14:52.179635"
+      }
+    ]
+  }
+]

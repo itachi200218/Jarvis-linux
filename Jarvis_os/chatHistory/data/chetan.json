@@ -1,0 +1,90 @@
+[
+  {
+    "id": "bab06780-3042-468b-a11c-0c91082d5c46",
+    "started_at": "2026-01-12T10:13:06.288677",
+    "messages": [
+      {
+        "role": "user",
+        "text": "hi",
+        "time": "2026-01-12T10:13:07.225656"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello! How can I assist you today?",
+        "time": "2026-01-12T10:13:07.226183"
+      }
+    ]
+  },
+  {
+    "id": "b22c67c1-fc18-455e-8118-1a3e2940b318",
+    "started_at": "2026-01-12T10:15:45.094239",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-12T10:15:46.112277"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure! Why don't scientists trust atoms? Because they make up everything!",
+        "time": "2026-01-12T10:15:46.112642"
+      }
+    ]
+  },
+  {
+    "id": "0a9b488a-5d46-4d17-854e-82d68bd511ec",
+    "started_at": "2026-01-12T10:20:11.954772",
+    "messages": [
+      {
+        "role": "user",
+        "text": "open chrome",
+        "time": "2026-01-12T10:20:11.989167"
+      },
+      {
+        "role": "jarvis",
+        "text": "Opening Google Chrome.",
+        "time": "2026-01-12T10:20:11.989399"
+      },
+      {
+        "role": "user",
+        "text": "gpu usage",
+        "time": "2026-01-12T10:20:18.003177"
+      },
+      {
+        "role": "jarvis",
+        "text": "The current GPU usage is 65%.",
+        "time": "2026-01-12T10:20:18.003478"
+      },
+      {
+        "role": "user",
+        "text": "cpu usage",
+        "time": "2026-01-12T10:20:24.265363"
+      },
+      {
+        "role": "jarvis",
+        "text": "The current CPU usage is 35%.",
+        "time": "2026-01-12T10:20:24.265663"
+      },
+      {
+        "role": "user",
+        "text": "ram usage",
+        "time": "2026-01-12T10:20:32.633462"
+      },
+      {
+        "role": "jarvis",
+        "text": "It seems like you are inquiring about the current RAM usage of your system. To check the RAM usage on a Windows computer, you can press Ctrl + Shift + Esc to open the Task Manager and navigate to the Performance tab. On a Mac, you can click on the Apple logo in the top-left corner, select About This Mac, and then click on the Memory tab to view the RAM usage.",
+        "time": "2026-01-12T10:20:32.633961"
+      },
+      {
+        "role": "user",
+        "text": "i am using linux say how to check ram",
+        "time": "2026-01-12T10:20:54.345308"
+      },
+      {
+        "role": "jarvis",
+        "text": "To check RAM usage in Linux, you can use the \"free\" command in the terminal. Simply type \"free\" and press enter to see the available memory in your system.",
+        "time": "2026-01-12T10:20:54.345634"
+      }
+    ]
+  }
+]
