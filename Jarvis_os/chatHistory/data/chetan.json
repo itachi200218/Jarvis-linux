@@ -13,6 +13,33 @@
         "text": "Hello! How can I assist you today?",
         "time": "2026-01-12T10:13:07.226183"
       }
+    ],
+    "facts": [
+      {
+        "type": "profile",
+        "key": "age",
+        "value": "23"
+      },
+      {
+        "type": "profile",
+        "key": "age",
+        "value": "23"
+      },
+      {
+        "type": "profile",
+        "key": "location",
+        "value": "Hyderabad"
+      },
+      {
+        "type": "profile",
+        "key": "role",
+        "value": "Full Stack Developer And Sdet"
+      },
+      {
+        "type": "profile",
+        "key": "name",
+        "value": "Chetan"
+      }
     ]
   },
   {
@@ -84,6 +111,374 @@
         "role": "jarvis",
         "text": "To check RAM usage in Linux, you can use the \"free\" command in the terminal. Simply type \"free\" and press enter to see the available memory in your system.",
         "time": "2026-01-12T10:20:54.345634"
+      }
+    ]
+  },
+  {
+    "id": "0e4f3f60-cd57-4fa9-af9b-82dbb3e35cdb",
+    "started_at": "2026-01-13T08:30:46.430760",
+    "messages": [
+      {
+        "role": "user",
+        "text": "gpu usage",
+        "time": "2026-01-13T08:30:47.859999"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-13T08:30:47.860407"
+      },
+      {
+        "role": "user",
+        "text": "tell me joke",
+        "time": "2026-01-13T08:30:59.222017"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-13T08:30:59.222496"
+      },
+      {
+        "role": "user",
+        "text": "gpu usage",
+        "time": "2026-01-13T08:32:25.183405"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-13T08:32:25.184062"
+      },
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T08:32:37.745050"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-13T08:32:37.745445"
+      },
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T08:35:38.408585"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-13T08:35:38.409012"
+      },
+      {
+        "role": "user",
+        "text": "hello",
+        "time": "2026-01-13T08:40:20.525973"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes. How can I help you?",
+        "time": "2026-01-13T08:40:20.526483"
+      },
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T08:40:28.622104"
+      },
+      {
+        "role": "jarvis",
+        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
+        "time": "2026-01-13T08:40:28.622482"
+      },
+      {
+        "role": "user",
+        "text": "gpu usage",
+        "time": "2026-01-13T08:40:42.441867"
+      },
+      {
+        "role": "jarvis",
+        "text": "The GPU usage refers to the percentage of a graphics processing unit's capacity that is currently being used.",
+        "time": "2026-01-13T08:40:42.442300"
+      },
+      {
+        "role": "user",
+        "text": "cpu usage",
+        "time": "2026-01-13T08:40:50.898945"
+      },
+      {
+        "role": "jarvis",
+        "text": "The current CPU usage is 34%.",
+        "time": "2026-01-13T08:40:50.899375"
+      },
+      {
+        "role": "user",
+        "text": "say something",
+        "time": "2026-01-13T09:07:42.862381"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello there!",
+        "time": "2026-01-13T09:07:42.863309"
+      },
+      {
+        "role": "user",
+        "text": "you know pug",
+        "time": "2026-01-13T09:07:55.692419"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
+        "time": "2026-01-13T09:07:55.692969"
+      },
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T09:11:25.780570"
+      },
+      {
+        "role": "jarvis",
+        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
+        "time": "2026-01-13T09:11:25.781064"
+      },
+      {
+        "role": "user",
+        "text": "open chrome",
+        "time": "2026-01-13T09:11:37.310700"
+      },
+      {
+        "role": "jarvis",
+        "text": "Opening Google Chrome.",
+        "time": "2026-01-13T09:11:37.311184"
+      },
+      {
+        "role": "user",
+        "text": "you know about the meditation",
+        "time": "2026-01-13T09:11:51.911179"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
+        "time": "2026-01-13T09:11:51.911812"
+      },
+      {
+        "role": "user",
+        "text": "you know pug",
+        "time": "2026-01-13T09:12:37.339277"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
+        "time": "2026-01-13T09:12:37.340026"
+      }
+    ]
+  },
+  {
+    "id": "55bff2b8-139e-48ca-b681-258935a421f5",
+    "started_at": "2026-01-13T10:00:05.762781",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me ajoke",
+        "time": "2026-01-13T10:00:05.776393"
+      },
+      {
+        "role": "jarvis",
+        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
+        "time": "2026-01-13T10:00:05.777155"
+      },
+      {
+        "role": "user",
+        "text": "where do i stay",
+        "time": "2026-01-13T10:00:13.326954"
+      },
+      {
+        "role": "jarvis",
+        "text": "I don\u2019t know your location yet.",
+        "time": "2026-01-13T10:00:13.328792"
+      },
+      {
+        "role": "user",
+        "text": "i stay at hyderabad",
+        "time": "2026-01-13T10:00:18.965522"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. I will remember your location is Hyderabad.",
+        "time": "2026-01-13T10:00:19.000431"
+      },
+      {
+        "role": "user",
+        "text": "where do i stay",
+        "time": "2026-01-13T10:00:23.143203"
+      },
+      {
+        "role": "jarvis",
+        "text": "You live in Hyderabad.",
+        "time": "2026-01-13T10:00:23.144531"
+      },
+      {
+        "role": "user",
+        "text": "my age is 23",
+        "time": "2026-01-13T10:00:28.548846"
+      },
+      {
+        "role": "jarvis",
+        "text": "Okay, I\u2019ve updated your age to 23.",
+        "time": "2026-01-13T10:00:28.583698"
+      },
+      {
+        "role": "user",
+        "text": "i am a full stack developer and sdet",
+        "time": "2026-01-13T10:00:40.018440"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. I will remember your role is Full Stack Developer And Sdet.",
+        "time": "2026-01-13T10:00:40.020742"
+      },
+      {
+        "role": "user",
+        "text": "what is my role",
+        "time": "2026-01-13T10:00:46.254611"
+      },
+      {
+        "role": "jarvis",
+        "text": "You are a Full Stack Developer And Sdet.",
+        "time": "2026-01-13T10:00:46.256500"
+      },
+      {
+        "role": "user",
+        "text": "i work at cognizant",
+        "time": "2026-01-13T10:00:54.617285"
+      },
+      {
+        "role": "jarvis",
+        "text": "I am not sure.",
+        "time": "2026-01-13T10:00:54.618178"
+      },
+      {
+        "role": "user",
+        "text": "do you know pug",
+        "time": "2026-01-13T10:02:12.742356"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
+        "time": "2026-01-13T10:02:12.743355"
+      },
+      {
+        "role": "user",
+        "text": "say something new?",
+        "time": "2026-01-13T10:02:22.416357"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello there!",
+        "time": "2026-01-13T10:02:22.417299"
+      },
+      {
+        "role": "user",
+        "text": "not that omething intresting",
+        "time": "2026-01-13T10:02:33.283349"
+      },
+      {
+        "role": "jarvis",
+        "text": "I'm here to help. What do you need assistance with?",
+        "time": "2026-01-13T10:02:33.284312"
+      },
+      {
+        "role": "user",
+        "text": "i want about to know about space",
+        "time": "2026-01-13T10:02:46.256905"
+      },
+      {
+        "role": "jarvis",
+        "text": "Space is the vast, seemingly infinite expanse that exists beyond Earth's atmosphere. It is home to stars, planets, galaxies, and other celestial objects. Scientists study space to better understand the universe and our place within it. Can I help you with any specific questions about space?",
+        "time": "2026-01-13T10:02:46.257848"
+      },
+      {
+        "role": "user",
+        "text": "say something about space",
+        "time": "2026-01-13T10:03:17.273179"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello there!",
+        "time": "2026-01-13T10:03:17.274088"
+      },
+      {
+        "role": "user",
+        "text": "i want to know about space",
+        "time": "2026-01-13T10:03:25.185007"
+      },
+      {
+        "role": "jarvis",
+        "text": "Space is the vast, seemingly infinite expanse that exists beyond Earth's atmosphere. It is home to stars, planets, galaxies, and other celestial objects. Scientists study space to better understand the universe and our place within it. Can I help you with any specific questions about space?",
+        "time": "2026-01-13T10:03:25.186050"
+      }
+    ]
+  },
+  {
+    "id": "d2a7dbd8-039f-4b10-8d27-a847cb1a599b",
+    "started_at": "2026-01-13T14:17:14.660528",
+    "messages": [
+      {
+        "role": "user",
+        "text": "open Chrome",
+        "time": "2026-01-13T14:17:14.687837"
+      },
+      {
+        "role": "jarvis",
+        "text": "Opening Google Chrome.",
+        "time": "2026-01-13T14:17:14.690194"
+      },
+      {
+        "role": "user",
+        "text": "open chrome",
+        "time": "2026-01-13T14:17:25.774527"
+      },
+      {
+        "role": "jarvis",
+        "text": "Opening Google Chrome.",
+        "time": "2026-01-13T14:17:25.775464"
+      },
+      {
+        "role": "user",
+        "text": "hi",
+        "time": "2026-01-13T14:32:19.593451"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello! How can I assist you today?",
+        "time": "2026-01-13T14:32:19.594052"
+      },
+      {
+        "role": "user",
+        "text": "my name is chetan",
+        "time": "2026-01-13T14:33:02.494492"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. I will remember your name is Chetan.",
+        "time": "2026-01-13T14:33:02.496679"
+      },
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T14:33:35.408866"
+      },
+      {
+        "role": "jarvis",
+        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
+        "time": "2026-01-13T14:33:35.409696"
+      },
+      {
+        "role": "user",
+        "text": "do you know pug?",
+        "time": "2026-01-13T14:33:43.501987"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
+        "time": "2026-01-13T14:33:43.503031"
       }
     ]
   }

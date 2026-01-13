@@ -1,0 +1,38 @@
+[
+  {
+    "id": "74d5cfd4-5331-4528-910c-f4fe0db621aa",
+    "started_at": "2026-01-13T14:57:34.908786",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-13T14:57:36.159846"
+      },
+      {
+        "role": "jarvis",
+        "text": "Why couldn't the bicycle find its way home? It lost its bearings!",
+        "time": "2026-01-13T14:57:36.160120"
+      },
+      {
+        "role": "user",
+        "text": "you know about tv serials",
+        "time": "2026-01-13T14:57:49.207120"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with TV serials. How can I assist you with that topic?",
+        "time": "2026-01-13T14:57:49.207408"
+      },
+      {
+        "role": "user",
+        "text": "you know about tv serials",
+        "time": "2026-01-13T15:02:24.639400"
+      },
+      {
+        "role": "jarvis",
+        "text": "Yes, I am familiar with TV serials. How can I assist you with that topic?",
+        "time": "2026-01-13T15:02:24.639637"
+      }
+    ]
+  }
+]

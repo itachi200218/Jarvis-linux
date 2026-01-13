@@ -1,28 +1,33 @@
 # jarvis_core.py
 import os
-import psutil
-import subprocess
-import socket
-import shutil
-import pyautogui
 import re
 import threading
 import platform
-from datetime import datetime
 
+from datetime import datetime
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from rapidfuzz import fuzz
+
 from ai_fallback import get_ai_response
 from weather_service import get_weather
 from time_service import get_time_from_timezone_db
 from maps_service import get_distance
 from location_service import get_current_location
+from memory_reader import find_past_answer
+from systems.system_router import execute_system_intent
+from memory.memory_facts import detect_fact_refinement
 
-# ============
-# chat history
-# ============
-from chatHistory.chathistory import add_message
+from chatHistory.chathistory import load, save, add_message
+
+# =========
+# memory
+# =========
+from memory.memory_facts import (
+    learn_fact,
+    get_fact,
+    detect_fact_query
+)
 
 # ==============================
 # LOAD ENV
@@ -103,17 +108,19 @@ def speak(text: str):
         $synth.Volume = 100
         $synth.Speak("{safe_text}")
         '''
+        import subprocess
         subprocess.run(
             ["powershell", "-NoProfile", "-Command", ps_script],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
     else:
+        import subprocess
         subprocess.run([
             "espeak",
-            "-v", "en-us",     # ⭐ BEST VOICE
-            "-s", "145",       # speed (natural)
-            "-a", "180",       # volume
+            "-v", "en-us",
+            "-s", "145",
+            "-a", "180",
             safe_text
         ])
 
@@ -134,102 +141,6 @@ def normalize_text(text: str) -> str:
     words = text.split()
     words = [w for w in words if w not in STOP_WORDS]
     return " ".join(words)
-
-# ==============================
-# SYSTEM ACTIONS (CROSS PLATFORM)
-# ==============================
-def open_chrome():
-    if OS_NAME == "Windows":
-        subprocess.Popen("start chrome", shell=True)
-    else:
-        subprocess.Popen(["google-chrome"])
-
-def open_vscode():
-    subprocess.Popen(["code"])
-
-def shutdown_system():
-    if OS_NAME == "Windows":
-        subprocess.Popen("shutdown /s /t 5", shell=True)
-    else:
-        subprocess.Popen(["shutdown", "-h", "now"])
-
-def restart_system():
-    if OS_NAME == "Windows":
-        subprocess.Popen("shutdown /r /t 5", shell=True)
-    else:
-        subprocess.Popen(["reboot"])
-
-def increase_volume():
-    for _ in range(10):
-        pyautogui.press("volumeup")
-
-def decrease_volume():
-    for _ in range(10):
-        pyautogui.press("volumedown")
-
-def mute_volume():
-    pyautogui.press("volumemute")
-
-def take_screenshot():
-    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
-    path = os.path.join(desktop, "Jarvis", "Screenshots")
-    os.makedirs(path, exist_ok=True)
-
-    file = f"jarvis_screenshot_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-    full = os.path.join(path, file)
-    pyautogui.screenshot(full)
-    return full
-
-def open_explorer():
-    if OS_NAME == "Windows":
-        subprocess.Popen("explorer", shell=True)
-    else:
-        subprocess.Popen(["xdg-open", os.path.expanduser("~")])
-
-def open_settings():
-    if OS_NAME == "Windows":
-        subprocess.Popen("start ms-settings:", shell=True)
-
-# ==============================
-# SYSTEM INFO
-# ==============================
-def cpu_usage():
-    return f"CPU usage is {psutil.cpu_percent(interval=1)} percent."
-
-def ram_usage():
-    r = psutil.virtual_memory()
-    return f"You are using {round(r.used/1e9,2)} GB out of {round(r.total/1e9,2)} GB."
-
-def battery_status():
-    b = psutil.sensors_battery()
-    return f"Battery level is {b.percent} percent." if b else "Battery info unavailable."
-
-def disk_space():
-    t, _, f = shutil.disk_usage("/")
-    return f"{round(f/1e9,2)} GB free out of {round(t/1e9,2)} GB."
-
-def network_status():
-    try:
-        socket.create_connection(("8.8.8.8", 53), timeout=2)
-        return "Internet is connected."
-    except:
-        return "No internet connection."
-
-def gpu_usage():
-    try:
-        out = subprocess.check_output(
-            "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits",
-            shell=True
-        )
-        return f"GPU usage is {out.decode().strip()} percent."
-    except:
-        return "GPU usage information is unavailable."
-
-def current_time():
-    return datetime.now().strftime("The time is %I:%M %p.")
-
-def current_date():
-    return datetime.now().strftime("Today is %B %d, %Y.")
 
 # ==============================
 # FUZZY MATCH
@@ -273,6 +184,9 @@ def is_identity_query(text: str) -> bool:
             return True
     return False
 
+# ==============================
+# CHEAP REASONING
+# ==============================
 def cheap_reasoning(raw: str):
     response_parts = []
 
@@ -284,92 +198,167 @@ def cheap_reasoning(raw: str):
         except:
             pass
 
-    if any(word in raw for word in CPU_KEYWORDS):
-        response_parts.append(cpu_usage())
-
     return " ".join(response_parts) if response_parts else None
 
+
+# ==============================
+# volume helper
+# ==============================
+def extract_number(text: str, default: int = 10) -> int:
+    match = re.search(r"\b(\d+)\b", text)
+    if match:
+        return int(match.group(1))
+    return default
+    
 # ==============================
 # COMMAND ROUTER
 # ==============================
 def handle_command(command, user_role="guest", user_name=None, chat_id=None):
 
     raw = command.strip().lower()
-    intent = None
+    intent = "unknown"
     confidence = 0
     response = "I am not sure."
 
-    if is_identity_query(raw):
-        response = f"Your name is {user_name}." if user_name else "You are currently using guest access."
-        intent = "user_identity"
-        confidence = 100
+    # ==============================
+    # 1️⃣ LEARNING (SAFE UPDATE)
+    # ==============================
+    if user_name:
+        key, value, action = learn_fact(user_name, raw)
 
-    elif raw in {"hello", "hey jarvis", "jarvis"}:
+        if key:
+            response = (
+                f"Okay, I’ve updated your {key} to {value}."
+                if action == "updated"
+                else f"Got it. I will remember your {key} is {value}."
+            )
+
+            intent = "learn_profile"
+            confidence = 100
+
+            if user_role == "user" and chat_id:
+                add_message(chat_id, user_name, "user", command)
+                add_message(chat_id, user_name, "jarvis", response)
+
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": intent,
+                "confidence": confidence
+            }
+
+    # ==============================
+    # 2️⃣ FACT QUESTIONS
+    # ==============================
+    if user_name:
+        fact_key = detect_fact_query(raw)
+        if fact_key:
+            value = get_fact(user_name, fact_key)
+
+            if value:
+                response = f"Your {fact_key} is {value}."
+                intent = "fact_recall"
+                confidence = 100
+            else:
+                response = f"I don’t know your {fact_key} yet."
+                intent = "fact_unknown"
+                confidence = 40
+
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": intent,
+                "confidence": confidence
+            }
+# ==============================
+# 2.5️⃣ CASUAL FACT REFINEMENT
+# ==============================
+    if user_name:
+        refine_key, refine_value = detect_fact_refinement(user_name, raw)
+
+        if refine_key and refine_value:
+            learn_fact(user_name, f"my {refine_key} is {refine_value}")
+
+            response = f"Got it 🙂 I understand — your {refine_key} is {refine_value}."
+            intent = "fact_refined"
+            confidence = 95
+
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": intent,
+                "confidence": confidence
+            }
+
+
+    # ==============================
+    # 3️⃣ GREETING
+    # ==============================
+    if raw in {"hi","hey","hello", "hey jarvis", "jarvis"}:
         response = "Yes. How can I help you?"
         intent = "wake"
         confidence = 100
 
-    elif not raw:
-        response = "I did not hear anything."
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": intent,
+            "confidence": confidence
+        }
 
+    # ==============================
+    # 🔥 3.5️⃣ SYSTEM COMMAND HANDLER
+    # ==============================
+    detected_intent, score = find_intent(command)
+
+    if detected_intent in SYSTEM_INTENTS:
+        # ❌ guests not allowed
+        if user_role == "guest":
+            response = "Sorry, system commands are restricted for guests."
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "restricted",
+                "confidence": score
+            }
+
+        # ✅ user allowed
+        if detected_intent in {"volume_up", "volume_down"}:
+            steps = extract_number(command, default=10)
+            response = execute_system_intent(detected_intent, steps)
+        else:
+            response = execute_system_intent(detected_intent)
+
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": detected_intent,
+            "confidence": score
+        }
+
+    # ==============================
+    # 4️⃣ MEMORY / AI (CONFIDENCE GATED)
+    # ==============================
+    past_chats = load(user_name) if user_name else []
+    past_answer, past_confidence = find_past_answer(past_chats, command)
+
+    if past_answer and past_confidence >= 80:
+        response = past_answer
+        intent = "memory_recall"
+        confidence = past_confidence
     else:
-        smart_reply = cheap_reasoning(raw)
+        response = get_ai_response(command)
+        intent = "ai_fallback"
+        confidence = 0
 
-        if smart_reply:
-            response = smart_reply
-            intent = "context_reasoning"
-            confidence = 90
-        else:
-            intent, confidence = find_intent(raw)
-
-        if user_role == "guest" and intent in SYSTEM_INTENTS:
-            response = "Guest access limited. Please sign in."
-
-        elif intent == "open_chrome":
-            open_chrome()
-            response = "Opening Google Chrome."
-
-        elif intent == "open_vscode":
-            open_vscode()
-            response = "Opening Visual Studio Code."
-
-        elif intent == "shutdown":
-            shutdown_system()
-            response = "Shutting down the system."
-
-        elif intent == "restart":
-            restart_system()
-            response = "Restarting the system."
-
-        elif intent == "volume_up":
-            increase_volume()
-            response = "Increasing volume."
-
-        elif intent == "volume_down":
-            decrease_volume()
-            response = "Decreasing volume."
-
-        elif intent == "mute_volume":
-            mute_volume()
-            response = "Volume muted."
-
-        elif intent == "current_time":
-            response = current_time()
-
-        elif intent == "current_date":
-            response = current_date()
-
-        else:
-            response = get_ai_response(command)
-            intent = "ai_fallback"
-            confidence = 0
-
+    # ==============================
+    # SAVE CHAT
+    # ==============================
     if user_role == "user" and user_name and chat_id:
         add_message(chat_id, user_name, "user", command)
         add_message(chat_id, user_name, "jarvis", response)
 
     speak_async(response)
-
     return {
         "reply": response,
         "intent": intent,
