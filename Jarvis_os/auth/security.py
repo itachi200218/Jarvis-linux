@@ -1,6 +1,6 @@
 import os
 import hashlib
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from passlib.context import CryptContext
 from jose import jwt, JWTError
@@ -23,7 +23,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 if not SECRET_KEY:
-    raise RuntimeError("JWT_SECRET is not set")
+    raise RuntimeError("JWT_SECRET is not set in .env")
 
 # ==============================
 # PASSWORD CONTEXT
@@ -34,31 +34,49 @@ pwd_context = CryptContext(
 )
 
 # ==============================
-# 🔐 PASSWORD NORMALIZATION (FIX)
+# 🔐 PASSWORD NORMALIZATION
 # ==============================
 def _normalize_password(password: str) -> bytes:
-    """
-    bcrypt max = 72 bytes.
-    We SHA-256 first to make it FIXED 32 bytes.
-    This works everywhere (Linux, Windows, Docker).
-    """
     return hashlib.sha256(password.encode("utf-8")).digest()
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(_normalize_password(password))
 
-def verify_password(password: str, hashed: str) -> bool:
-    return pwd_context.verify(_normalize_password(password), hashed)
+def verify_password(password: str, hashed_password: str) -> bool:
+    try:
+        return pwd_context.verify(
+            _normalize_password(password),
+            hashed_password
+        )
+    except ValueError:
+        # backward compatibility for OLD users
+        try:
+            return pwd_context.verify(
+                password.encode("utf-8")[:72],
+                hashed_password
+            )
+        except Exception:
+            return False
+
+def needs_password_upgrade(password: str, hashed_password: str) -> bool:
+    try:
+        pwd_context.verify(
+            _normalize_password(password),
+            hashed_password
+        )
+        return False
+    except Exception:
+        return True
 
 # ==============================
 # JWT TOKEN
 # ==============================
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(
+    expire = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": expire, "type": "access"})
 
     return jwt.encode(
         to_encode,
@@ -67,10 +85,13 @@ def create_access_token(data: dict) -> str:
     )
 
 # ==============================
-# 🔐 TOKEN → USER
+# OAUTH2
 # ==============================
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
+# ==============================
+# 🔐 TOKEN → USER
+# ==============================
 def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -84,9 +105,13 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
+
         email = payload.get("sub")
-        if email is None:
+        token_type = payload.get("type")
+
+        if email is None or token_type != "access":
             raise credentials_exception
+
     except JWTError:
         raise credentials_exception
 

@@ -9,6 +9,9 @@ import "../styles/jarvisToast.css";
 import Fuse from "fuse.js"; // 🔥 ADDED
 import ChatHistory from "../components/ChatHistory";
 import { getChatHistory } from "../api/historyApi";
+import ReactMarkdown from "react-markdown";
+import JarvisPopup from "../pages/JarvisPopup";
+import { JarvisCodeBlock } from "../components/JarvisCodeBlock";
 
 const API_URL = "http://127.0.0.1:8000/command";
 
@@ -17,6 +20,8 @@ const fuse = new Fuse(SYSTEM_COMMAND_KEYWORDS, {
   includeScore: true,
   threshold: 0.4, // works well for chrome / crome / cromr / chorme
 });
+
+
 
 function JarvisApp({ openLogin }) {
   const recognitionRef = useRef(null);
@@ -30,13 +35,23 @@ const historyPanelRef = useRef(null); // 👈 ADD THIS
   const [textCommand, setTextCommand] = useState("");
   const [jarvisReply, setJarvisReply] = useState("");
 const [activeChatId, setActiveChatId] = useState(null);
-const [activeConversation, setActiveConversation] = useState(null);
-
+// const [isJarvisPopupOpen, setIsJarvisPopupOpen] = useState(false);
+const [windows, setWindows] = useState([]);
   // 🔥 ROBOTIC HUD NOTIFICATION STATE
   const [showRestriction, setShowRestriction] = useState(false);
 const [showHistory, setShowHistory] = useState(false);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+const [isJarvisExpanded, setIsJarvisExpanded] = useState(false);
+const openNewWindow = (content) => {
+  setWindows((prev) => [
+    ...prev,
+    {
+      id: Date.now() + Math.random(),
+      content,
+    },
+  ]);
+};
 
   // =========================
   // 🔊 FRONTEND JARVIS VOICE (DENIAL ONLY)
@@ -286,7 +301,7 @@ async function sendCommand(command) {
   // =========================
   // UI
   // =========================
-return (
+  return (
   <div className="hud">
     <div className="hud-grid">
       <div className="box-aura" />
@@ -296,13 +311,11 @@ return (
       <JarvisScene />
     </div>
 
-    {/* SECURE MODE */}
     <div className="hud-login" onClick={() => navigate("/auth")}>
       <span className="hud-login-icon">🔐</span>
       <span className="hud-login-text">SECURE MODE</span>
     </div>
 
-    {/* MY CHATS TOGGLE */}
     {user && (
       <div
         className="hud-login"
@@ -316,27 +329,23 @@ return (
       </div>
     )}
 
-    {/* 🔥 CHAT HISTORY DRAWER (MUST BE HERE) */}
-{showHistory && (
-  <div className="chat-drawer" ref={historyPanelRef}>
-    <div className="scan-line" />
+    {showHistory && (
+      <div className="chat-drawer" ref={historyPanelRef}>
+        <div className="scan-line" />
+        <div className="hud-corner tl" />
+        <div className="hud-corner tr" />
+        <div className="hud-corner bl" />
+        <div className="hud-corner br" />
 
-    <div className="hud-corner tl" />
-    <div className="hud-corner tr" />
-    <div className="hud-corner bl" />
-    <div className="hud-corner br" />
+        <ChatHistory
+          onSelectChat={(chatId) => {
+            setActiveChatId(chatId);
+            setShowHistory(false);
+          }}
+        />
+      </div>
+    )}
 
-    <ChatHistory
-      onSelectChat={(chatId) => {
-        setActiveChatId(chatId);
-        setShowHistory(false);
-      }}
-    />
-  </div>
-)}
-
-
-    {/* MAIN HUD FRAME */}
     <div className="hud-frame">
       <div className="hud-header">
         <div className="hud-title">J.A.R.V.I.S</div>
@@ -394,15 +403,38 @@ return (
           <span className="text">{lastCommand}</span>
         </div>
       )}
+      
+{jarvisReply && (
+  <div
+    className="command-box jarvis-card"
+    onClick={() => openNewWindow(jarvisReply)}
 
-      {jarvisReply && (
-        <div className="command-box jarvis">
-          <span className="label">JARVIS</span>
-          <span className="text" ref={jarvisTextRef}>
-            {jarvisReply}
-          </span>
-        </div>
-      )}
+  >
+    <span className="label">JARVIS</span>
+
+    <div className="jarvis-card-content">
+      <ReactMarkdown
+  components={{
+    pre({ children }) {
+      return <>{children}</>; // 🔥 removes extra outer box
+    },
+    code({ inline, children }) {
+      if (inline) return <code>{children}</code>;
+      return (
+        <JarvisCodeBlock>
+          {String(children).trim()}
+        </JarvisCodeBlock>
+      );
+    },
+  }}
+>
+  {jarvisReply}
+</ReactMarkdown>
+
+
+    </div>
+  </div>
+)}
 
       <div className="text-input">
         <input
@@ -415,8 +447,17 @@ return (
         <button onClick={handleTextSubmit}>EXECUTE</button>
       </div>
     </div>
+{windows.map((win) => (
+  <JarvisPopup
+    key={win.id}
+    id={win.id}
+    content={win.content}
+    onClose={(id) =>
+      setWindows((prev) => prev.filter((w) => w.id !== id))
+    }
+  />
+))}
 
-    {/* ACCESS DENIED TOAST */}
     {showRestriction && (
       <div className="jarvis-toast">
         <div className="jarvis-toast-title">🔒 ACCESS RESTRICTED</div>
@@ -427,6 +468,8 @@ return (
     )}
   </div>
 );
+
+
 }
 export default JarvisApp;
  

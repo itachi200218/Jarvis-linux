@@ -13,6 +13,7 @@ from auth.database import users_collection
 from auth.security import (
     hash_password,
     verify_password,
+    needs_password_upgrade,
     create_access_token,
     get_current_user
 )
@@ -33,7 +34,7 @@ def register(data: RegisterRequest):
     users_collection.insert_one({
         "name": data.name,
         "email": data.email,
-        "password": hash_password(data.password),
+        "password": hash_password(data.password),  # ✅ NEW FORMAT
         "role": "guest",
         "secure_mode": False,
         "avatar": None
@@ -42,7 +43,7 @@ def register(data: RegisterRequest):
     return {"message": "User registered successfully"}
 
 # ==============================
-# 🔐 LOGIN
+# 🔐 LOGIN (AUTO PASSWORD MIGRATION)
 # ==============================
 @router.post("/login")
 def login(data: LoginRequest):
@@ -55,6 +56,13 @@ def login(data: LoginRequest):
 
     if not user or not verify_password(data.password, user["password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    # 🔁 AUTO-UPGRADE OLD PASSWORD HASH
+    if needs_password_upgrade(data.password, user["password"]):
+        users_collection.update_one(
+            {"_id": user["_id"]},
+            {"$set": {"password": hash_password(data.password)}}
+        )
 
     token = create_access_token({
         "sub": user["email"],

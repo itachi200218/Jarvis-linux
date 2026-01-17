@@ -1,0 +1,25 @@
+{
+  "name": "Adepu Chetan",
+  "age": "23",
+  "location": "Hyderabad",
+  "role": "Full Stack Developer",
+  "dislikes": [
+    "Dal"
+  ],
+  "likes": [
+    "Chicken Biryani",
+    "Mutton Biryani"
+  ],
+  "skills": [
+    "Java",
+    "Python",
+    "Spring",
+    "Boot"
+  ],
+  "tools": [
+    "linux",
+    "vs Code",
+    "Git"
+  ],
+  "career_goal": "Backend Developer"
+}

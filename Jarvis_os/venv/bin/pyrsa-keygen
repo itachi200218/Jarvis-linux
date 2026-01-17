@@ -1,4 +1,4 @@
-#!/home/chetan/Downloads/jarvis/Jarvis_os/venv/bin/python3
+#!/home/chetan/Documents/jarvis/Jarvis_os/venv/bin/python
 import sys
 from rsa.cli import keygen
 if __name__ == '__main__':

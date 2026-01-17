@@ -1,484 +1,480 @@
 [
   {
-    "id": "bab06780-3042-468b-a11c-0c91082d5c46",
-    "started_at": "2026-01-12T10:13:06.288677",
+    "id": "99a8c1e2-ff4c-420c-9d48-7e7cc9382955",
+    "started_at": "2026-01-16T11:14:54.814379",
     "messages": [
       {
         "role": "user",
-        "text": "hi",
-        "time": "2026-01-12T10:13:07.225656"
+        "text": "my name is Chetan",
+        "time": "2026-01-16T11:15:00.908597"
       },
       {
         "role": "jarvis",
-        "text": "Hello! How can I assist you today?",
-        "time": "2026-01-12T10:13:07.226183"
-      }
-    ],
-    "facts": [
-      {
-        "type": "profile",
-        "key": "age",
-        "value": "23"
-      },
-      {
-        "type": "profile",
-        "key": "age",
-        "value": "23"
-      },
-      {
-        "type": "profile",
-        "key": "location",
-        "value": "Hyderabad"
-      },
-      {
-        "type": "profile",
-        "key": "role",
-        "value": "Full Stack Developer And Sdet"
-      },
-      {
-        "type": "profile",
-        "key": "name",
-        "value": "Chetan"
-      }
-    ]
-  },
-  {
-    "id": "b22c67c1-fc18-455e-8118-1a3e2940b318",
-    "started_at": "2026-01-12T10:15:45.094239",
-    "messages": [
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-12T10:15:46.112277"
-      },
-      {
-        "role": "jarvis",
-        "text": "Sure! Why don't scientists trust atoms? Because they make up everything!",
-        "time": "2026-01-12T10:15:46.112642"
-      }
-    ]
-  },
-  {
-    "id": "0a9b488a-5d46-4d17-854e-82d68bd511ec",
-    "started_at": "2026-01-12T10:20:11.954772",
-    "messages": [
-      {
-        "role": "user",
-        "text": "open chrome",
-        "time": "2026-01-12T10:20:11.989167"
-      },
-      {
-        "role": "jarvis",
-        "text": "Opening Google Chrome.",
-        "time": "2026-01-12T10:20:11.989399"
-      },
-      {
-        "role": "user",
-        "text": "gpu usage",
-        "time": "2026-01-12T10:20:18.003177"
-      },
-      {
-        "role": "jarvis",
-        "text": "The current GPU usage is 65%.",
-        "time": "2026-01-12T10:20:18.003478"
-      },
-      {
-        "role": "user",
-        "text": "cpu usage",
-        "time": "2026-01-12T10:20:24.265363"
-      },
-      {
-        "role": "jarvis",
-        "text": "The current CPU usage is 35%.",
-        "time": "2026-01-12T10:20:24.265663"
-      },
-      {
-        "role": "user",
-        "text": "ram usage",
-        "time": "2026-01-12T10:20:32.633462"
-      },
-      {
-        "role": "jarvis",
-        "text": "It seems like you are inquiring about the current RAM usage of your system. To check the RAM usage on a Windows computer, you can press Ctrl + Shift + Esc to open the Task Manager and navigate to the Performance tab. On a Mac, you can click on the Apple logo in the top-left corner, select About This Mac, and then click on the Memory tab to view the RAM usage.",
-        "time": "2026-01-12T10:20:32.633961"
-      },
-      {
-        "role": "user",
-        "text": "i am using linux say how to check ram",
-        "time": "2026-01-12T10:20:54.345308"
-      },
-      {
-        "role": "jarvis",
-        "text": "To check RAM usage in Linux, you can use the \"free\" command in the terminal. Simply type \"free\" and press enter to see the available memory in your system.",
-        "time": "2026-01-12T10:20:54.345634"
-      }
-    ]
-  },
-  {
-    "id": "0e4f3f60-cd57-4fa9-af9b-82dbb3e35cdb",
-    "started_at": "2026-01-13T08:30:46.430760",
-    "messages": [
-      {
-        "role": "user",
-        "text": "gpu usage",
-        "time": "2026-01-13T08:30:47.859999"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-13T08:30:47.860407"
-      },
-      {
-        "role": "user",
-        "text": "tell me joke",
-        "time": "2026-01-13T08:30:59.222017"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-13T08:30:59.222496"
-      },
-      {
-        "role": "user",
-        "text": "gpu usage",
-        "time": "2026-01-13T08:32:25.183405"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-13T08:32:25.184062"
-      },
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-13T08:32:37.745050"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-13T08:32:37.745445"
-      },
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-13T08:35:38.408585"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-13T08:35:38.409012"
-      },
-      {
-        "role": "user",
-        "text": "hello",
-        "time": "2026-01-13T08:40:20.525973"
-      },
-      {
-        "role": "jarvis",
-        "text": "Yes. How can I help you?",
-        "time": "2026-01-13T08:40:20.526483"
-      },
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-13T08:40:28.622104"
-      },
-      {
-        "role": "jarvis",
-        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
-        "time": "2026-01-13T08:40:28.622482"
-      },
-      {
-        "role": "user",
-        "text": "gpu usage",
-        "time": "2026-01-13T08:40:42.441867"
-      },
-      {
-        "role": "jarvis",
-        "text": "The GPU usage refers to the percentage of a graphics processing unit's capacity that is currently being used.",
-        "time": "2026-01-13T08:40:42.442300"
-      },
-      {
-        "role": "user",
-        "text": "cpu usage",
-        "time": "2026-01-13T08:40:50.898945"
-      },
-      {
-        "role": "jarvis",
-        "text": "The current CPU usage is 34%.",
-        "time": "2026-01-13T08:40:50.899375"
-      },
-      {
-        "role": "user",
-        "text": "say something",
-        "time": "2026-01-13T09:07:42.862381"
-      },
-      {
-        "role": "jarvis",
-        "text": "Hello there!",
-        "time": "2026-01-13T09:07:42.863309"
-      },
-      {
-        "role": "user",
-        "text": "you know pug",
-        "time": "2026-01-13T09:07:55.692419"
-      },
-      {
-        "role": "jarvis",
-        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
-        "time": "2026-01-13T09:07:55.692969"
-      },
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-13T09:11:25.780570"
-      },
-      {
-        "role": "jarvis",
-        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
-        "time": "2026-01-13T09:11:25.781064"
-      },
-      {
-        "role": "user",
-        "text": "open chrome",
-        "time": "2026-01-13T09:11:37.310700"
-      },
-      {
-        "role": "jarvis",
-        "text": "Opening Google Chrome.",
-        "time": "2026-01-13T09:11:37.311184"
-      },
-      {
-        "role": "user",
-        "text": "you know about the meditation",
-        "time": "2026-01-13T09:11:51.911179"
-      },
-      {
-        "role": "jarvis",
-        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
-        "time": "2026-01-13T09:11:51.911812"
-      },
-      {
-        "role": "user",
-        "text": "you know pug",
-        "time": "2026-01-13T09:12:37.339277"
-      },
-      {
-        "role": "jarvis",
-        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
-        "time": "2026-01-13T09:12:37.340026"
-      }
-    ]
-  },
-  {
-    "id": "55bff2b8-139e-48ca-b681-258935a421f5",
-    "started_at": "2026-01-13T10:00:05.762781",
-    "messages": [
-      {
-        "role": "user",
-        "text": "tell me ajoke",
-        "time": "2026-01-13T10:00:05.776393"
-      },
-      {
-        "role": "jarvis",
-        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
-        "time": "2026-01-13T10:00:05.777155"
-      },
-      {
-        "role": "user",
-        "text": "where do i stay",
-        "time": "2026-01-13T10:00:13.326954"
-      },
-      {
-        "role": "jarvis",
-        "text": "I don\u2019t know your location yet.",
-        "time": "2026-01-13T10:00:13.328792"
-      },
-      {
-        "role": "user",
-        "text": "i stay at hyderabad",
-        "time": "2026-01-13T10:00:18.965522"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. I will remember your location is Hyderabad.",
-        "time": "2026-01-13T10:00:19.000431"
-      },
-      {
-        "role": "user",
-        "text": "where do i stay",
-        "time": "2026-01-13T10:00:23.143203"
-      },
-      {
-        "role": "jarvis",
-        "text": "You live in Hyderabad.",
-        "time": "2026-01-13T10:00:23.144531"
+        "text": "Hello, Chetan! How can I assist you today?",
+        "time": "2026-01-16T11:15:00.908857"
       },
       {
         "role": "user",
         "text": "my age is 23",
-        "time": "2026-01-13T10:00:28.548846"
+        "time": "2026-01-16T11:15:31.880780"
       },
       {
         "role": "jarvis",
-        "text": "Okay, I\u2019ve updated your age to 23.",
-        "time": "2026-01-13T10:00:28.583698"
+        "text": "Got it! How can I assist you today?",
+        "time": "2026-01-16T11:15:31.881026"
       },
       {
         "role": "user",
-        "text": "i am a full stack developer and sdet",
-        "time": "2026-01-13T10:00:40.018440"
+        "text": "finding at Hyderabad",
+        "time": "2026-01-16T11:16:45.204336"
       },
       {
         "role": "jarvis",
-        "text": "Got it. I will remember your role is Full Stack Developer And Sdet.",
-        "time": "2026-01-13T10:00:40.020742"
+        "text": "How can I assist you with finding something in Hyderabad? Are you looking for a specific place, information, or assistance with directions? Please provide more details so I can help you better.",
+        "time": "2026-01-16T11:16:45.204708"
       },
       {
         "role": "user",
-        "text": "what is my role",
-        "time": "2026-01-13T10:00:46.254611"
+        "text": "i live at hyderabad",
+        "time": "2026-01-16T11:16:59.990368"
       },
       {
         "role": "jarvis",
-        "text": "You are a Full Stack Developer And Sdet.",
-        "time": "2026-01-13T10:00:46.256500"
+        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
+        "time": "2026-01-16T11:16:59.990770"
       },
       {
         "role": "user",
-        "text": "i work at cognizant",
-        "time": "2026-01-13T10:00:54.617285"
+        "text": "where do I live",
+        "time": "2026-01-16T11:17:15.231043"
       },
       {
         "role": "jarvis",
-        "text": "I am not sure.",
-        "time": "2026-01-13T10:00:54.618178"
+        "text": "I'm sorry, but I don't have that information. Could you please provide me with your current location or the city you live in?",
+        "time": "2026-01-16T11:17:15.231438"
       },
       {
         "role": "user",
-        "text": "do you know pug",
-        "time": "2026-01-13T10:02:12.742356"
+        "text": "I live in Hyderabad",
+        "time": "2026-01-16T11:18:01.419572"
       },
       {
         "role": "jarvis",
-        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
-        "time": "2026-01-13T10:02:12.743355"
+        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
+        "time": "2026-01-16T11:18:01.419792"
       },
       {
         "role": "user",
-        "text": "say something new?",
-        "time": "2026-01-13T10:02:22.416357"
+        "text": "I am a full stack developer",
+        "time": "2026-01-16T11:18:17.579620"
       },
       {
         "role": "jarvis",
-        "text": "Hello there!",
-        "time": "2026-01-13T10:02:22.417299"
+        "text": "That's great to hear! Full stack developers are in high demand these days. How can I assist you today with your development work or any related queries?",
+        "time": "2026-01-16T11:18:17.580061"
       },
       {
         "role": "user",
-        "text": "not that omething intresting",
-        "time": "2026-01-13T10:02:33.283349"
+        "text": "I like chicken biryani",
+        "time": "2026-01-16T11:18:32.509321"
       },
       {
         "role": "jarvis",
-        "text": "I'm here to help. What do you need assistance with?",
-        "time": "2026-01-13T10:02:33.284312"
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:18:32.509627"
       },
       {
         "role": "user",
-        "text": "i want about to know about space",
-        "time": "2026-01-13T10:02:46.256905"
+        "text": "I dislike dal",
+        "time": "2026-01-16T11:18:49.322746"
       },
       {
         "role": "jarvis",
-        "text": "Space is the vast, seemingly infinite expanse that exists beyond Earth's atmosphere. It is home to stars, planets, galaxies, and other celestial objects. Scientists study space to better understand the universe and our place within it. Can I help you with any specific questions about space?",
-        "time": "2026-01-13T10:02:46.257848"
-      },
-      {
-        "role": "user",
-        "text": "say something about space",
-        "time": "2026-01-13T10:03:17.273179"
-      },
-      {
-        "role": "jarvis",
-        "text": "Hello there!",
-        "time": "2026-01-13T10:03:17.274088"
-      },
-      {
-        "role": "user",
-        "text": "i want to know about space",
-        "time": "2026-01-13T10:03:25.185007"
-      },
-      {
-        "role": "jarvis",
-        "text": "Space is the vast, seemingly infinite expanse that exists beyond Earth's atmosphere. It is home to stars, planets, galaxies, and other celestial objects. Scientists study space to better understand the universe and our place within it. Can I help you with any specific questions about space?",
-        "time": "2026-01-13T10:03:25.186050"
+        "text": "Got it! I've noted that you dislike dal. Is there anything else you'd like to share or ask about?",
+        "time": "2026-01-16T11:18:49.323093"
       }
     ]
   },
   {
-    "id": "d2a7dbd8-039f-4b10-8d27-a847cb1a599b",
-    "started_at": "2026-01-13T14:17:14.660528",
+    "id": "e8256ca4-2872-4090-a67a-56b75a2eb1c5",
+    "started_at": "2026-01-16T11:19:38.794359",
     "messages": [
       {
         "role": "user",
-        "text": "open Chrome",
-        "time": "2026-01-13T14:17:14.687837"
+        "text": "tell me a joke",
+        "time": "2026-01-16T11:20:38.835952"
       },
       {
         "role": "jarvis",
-        "text": "Opening Google Chrome.",
-        "time": "2026-01-13T14:17:14.690194"
-      },
-      {
-        "role": "user",
-        "text": "open chrome",
-        "time": "2026-01-13T14:17:25.774527"
-      },
-      {
-        "role": "jarvis",
-        "text": "Opening Google Chrome.",
-        "time": "2026-01-13T14:17:25.775464"
-      },
-      {
-        "role": "user",
-        "text": "hi",
-        "time": "2026-01-13T14:32:19.593451"
-      },
-      {
-        "role": "jarvis",
-        "text": "Hello! How can I assist you today?",
-        "time": "2026-01-13T14:32:19.594052"
-      },
-      {
-        "role": "user",
-        "text": "my name is chetan",
-        "time": "2026-01-13T14:33:02.494492"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. I will remember your name is Chetan.",
-        "time": "2026-01-13T14:33:02.496679"
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-16T11:20:38.838502"
       },
       {
         "role": "user",
         "text": "tell me a joke",
-        "time": "2026-01-13T14:33:35.408866"
+        "time": "2026-01-16T11:20:48.282062"
       },
       {
         "role": "jarvis",
-        "text": "Why did the scarecrow win an award? Because he was outstanding in his field!",
-        "time": "2026-01-13T14:33:35.409696"
+        "text": "Sure, here you go: Why couldn't the bicycle find its way home? Because it lost its bearings!",
+        "time": "2026-01-16T11:20:48.282694"
+      }
+    ]
+  },
+  {
+    "id": "c2cd9865-7b55-4615-abc5-b797d73cb567",
+    "started_at": "2026-01-16T11:21:30.714600",
+    "messages": [
+      {
+        "role": "user",
+        "text": "no I like mutton biryani",
+        "time": "2026-01-16T11:22:22.695591"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. You like mutton biryani. How can I assist you today?",
+        "time": "2026-01-16T11:22:22.696092"
       },
       {
         "role": "user",
-        "text": "do you know pug?",
-        "time": "2026-01-13T14:33:43.501987"
+        "text": "I only like mutton biryani remove chicken biryani",
+        "time": "2026-01-16T11:22:40.866865"
       },
       {
         "role": "jarvis",
-        "text": "Yes, I am familiar with pugs. They are a popular breed of dog known for their wrinkled faces and playful personalities.",
-        "time": "2026-01-13T14:33:43.503031"
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:22:40.867272"
+      },
+      {
+        "role": "user",
+        "text": "I like chicken biryani mutton biryani",
+        "time": "2026-01-16T11:31:01.455487"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:31:01.455777"
+      },
+      {
+        "role": "user",
+        "text": "remove chicken biryani",
+        "time": "2026-01-16T11:31:27.908815"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:31:27.909168"
+      },
+      {
+        "role": "user",
+        "text": "I like chicken biryani and mutton biryani",
+        "time": "2026-01-16T11:36:49.741466"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:36:49.741857"
+      },
+      {
+        "role": "user",
+        "text": "my name is adappu Chetan",
+        "time": "2026-01-16T11:37:17.245539"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello, Chetan! How can I assist you today?",
+        "time": "2026-01-16T11:37:17.246105"
+      },
+      {
+        "role": "user",
+        "text": "I like",
+        "time": "2026-01-16T11:37:50.164721"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. You like mutton biryani. How can I assist you today?",
+        "time": "2026-01-16T11:37:50.165221"
+      },
+      {
+        "role": "user",
+        "text": "I like mutton",
+        "time": "2026-01-16T11:37:58.171493"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. You like mutton biryani. How can I assist you today?",
+        "time": "2026-01-16T11:37:58.171859"
+      },
+      {
+        "role": "user",
+        "text": "what is my likes",
+        "time": "2026-01-16T11:38:07.594009"
+      },
+      {
+        "role": "jarvis",
+        "text": "I don't have that information. Could you please provide me with a list of your likes?",
+        "time": "2026-01-16T11:38:07.594536"
+      },
+      {
+        "role": "user",
+        "text": "I like mutton biryani",
+        "time": "2026-01-16T11:38:16.634648"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. You like mutton biryani. How can I assist you today?",
+        "time": "2026-01-16T11:38:16.635580"
+      },
+      {
+        "role": "user",
+        "text": "I know Java Python React",
+        "time": "2026-01-16T11:42:28.250849"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Java, Python, and React are valuable skills in the world of software development. How can I assist you with your expertise in these technologies?",
+        "time": "2026-01-16T11:42:28.251438"
+      },
+      {
+        "role": "user",
+        "text": "I use vs code Kitab get Linux",
+        "time": "2026-01-16T11:42:49.694114"
+      },
+      {
+        "role": "jarvis",
+        "text": "It's great to hear that you use VS Code, Kitab, and Linux for your development work. Is there anything specific you would like to know or discuss about these tools?",
+        "time": "2026-01-16T11:42:49.694536"
+      },
+      {
+        "role": "user",
+        "text": "I like chicken biryani mutton biryani",
+        "time": "2026-01-16T11:43:11.673272"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:43:11.673830"
+      },
+      {
+        "role": "user",
+        "text": "I like chicken biryani mutton biryani",
+        "time": "2026-01-16T11:44:35.560280"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:44:35.560675"
+      },
+      {
+        "role": "user",
+        "text": "I like chicken biryani mutton biryani",
+        "time": "2026-01-16T11:45:34.068235"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
+        "time": "2026-01-16T11:45:34.068841"
+      },
+      {
+        "role": "user",
+        "text": "my skills are Java Python spring boot",
+        "time": "2026-01-16T11:45:49.946123"
+      },
+      {
+        "role": "jarvis",
+        "text": "Great! It seems like you have a strong skill set in Java, Python, and Spring Boot. Is there anything specific you would like assistance with or any questions you have related to these skills?",
+        "time": "2026-01-16T11:45:49.946820"
+      },
+      {
+        "role": "user",
+        "text": "my skills are Java Python spring boot",
+        "time": "2026-01-16T11:46:50.181331"
+      },
+      {
+        "role": "jarvis",
+        "text": "Great! It seems like you have a strong skill set in Java, Python, and Spring Boot. Is there anything specific you would like assistance with or any questions you have related to these skills?",
+        "time": "2026-01-16T11:46:50.181944"
+      },
+      {
+        "role": "user",
+        "text": "I walk on tools like git",
+        "time": "2026-01-16T11:48:39.146005"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it. You like mutton biryani. How can I assist you today?",
+        "time": "2026-01-16T11:48:39.146649"
+      },
+      {
+        "role": "user",
+        "text": "I use PS code git",
+        "time": "2026-01-16T11:49:00.157557"
+      },
+      {
+        "role": "jarvis",
+        "text": "It sounds like you use Visual Studio Code (VS Code) for your coding, along with Git for version control. Is there anything specific you'd like to know or discuss about these tools?",
+        "time": "2026-01-16T11:49:00.158602"
+      },
+      {
+        "role": "user",
+        "text": "what tools I use",
+        "time": "2026-01-16T11:49:22.211785"
+      },
+      {
+        "role": "jarvis",
+        "text": "You mentioned that you use Linux, Code, and Git as tools in your work. If you need more information or assistance with these tools, feel free to ask!",
+        "time": "2026-01-16T11:49:22.212357"
+      },
+      {
+        "role": "user",
+        "text": "My goal is to become a backend developer",
+        "time": "2026-01-16T11:49:46.714191"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
+        "time": "2026-01-16T11:49:46.714941"
+      },
+      {
+        "role": "user",
+        "text": "I want to work in Hyderabad",
+        "time": "2026-01-16T11:50:32.907621"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
+        "time": "2026-01-16T11:50:32.908351"
+      },
+      {
+        "role": "user",
+        "text": "I understand things better by doing projects",
+        "time": "2026-01-16T11:51:02.354255"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's a great way to learn and improve your skills! Hands-on projects can provide valuable experience and help solidify your understanding of concepts. Is there a specific project you're working on or thinking about starting?",
+        "time": "2026-01-16T11:51:02.354967"
+      },
+      {
+        "role": "user",
+        "text": "I want to become a backend developer",
+        "time": "2026-01-16T11:54:14.832430"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
+        "time": "2026-01-16T11:54:14.834016"
+      },
+      {
+        "role": "user",
+        "text": "my job location preference is Hyderabad",
+        "time": "2026-01-16T11:54:48.905682"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to know! Hyderabad is a popular location for tech jobs, especially in the IT industry. Is there anything specific you would like assistance with regarding your job location preference in Hyderabad?",
+        "time": "2026-01-16T11:54:48.906885"
+      },
+      {
+        "role": "user",
+        "text": "I preferred to learn through",
+        "time": "2026-01-16T11:55:11.415441"
+      },
+      {
+        "role": "jarvis",
+        "text": "It seems like your message got cut off. Could you please provide more details or complete your sentence?",
+        "time": "2026-01-16T11:55:11.416207"
+      },
+      {
+        "role": "user",
+        "text": "i perfer to learn through projects",
+        "time": "2026-01-16T11:55:31.511815"
+      },
+      {
+        "role": "jarvis",
+        "text": "It seems like your message got cut off. Could you please provide more details or complete your sentence?",
+        "time": "2026-01-16T11:55:31.512441"
+      },
+      {
+        "role": "user",
+        "text": "i learn b etter by projects",
+        "time": "2026-01-16T11:56:03.069641"
+      },
+      {
+        "role": "jarvis",
+        "text": "Learning by working on projects is a great way to improve your skills. It allows you to apply what you've learned in a practical way and helps you understand the concepts better. If you need any guidance or suggestions for project ideas, feel free to ask!",
+        "time": "2026-01-16T11:56:03.070465"
+      },
+      {
+        "role": "user",
+        "text": "my goal is to become a full",
+        "time": "2026-01-16T11:56:31.724587"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
+        "time": "2026-01-16T11:56:31.725369"
+      }
+    ]
+  },
+  {
+    "id": "f580446e-ca8d-40a0-9ffd-4385d1ed5143",
+    "started_at": "2026-01-16T18:18:20.362568",
+    "messages": []
+  },
+  {
+    "id": "8acfbb1e-fcdf-47b2-b3f2-2d9d6d8b8e31",
+    "started_at": "2026-01-17T11:10:52.902710",
+    "messages": [
+      {
+        "role": "user",
+        "text": "give basic code in java",
+        "time": "2026-01-17T11:10:54.224367"
+      },
+      {
+        "role": "jarvis",
+        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
+        "time": "2026-01-17T11:10:54.225095"
+      },
+      {
+        "role": "user",
+        "text": "give a basic code in java",
+        "time": "2026-01-17T11:16:16.351630"
+      },
+      {
+        "role": "jarvis",
+        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
+        "time": "2026-01-17T11:16:16.352383"
+      },
+      {
+        "role": "user",
+        "text": "give a code of basic java code",
+        "time": "2026-01-17T11:19:22.054755"
+      },
+      {
+        "role": "jarvis",
+        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
+        "time": "2026-01-17T11:19:22.055540"
+      },
+      {
+        "role": "user",
+        "text": "give a baic code in java",
+        "time": "2026-01-17T11:20:28.806574"
+      },
+      {
+        "role": "jarvis",
+        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
+        "time": "2026-01-17T11:20:28.807388"
+      },
+      {
+        "role": "user",
+        "text": "give basic code in java",
+        "time": "2026-01-17T11:23:33.557173"
+      },
+      {
+        "role": "jarvis",
+        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
+        "time": "2026-01-17T11:23:33.557971"
       }
     ]
   }

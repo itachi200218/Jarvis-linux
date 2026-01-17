@@ -1310,3 +1310,268 @@ body {
 .back-home-btn:hover {
   background: rgba(0, 229, 255, 0.1);
 }
+
+/*==================
+/*maximize and minimize
+/*===================*/
+/* ================= ROBOTIC GLASS BASE ================= */
+.jarvis-card,
+.jarvis-popup {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 40, 80, 0.75),
+    rgba(5, 10, 25, 0.85)
+  );
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.25),
+    inset 0 0 20px rgba(0, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+/* ================= SMALL CARD ================= */
+.jarvis-card {
+  cursor: pointer;
+  height: 240px; /* 🔥 MEDIUM SIZE (was 160px) */
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.35s ease;
+}
+
+/* HOVER GLOW */
+.jarvis-card:hover {
+  box-shadow:
+    0 0 28px rgba(0, 255, 255, 0.45),
+    inset 0 0 25px rgba(0, 255, 255, 0.15);
+}
+
+/* ================= CARD CONTENT ================= */
+.jarvis-card-content {
+  height: calc(240px - 30px); /* 🔥 match card height */
+  overflow-y: auto;
+  padding-right: 6px;
+  position: relative;
+}
+/* ================= POPUP OVERLAY ================= */
+.jarvis-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(0, 255, 255, 0.15), transparent 60%),
+    rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 998;
+}
+
+/* ================= POPUP WINDOW ================= */
+.jarvis-popup {
+  width: 72vw;
+  max-width: 980px;
+  height: 72vh;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: jarvis-pop 0.35s ease;
+}
+
+/* POP ANIMATION */
+@keyframes jarvis-pop {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ================= POPUP HEADER ================= */
+.jarvis-popup-header {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #9ff;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+/* CLOSE BUTTON */
+.jarvis-popup-header button {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+
+  border: none;
+  border-radius: 4px;
+
+  background: transparent;
+  color: #9ff;
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ================= POPUP CONTENT ================= */
+.jarvis-popup-content {
+  flex: 1;
+  padding: 18px;
+  overflow: auto;
+}
+
+/* ================= CODE BLOCKS ================= */
+.jarvis-card-content pre,
+.jarvis-popup-content pre {
+  background: rgba(0, 10, 25, 0.9);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+/* ================= ROBOTIC SCROLLBAR ================= */
+.jarvis-card-content::-webkit-scrollbar,
+.jarvis-popup-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.jarvis-card-content::-webkit-scrollbar-track,
+.jarvis-popup-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jarvis-card-content::-webkit-scrollbar-thumb,
+.jarvis-popup-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #00f6ff,
+    #0077ff
+  );
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+/* ================= SCAN LINE EFFECT ================= */
+.jarvis-card::after,
+.jarvis-popup::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 255, 255, 0.08),
+    transparent
+  );
+  animation: scan 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+/*copy past */
+
+/* ================= CODE WRAPPER ================= */
+.jarvis-code-wrapper {
+  position: relative;
+}
+
+/* ================= MINI ROBOTIC COPY BUTTON ================= */
+.jarvis-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+
+  width: 26px;
+  height: 26px;
+  padding: 0;
+
+  background: radial-gradient(
+    circle at top left,
+    #00f6ff,
+    #0077ff
+  );
+
+  border: 1px solid rgba(0, 255, 255, 0.6);
+  border-radius: 6px;
+
+  color: #001018;
+  font-size: 10px;
+  font-weight: bold;
+
+  cursor: pointer;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.7),
+    inset 0 0 6px rgba(255, 255, 255, 0.35);
+
+  transition: all 0.25s ease;
+}
+
+/* ICON LOOK (OPTIONAL TEXT REPLACED BY SYMBOL) */
+.jarvis-copy-btn::before {
+  content: "⧉";
+  font-size: 12px;
+}
+
+/* HOVER = ROBOT WAKE */
+.jarvis-copy-btn:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.9),
+    inset 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* CLICK FEEDBACK */
+.jarvis-copy-btn:active {
+  transform: scale(0.95);
+}
+
+/* COPIED STATE */
+.jarvis-copy-btn.copied {
+  background: radial-gradient(circle, #00ff99, #00cc66);
+  box-shadow:
+    0 0 14px rgba(0, 255, 153, 0.9);
+}
+
+.jarvis-copy-btn.copied::before {
+  content: "✓";
+  font-size: 13px;
+}
+
+.jarvis-popup-overlay {
+  backdrop-filter: none;
+}
+.jarvis-popup {
+  position: fixed;
+  z-index: 1000;
+
+  /* ✅ ADD THESE LINES */
+  width: 520px;        /* 👈 reduce window width */
+  max-width: 90vw;     /* responsive on small screens */
+
+  /* optional window shadow */
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(0, 255, 255, 0.35);
+}

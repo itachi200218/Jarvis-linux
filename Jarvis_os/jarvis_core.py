@@ -16,9 +16,11 @@ from maps_service import get_distance
 from location_service import get_current_location
 from memory_reader import find_past_answer
 from systems.system_router import execute_system_intent
-from memory.memory_facts import detect_fact_refinement
+from memory.memory_facts import detect_explicit_update
 
 from chatHistory.chathistory import load, save, add_message
+from memory.memory_facts import get_memory_summary
+
 
 # =========
 # memory
@@ -27,6 +29,13 @@ from memory.memory_facts import (
     learn_fact,
     get_fact,
     detect_fact_query
+)
+#===========
+#memory remove
+#============
+from memory.memory_facts import (
+    detect_fact_removal,
+    detect_only_like
 )
 
 # ==============================
@@ -209,9 +218,8 @@ def extract_number(text: str, default: int = 10) -> int:
     if match:
         return int(match.group(1))
     return default
-    
-# ==============================
-# COMMAND ROUTER
+  # ==============================
+# COMMAND ROUTER (FINAL)
 # ==============================
 def handle_command(command, user_role="guest", user_name=None, chat_id=None):
 
@@ -221,108 +229,118 @@ def handle_command(command, user_role="guest", user_name=None, chat_id=None):
     response = "I am not sure."
 
     # ==============================
-    # 1️⃣ LEARNING (SAFE UPDATE)
+    # 0️⃣ IDENTITY QUERY (who am I?)
     # ==============================
+    if user_name and is_identity_query(raw):
+        name = get_fact(user_name, "name")
+        response = f"You are {name}." if name else "I don’t know your name yet."
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": "identity",
+            "confidence": 100
+        }
+# ==============================
+# 1️⃣ EXPLICIT FACT UPDATE
+# ==============================
     if user_name:
-        key, value, action = learn_fact(user_name, raw)
-
-        if key:
-            response = (
-                f"Okay, I’ve updated your {key} to {value}."
-                if action == "updated"
-                else f"Got it. I will remember your {key} is {value}."
-            )
-
-            intent = "learn_profile"
-            confidence = 100
-
-            if user_role == "user" and chat_id:
-                add_message(chat_id, user_name, "user", command)
-                add_message(chat_id, user_name, "jarvis", response)
-
+        explicit = detect_explicit_update(user_name, raw)
+        if explicit:
+            response = f"Okay 👍 I updated your {explicit['key']}."
             speak_async(response)
             return {
                 "reply": response,
-                "intent": intent,
-                "confidence": confidence
+                "intent": "fact_update",
+                "confidence": 100
+            }
+        
+# ==============================
+# 🔁 ONLY LIKE (replace list)  ← MOVE HERE
+# ==============================
+    if user_name:
+        only = detect_only_like(user_name, raw)
+        if only:
+            response = f"Got it 👍 I’ll remember that you only like {only}."
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "fact_replace",
+                "confidence": 100
             }
 
     # ==============================
-    # 2️⃣ FACT QUESTIONS
+    # 🗑️ FACT REMOVAL (likes / dislikes) ← MOVE HERE
     # ==============================
+    if user_name:
+        removal = detect_fact_removal(user_name, raw)
+        if removal:
+            response = f"Okay 👍 I removed {removal['value']} from your {removal['key']}."
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "fact_remove",
+                "confidence": 100
+            }
+  # ==============================
+    # 3️⃣ GREETING / WAKE
+    # ==============================
+    if raw in {"hi", "hey", "hello", "hey jarvis", "jarvis"}:
+        response = "Yes. How can I help you?"
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": "wake",
+            "confidence": 100
+        }
+ 
+   # ==============================
+# FACT QUESTIONS (RECALL)
+# ==============================
     if user_name:
         fact_key = detect_fact_query(raw)
         if fact_key:
             value = get_fact(user_name, fact_key)
-
             if value:
                 response = f"Your {fact_key} is {value}."
-                intent = "fact_recall"
-                confidence = 100
-            else:
-                response = f"I don’t know your {fact_key} yet."
-                intent = "fact_unknown"
-                confidence = 40
+                speak_async(response)
+                return {
+                    "reply": response,
+                    "intent": "fact_recall",
+                    "confidence": 100
+                }
+            # ❌ no else → fall through
 
-            speak_async(response)
-            return {
-                "reply": response,
-                "intent": intent,
-                "confidence": confidence
-            }
-# ==============================
-# 2.5️⃣ CASUAL FACT REFINEMENT
-# ==============================
-    if user_name:
-        refine_key, refine_value = detect_fact_refinement(user_name, raw)
-
-        if refine_key and refine_value:
-            learn_fact(user_name, f"my {refine_key} is {refine_value}")
-
-            response = f"Got it 🙂 I understand — your {refine_key} is {refine_value}."
-            intent = "fact_refined"
-            confidence = 95
-
-            speak_async(response)
-            return {
-                "reply": response,
-                "intent": intent,
-                "confidence": confidence
-            }
-
+    # # ==============================
+    # # 2️⃣ CASUAL FACT REFINEMENT
+    # # ==============================
+    # if user_name:
+    #     refine_key, refine_value = detect_fact_refinement(user_name, raw)
+    #     if refine_key and refine_value:
+    #         learn_fact(user_name, f"my {refine_key} is {refine_value}")
+    #         response = f"Got it 🙂 Your {refine_key} is now {refine_value}."
+    #         speak_async(response)
+    #         return {
+    #             "reply": response,
+    #             "intent": "fact_refined",
+    #             "confidence": 95
+    #         }
+ 
 
     # ==============================
-    # 3️⃣ GREETING
-    # ==============================
-    if raw in {"hi","hey","hello", "hey jarvis", "jarvis"}:
-        response = "Yes. How can I help you?"
-        intent = "wake"
-        confidence = 100
-
-        speak_async(response)
-        return {
-            "reply": response,
-            "intent": intent,
-            "confidence": confidence
-        }
-
-    # ==============================
-    # 🔥 3.5️⃣ SYSTEM COMMAND HANDLER
+    # 4️⃣ SYSTEM COMMAND HANDLER
     # ==============================
     detected_intent, score = find_intent(command)
 
     if detected_intent in SYSTEM_INTENTS:
-        # ❌ guests not allowed
         if user_role == "guest":
-            response = "Sorry, system commands are restricted for guests."
+            response = "Please log in to use system commands."
             speak_async(response)
             return {
                 "reply": response,
-                "intent": "restricted",
+                "intent": "guest_restricted",
                 "confidence": score
             }
 
-        # ✅ user allowed
         if detected_intent in {"volume_up", "volume_down"}:
             steps = extract_number(command, default=10)
             response = execute_system_intent(detected_intent, steps)
@@ -336,18 +354,31 @@ def handle_command(command, user_role="guest", user_name=None, chat_id=None):
             "confidence": score
         }
 
-    # ==============================
-    # 4️⃣ MEMORY / AI (CONFIDENCE GATED)
-    # ==============================
+     # ==============================
+# SILENT LEARNING (EARLY) ✅
+# ==============================
+    if user_name:
+        learn_fact(user_name, raw)
+
+# ==============================
+# 6️⃣ MEMORY / AI FALLBACK (FINAL)
+# ==============================
     past_chats = load(user_name) if user_name else []
     past_answer, past_confidence = find_past_answer(past_chats, command)
 
-    if past_answer and past_confidence >= 80:
+    BAD_ANSWERS = {
+        "I am not sure.",
+        "I don't know.",
+        "Sorry, I can't help with that."
+    }
+
+    if past_answer and past_confidence >= 80 and past_answer not in BAD_ANSWERS:
         response = past_answer
         intent = "memory_recall"
         confidence = past_confidence
     else:
-        response = get_ai_response(command)
+        memory_summary = get_memory_summary(user_name) if user_name else ""
+        response = get_ai_response(command, memory_summary)
         intent = "ai_fallback"
         confidence = 0
 

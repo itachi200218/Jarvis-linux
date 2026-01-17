@@ -1,212 +1,263 @@
+# memory/memory_facts.py
 import re
 from rapidfuzz import fuzz
-from chatHistory.chathistory import load, save
+
 from memory.fact_patterns import FACT_QUERY_PATTERNS
-
-# ==============================
-# 🧠 SMART LEARNING RULES
-# ==============================
-# memory/fact_patterns.py
-
-LEARN_RULES = [
-    # ==============================
-    # 👤 PROFILE
-    # ==============================
-    (r"my name is (.+)", "name"),
-    (r"i am called (.+)", "name"),
-    (r"people call me (.+)", "name"),
-
-    (r"my age is (\d+)", "age"),
-    (r"i am (\d+) years old", "age"),
-    (r"i am (\d+)", "age"),
-
-    # ==============================
-    # 📍 LOCATION
-    # ==============================
-    (r"i live in (.+)", "location"),
-    (r"i stay at (.+)", "location"),
-    (r"i stay in (.+)", "location"),
-    (r"i am from (.+)", "location"),
-    (r"my location is (.+)", "location"),
-
-    # ==============================
-    # 🎭 ROLE / IDENTITY
-    # ==============================
-    (r"i am a (.+)", "role"),
-    (r"i am an (.+)", "role"),
-    (r"my role is (.+)", "role"),
-    (r"i work as (.+)", "role"),
-    (r"i am working as (.+)", "role"),
-
-    # ==============================
-    # ❤️ LIKES / PREFERENCES
-    # ==============================
-    (r"i like (.+)", "likes"),
-    (r"i love (.+)", "likes"),
-    (r"i enjoy (.+)", "likes"),
-    (r"my favorite food is (.+)", "likes"),
-    (r"my liked one is (.+)", "likes"),
-    (r"my like is (.+)", "likes"),
-
-    # ==============================
-    # 💔 DISLIKES
-    # ==============================
-    (r"i hate (.+)", "dislikes"),
-    (r"i dislike (.+)", "dislikes"),
-    (r"i dont like (.+)", "dislikes"),
-]
-
+from memory.LEARN_RULES import LEARN_RULES
+from memory.CASUAL_WORDS import CASUAL_WORDS
+from memory.user_facts import load_user_facts, save_user_facts
 
 
 # ==============================
-# 🗣️ CASUAL WORDS TO IGNORE
+# 🧹 NORMALIZE VALUE
 # ==============================
-CASUAL_WORDS = {
-    "lol", "bro", "nah", "hey", "just",
-    "only", "actually", "no", "not"
-}
+def normalize_value(value: str) -> str:
+    value = value.lower().strip()
+
+    if value.isdigit():
+        return value
+
+    words = []
+    for w in value.split():
+        if w in CASUAL_WORDS:
+            continue
+        if not w.isalpha():
+            continue
+        words.append(w)
+
+    return " ".join(words).title()
+
 
 # ==============================
-# 🔁 UPSERT FACT
+# ✂️ SPLIT MULTI-VALUE PREFERENCES
 # ==============================
-def upsert_fact(chats, key, value):
-    chats[0].setdefault("facts", [])
+def split_preferences(text: str) -> list:
+    """
+    Intelligent splitter for skills, tools, likes.
+    Handles:
+    - 'java python react'
+    - 'chicken biryani mutton biryani'
+    - 'vs code git linux'
+    """
+    text = text.lower().strip()
 
-    for fact in chats[0]["facts"]:
-        if fact["key"] == key:
-            fact["value"] = value
-            return "updated"
+    # normalize connectors
+    text = re.sub(r"\band\b", ",", text)
+    text = re.sub(r"\bwith\b", ",", text)
 
-    chats[0]["facts"].append({
-        "type": "profile",
-        "key": key,
-        "value": value
-    })
-    return "added"
+    # split on commas
+    parts = [p.strip() for p in text.split(",") if p.strip()]
+
+    items = []
+
+    for part in parts:
+        words = part.split()
+
+        buffer = []
+        for w in words:
+            # join food names like "chicken biryani"
+            if w in {"biryani", "rice", "curry"} and buffer:
+                buffer[-1] = buffer[-1] + " " + w
+            else:
+                buffer.append(w)
+
+        items.extend(buffer)
+
+    # final cleanup
+    cleaned = []
+    for item in items:
+        item = normalize_value(item)
+        if len(item) >= 2:
+            cleaned.append(item)
+
+    return list(dict.fromkeys(cleaned))  # remove duplicates
 
 # ==============================
-# 🧠 LEARN FACT (STRICT)
+# 🔁 UPSERT FACT (GLOBAL)
+# ==============================
+def upsert_fact(user: str, key: str, value: str):
+    facts = load_user_facts(user)
+
+    if key in {"likes", "dislikes", "skills", "tools"}:
+        facts.setdefault(key, [])
+        if value not in facts[key]:
+            facts[key].append(value)
+            save_user_facts(user, facts)
+            return "added"
+        return "unchanged"
+
+    if facts.get(key) == value:
+        return "unchanged"
+
+    facts[key] = value
+    save_user_facts(user, facts)
+    return "updated"
+
+
+# ==============================
+# 🧠 LEARN FACT (SAFE)
 # ==============================
 def learn_fact(user_name: str, text: str):
     text = text.lower().strip()
-    chats = load(user_name)
-
-    if not chats:
-        return None, None, None
 
     for pattern, key in LEARN_RULES:
         match = re.search(pattern, text)
         if match:
-            value = match.group(1).strip()
+            raw_value = match.group(1)
 
-            # remove casual words
-            words = [w for w in value.split() if w not in CASUAL_WORDS]
-            clean_value = " ".join(words).title()
+            if key in {"likes", "dislikes", "skills", "tools"}:
+                items = split_preferences(raw_value)
+                for item in items:
+                    upsert_fact(user_name, key, item)
+                return {"key": key, "value": items, "action": "added"}
 
-            action = upsert_fact(chats, key, clean_value)
-            save(user_name, chats)
-            return key, clean_value, action
-
-    return None, None, None
-
-# ==============================
-# 🔎 DETECT FACT QUESTION
-# ==============================
-def detect_fact_query(text: str):
-    text = text.lower().strip()
-    best_score = 0
-    best_key = None
-
-    for key, phrases in FACT_QUERY_PATTERNS.items():
-        for phrase in phrases:
-            score = fuzz.partial_ratio(text, phrase)
-            if score > best_score and score >= 80:
-                best_score = score
-                best_key = key
-
-    return best_key
-
-# ==============================
-# 📤 GET FACT VALUE
-# ==============================
-def get_fact(user_name: str, key: str):
-    chats = load(user_name)
-
-    for convo in reversed(chats):
-        for fact in convo.get("facts", []):
-            if fact.get("key") == key:
-                return fact.get("value")
+            clean_value = normalize_value(raw_value)
+            action = upsert_fact(user_name, key, clean_value)
+            return {"key": key, "value": clean_value, "action": action}
 
     return None
 
 # ==============================
-# 🔁 CASUAL FACT REFINEMENT
+# 🗑️ REMOVE FROM LIST FACT
 # ==============================
-def detect_fact_refinement(user_name: str, text: str):
-    """
-    Handles:
-    - its only pet dog
-    - bro just dog
-    - not dog lol
-    """
-    chats = load(user_name)
-    if not chats:
-        return None, None
+def remove_from_fact(user: str, key: str, value: str):
+    facts = load_user_facts(user)
 
-    text = text.lower()
+    if key not in facts or not isinstance(facts[key], list):
+        return "not_found"
 
-    if not any(x in text for x in ["only", "just", "not", "i mean"]):
-        return None, None
+    if value in facts[key]:
+        facts[key].remove(value)
 
-    if "dog" in text:
-        return "role", "Dog"
+        # clean empty list
+        if not facts[key]:
+            del facts[key]
 
-    return None, None
+        save_user_facts(user, facts)
+        return "removed"
+
+    return "not_found"
+
 
 # ==============================
-# 🔁 EXPLICIT FACT UPDATE (NEW)
+# 🧠 DETECT FACT REMOVAL
 # ==============================
-def detect_explicit_update(user_name: str, text: str):
-    """
-    Handles:
-    - change it to dog lol
-    - change my role to dog
-    - update my name to chiku
-    """
-    chats = load(user_name)
-    if not chats:
-        return None, None
-
+def detect_fact_removal(user_name: str, text: str):
     text = text.lower().strip()
 
     patterns = [
-        r"change my (\w+) to (.+)",
-        r"update my (\w+) to (.+)",
-        r"change it to (.+)",
-        r"make it (.+)"
+        r"remove (.+)",
+        r"delete (.+)",
+        r"i dont like (.+) anymore",
+        r"i don't like (.+) anymore",
     ]
 
     for pattern in patterns:
         match = re.search(pattern, text)
-        if not match:
-            continue
+        if match:
+            value = normalize_value(match.group(1))
 
-        if "my" in pattern:
+            # try likes first
+            if remove_from_fact(user_name, "likes", value) == "removed":
+                return {"key": "likes", "value": value}
+
+            # then dislikes
+            if remove_from_fact(user_name, "dislikes", value) == "removed":
+                return {"key": "dislikes", "value": value}
+
+    return None
+
+
+# ==============================
+# 🔁 ONLY LIKE (REPLACE LIST)
+# ==============================
+def detect_only_like(user_name: str, text: str):
+    match = re.search(r"i only like (.+)", text.lower())
+    if not match:
+        return None
+
+    value = normalize_value(match.group(1))
+    facts = load_user_facts(user_name)
+
+    facts["likes"] = [value]
+    save_user_facts(user_name, facts)
+
+    return value
+
+
+# ==============================
+# 🤖 AI-ASSISTED FACT SUGGESTION (SAFE)
+# ==============================
+def ai_suggest_facts(ai_text: str) -> list:
+    suggestions = []
+    text = ai_text.lower()
+
+    if "full stack" in text and "developer" in text:
+        suggestions.append({"key": "role", "value": "Full Stack Developer"})
+
+    if "backend developer" in text:
+        suggestions.append({"key": "role", "value": "Backend Developer"})
+
+    if "frontend developer" in text:
+        suggestions.append({"key": "role", "value": "Frontend Developer"})
+
+    return suggestions
+
+
+# ==============================
+# 🔎 FACT QUESTION DETECTION
+# ==============================
+def detect_fact_query(text: str):
+    text = text.lower().strip()
+    best_score, best_key = 0, None
+
+    for key, phrases in FACT_QUERY_PATTERNS.items():
+        for phrase in phrases:
+            score = fuzz.partial_ratio(text, phrase)
+            if score >= 80 and score > best_score:
+                best_score, best_key = score, key
+
+    return best_key
+
+
+# ==============================
+# 📤 GET FACT (GLOBAL)
+# ==============================
+def get_fact(user_name: str, key: str):
+    return load_user_facts(user_name).get(key)
+
+
+# ==============================
+# 🔁 EXPLICIT FACT UPDATE
+# ==============================
+def detect_explicit_update(user_name: str, text: str):
+    text = text.lower().strip()
+
+    for pattern in (
+        r"change my (\w+) to (.+)",
+        r"update my (\w+) to (.+)"
+    ):
+        match = re.search(pattern, text)
+        if match:
             key = match.group(1)
-            value = match.group(2)
-        else:
-            # infer last fact
-            last_facts = chats[0].get("facts", [])
-            if not last_facts:
-                return None, None
-            key = last_facts[-1]["key"]
-            value = match.group(1)
+            value = normalize_value(match.group(2))
+            action = upsert_fact(user_name, key, value)
+            return {
+                "key": key,
+                "value": value,
+                "action": action
+            }
 
-        words = [w for w in value.split() if w not in CASUAL_WORDS]
-        clean_value = " ".join(words).title()
+    return None
 
-        upsert_fact(chats, key, clean_value)
-        save(user_name, chats)
-        return key, clean_value
 
-    return None, None
+# ==============================
+# 📘 MEMORY SUMMARY (GLOBAL, READ-ONLY)
+# ==============================
+def get_memory_summary(user_name: str) -> str:
+    facts = load_user_facts(user_name)
+    if not facts:
+        return ""
+
+    return "; ".join(f"{k}: {v}" for k, v in facts.items())
+
