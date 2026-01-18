@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { JarvisCodeBlock } from "../components/JarvisCodeBlock.jsx";
 
-function JarvisPopup({ id, content, onClose }) {
+function JarvisPopup({ id, content, onClose, onMinimize, minimized }) {
   const popupRef = useRef(null);
 
   const [pos, setPos] = useState({
@@ -17,7 +17,7 @@ function JarvisPopup({ id, content, onClose }) {
 
   // ===== START DRAG =====
   const startDrag = (e) => {
-    e.preventDefault();            // 🔥 prevents text selection
+    e.preventDefault();
     e.stopPropagation();
 
     const rect = popupRef.current.getBoundingClientRect();
@@ -28,7 +28,7 @@ function JarvisPopup({ id, content, onClose }) {
     };
 
     setDragging(true);
-    setZIndex(Date.now());         // 🔥 bring window to front
+    setZIndex(Date.now()); // 🔥 bring to front
   };
 
   // ===== MOVE + STOP =====
@@ -62,17 +62,30 @@ function JarvisPopup({ id, content, onClose }) {
         left: pos.x,
         top: pos.y,
         zIndex,
-        userSelect: "none",      // 🔥 critical
+        userSelect: "none",
+        display: minimized ? "none" : "block", // ✅ MINIMIZE
       }}
     >
-      {/* DRAG HANDLE */}
+      {/* HEADER = DRAG HANDLE */}
       <div
         className="jarvis-popup-header"
         onMouseDown={startDrag}
-        style={{ cursor: "grab" }} // 🔥 mouse feedback
+        style={{ cursor: "grab", display: "flex", justifyContent: "space-between" }}
       >
         <span>JARVIS RESPONSE</span>
-        <button onClick={() => onClose(id)}>✕</button>
+
+        <div className="window-controls">
+          {/* ➖ MINIMIZE */}
+          <button
+            onClick={() => onMinimize(id)}
+            style={{ marginRight: "6px" }}
+          >
+            —
+          </button>
+
+          {/* ❌ CLOSE */}
+          <button onClick={() => onClose(id)}>✕</button>
+        </div>
       </div>
 
       <div className="jarvis-popup-content">

@@ -43,15 +43,21 @@ const [showHistory, setShowHistory] = useState(false);
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 const [isJarvisExpanded, setIsJarvisExpanded] = useState(false);
+const [showOverflow, setShowOverflow] = useState(false);
+
 const openNewWindow = (content) => {
   setWindows((prev) => [
     ...prev,
     {
       id: Date.now() + Math.random(),
       content,
+      title: lastCommand,   // ✅ ADD THIS LINE
+      minimized: false,
     },
   ]);
 };
+
+
 
   // =========================
   // 🔊 FRONTEND JARVIS VOICE (DENIAL ONLY)
@@ -297,6 +303,12 @@ async function sendCommand(command) {
   if (loading) {
     return <div className="status">Initializing Jarvis…</div>;
   }
+const MAX_VISIBLE_TABS = 5;
+
+const minimizedWindows = windows.filter(w => w.minimized);
+
+const visibleTabs = minimizedWindows.slice(0, MAX_VISIBLE_TABS);
+const overflowTabs = minimizedWindows.slice(MAX_VISIBLE_TABS);
 
   // =========================
   // UI
@@ -452,11 +464,112 @@ async function sendCommand(command) {
     key={win.id}
     id={win.id}
     content={win.content}
+    minimized={win.minimized}   // ✅ ADD
+    onMinimize={(id) =>         // ✅ ADD
+      setWindows((prev) =>
+        prev.map((w) =>
+          w.id === id ? { ...w, minimized: true } : w
+        )
+      )
+    }
     onClose={(id) =>
       setWindows((prev) => prev.filter((w) => w.id !== id))
     }
   />
 ))}
+
+{/* 🧭 TASKBAR (MINIMIZED WINDOWS) */}
+<div className="jarvis-taskbar">
+
+  {/* NORMAL VISIBLE TABS */}
+  {visibleTabs.map((w) => (
+    <div
+  key={w.id}
+  className="jarvis-taskbar-tab"
+  onClick={() => {
+    setWindows(prev =>
+      prev.map(win =>
+        win.id === w.id
+          ? { ...win, minimized: false }
+          : win
+      )
+    );
+    setShowOverflow(false);
+  }}
+>
+  <span>{w.title || "JARVIS"}</span>
+
+  {/* ❌ CLOSE */}
+  <button
+    className="taskbar-close"
+    onClick={(e) => {
+      e.stopPropagation(); // 🔥 IMPORTANT
+      setWindows(prev =>
+        prev.filter(win => win.id !== w.id)
+      );
+    }}
+  >
+    ✕
+  </button>
+</div>
+
+  ))}
+
+  {/* +N OVERFLOW BUTTON */}
+  {overflowTabs.length > 0 && (
+    <div className="jarvis-overflow-wrapper">
+      <div
+        className="jarvis-taskbar-tab overflow"
+        onClick={() => setShowOverflow(prev => !prev)}
+      >
+        +{overflowTabs.length}
+      </div>
+    </div>
+  )}
+
+</div>
+
+{/* 🔽 OVERFLOW POPUP */}
+{showOverflow && (
+  <div className="jarvis-overflow-popup">
+    {overflowTabs.map((w) => (
+      <div key={w.id} className="overflow-item">
+
+        {/* 🪟 RESTORE WINDOW */}
+        <span
+          className="overflow-title"
+          onClick={() => {
+            setWindows(prev =>
+              prev.map(win =>
+                win.id === w.id
+                  ? { ...win, minimized: false }
+                  : win
+              )
+            );
+            setShowOverflow(false);
+          }}
+        >
+          {w.title || "JARVIS"}
+        </span>
+
+        {/* ❌ CLOSE WINDOW */}
+        <button
+          className="overflow-close"
+          onClick={(e) => {
+            e.stopPropagation(); // 🔥 VERY IMPORTANT
+            setWindows(prev =>
+              prev.filter(win => win.id !== w.id)
+            );
+          }}
+        >
+          ✕
+        </button>
+
+      </div>
+    ))}
+  </div>
+)}
+
 
     {showRestriction && (
       <div className="jarvis-toast">
