@@ -15,17 +15,6 @@
     "messages": []
   },
   {
-    "id": "a980b000-d3e8-4ea8-9299-3fe73ec85cf3",
-    "started_at": "2026-01-20T10:46:55.107665",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i am chetan",
-        "time": "2026-01-20T10:46:55.107675"
-      }
-    ]
-  },
-  {
     "id": "98749d8a-b29e-4cdd-b931-ffbf228743d3",
     "started_at": "2026-01-20T10:46:55.108028",
     "messages": [
@@ -33,17 +22,6 @@
         "role": "jarvis",
         "text": "Hello Chetan! How can I assist you today?",
         "time": "2026-01-20T10:46:55.108034"
-      }
-    ]
-  },
-  {
-    "id": "80318b0d-d1f5-49b8-bbb4-94bf780bb81d",
-    "started_at": "2026-01-20T10:49:25.314559",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i like panner",
-        "time": "2026-01-20T10:49:25.314569"
       }
     ]
   },
@@ -59,17 +37,6 @@
     ]
   },
   {
-    "id": "2bdaea84-544f-42cd-8fa9-232c4dfb2093",
-    "started_at": "2026-01-20T10:50:19.116397",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i use tools github",
-        "time": "2026-01-20T10:50:19.116406"
-      }
-    ]
-  },
-  {
     "id": "39e512c2-5e1e-4f23-b17f-fb114ef148da",
     "started_at": "2026-01-20T10:50:19.116773",
     "messages": [
@@ -77,17 +44,6 @@
         "role": "jarvis",
         "text": "That's great to hear! GitHub is a popular platform for version control and collaboration on software development projects. If you have any specific questions or need help with anything related to GitHub, feel free to ask!",
         "time": "2026-01-20T10:50:19.116778"
-      }
-    ]
-  },
-  {
-    "id": "2bca43ce-d3d4-4f53-9b22-6e7c735b1909",
-    "started_at": "2026-01-20T10:51:25.437091",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i stay at mumbai",
-        "time": "2026-01-20T10:51:25.437100"
       }
     ]
   },
@@ -103,17 +59,6 @@
     ]
   },
   {
-    "id": "26e9df6a-7c4d-43b1-a6ac-bd1c5803b2d1",
-    "started_at": "2026-01-20T10:51:36.490185",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i stay at hyderabad",
-        "time": "2026-01-20T10:51:36.490198"
-      }
-    ]
-  },
-  {
     "id": "ed8f05f2-ea95-4d8f-8103-faf6299cd08c",
     "started_at": "2026-01-20T10:51:36.490799",
     "messages": [
@@ -121,17 +66,6 @@
         "role": "jarvis",
         "text": "Got it! How can I assist you today, Adepu?",
         "time": "2026-01-20T10:51:36.490806"
-      }
-    ]
-  },
-  {
-    "id": "ca9f6201-c726-48d4-86d3-f74fe0b2b58a",
-    "started_at": "2026-01-20T10:51:55.252393",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i am chetan",
-        "time": "2026-01-20T10:51:55.252408"
       }
     ]
   },
@@ -147,17 +81,6 @@
     ]
   },
   {
-    "id": "e2629244-e274-4a70-88fe-aaa8548e5964",
-    "started_at": "2026-01-20T10:52:07.253705",
-    "messages": [
-      {
-        "role": "user",
-        "text": "my role is backend developer",
-        "time": "2026-01-20T10:52:07.253713"
-      }
-    ]
-  },
-  {
     "id": "f8380fa8-557a-44fa-a631-28b8d1dd7b07",
     "started_at": "2026-01-20T10:52:07.254157",
     "messages": [
@@ -169,17 +92,6 @@
     ]
   },
   {
-    "id": "b7a12208-f313-433a-93c0-2a6b3f45408b",
-    "started_at": "2026-01-20T10:52:18.160372",
-    "messages": [
-      {
-        "role": "user",
-        "text": "my role is full stack developer",
-        "time": "2026-01-20T10:52:18.160381"
-      }
-    ]
-  },
-  {
     "id": "5f9b4634-3257-4c66-a9f1-1da36a72beb6",
     "started_at": "2026-01-20T10:52:18.160969",
     "messages": [
@@ -187,17 +99,6 @@
         "role": "jarvis",
         "text": "Got it! How can I assist you today as a Full Stack Developer, Adepu Chetan?",
         "time": "2026-01-20T10:52:18.160978"
-      }
-    ]
-  },
-  {
-    "id": "7625bcce-75db-4acf-aa17-5e84db3f4caf",
-    "started_at": "2026-01-20T10:57:54.747950",
-    "messages": [
-      {
-        "role": "user",
-        "text": "i am chetan]",
-        "time": "2026-01-20T10:57:54.747959"
       }
     ]
   },
@@ -247,5 +148,10 @@
         "time": "2026-01-20T11:01:39.879139"
       }
     ]
+  },
+  {
+    "id": "8b8a655c-4ea2-4607-9f90-53b3d6d6d3f1",
+    "started_at": "2026-01-20T14:24:53.881641",
+    "messages": []
   }
 ]

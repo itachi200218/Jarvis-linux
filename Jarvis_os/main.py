@@ -10,11 +10,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 
-from jarvis_core import handle_command, speak_async
+from jarvis_core import handle_command   # 🔥 speak_async REMOVED
 
 from auth.router import router as auth_router
 from auth.historyrouter import router as history_router
-from chat.chatrouter import router as chat_router   # ✅ ADD THIS
+from chat.chatrouter import router as chat_router
 
 # ==============================
 # LOAD ENV
@@ -47,7 +47,7 @@ app.add_middleware(
 # ==============================
 app.include_router(auth_router)
 app.include_router(history_router)
-app.include_router(chat_router)   # ✅ REQUIRED
+app.include_router(chat_router)
 
 # ==============================
 # STATIC FILES
@@ -55,14 +55,11 @@ app.include_router(chat_router)   # ✅ REQUIRED
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # ==============================
-# STARTUP
+# STARTUP (NO VOICE HERE)
 # ==============================
 @app.on_event("startup")
 def startup_event():
-    threading.Thread(
-        target=lambda: speak_async("Hello. I am Jarvis. System is online."),
-        daemon=True
-    ).start()
+    print("Jarvis backend online")
 
 # ==============================
 # MODELS
@@ -70,6 +67,7 @@ def startup_event():
 class CommandRequest(BaseModel):
     command: str
     chat_id: str | None = None
+    silent: bool = False     # ✅ REQUIRED FOR WINDOW TABS
 
 # ==============================
 # ROUTES
@@ -104,12 +102,13 @@ def execute_command(
         except jwt.InvalidTokenError:
             pass
 
-    # ⚠️ This does NOT use new chat logic
+    # ✅ SILENT FLAG PASSED TO CORE
     return handle_command(
         command=req.command,
         user_role=user_role,
         user_name=user_name,
-        chat_id=req.chat_id
+        chat_id=req.chat_id,
+        silent=req.silent
     )
 
 # ==============================

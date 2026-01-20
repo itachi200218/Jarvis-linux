@@ -2,8 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { JarvisCodeBlock } from "../components/JarvisCodeBlock.jsx";
 
-function JarvisPopup({ id, content, onClose, onMinimize, minimized }) {
+function JarvisPopup({
+  id,
+  messages = [],
+  minimized,
+  onClose,
+  onMinimize,
+  onSendMessage,
+}) {
   const popupRef = useRef(null);
+  const scrollRef = useRef(null);
 
   const [pos, setPos] = useState({
     x: 120 + Math.random() * 80,
@@ -12,30 +20,28 @@ function JarvisPopup({ id, content, onClose, onMinimize, minimized }) {
 
   const [dragging, setDragging] = useState(false);
   const [zIndex, setZIndex] = useState(1000);
+  const [input, setInput] = useState("");
 
   const offsetRef = useRef({ x: 0, y: 0 });
 
-  // ===== START DRAG =====
+  /* ================= DRAG WINDOW ================= */
   const startDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     const rect = popupRef.current.getBoundingClientRect();
-
     offsetRef.current = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     };
 
     setDragging(true);
-    setZIndex(Date.now()); // 🔥 bring to front
+    setZIndex(Date.now());
   };
 
-  // ===== MOVE + STOP =====
   useEffect(() => {
     const move = (e) => {
       if (!dragging) return;
-
       setPos({
         x: e.clientX - offsetRef.current.x,
         y: e.clientY - offsetRef.current.y,
@@ -53,59 +59,83 @@ function JarvisPopup({ id, content, onClose, onMinimize, minimized }) {
     };
   }, [dragging]);
 
+  /* ================= AUTO SCROLL ================= */
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop =
+        scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  /* ================= SEND MESSAGE ================= */
+  const handleSend = () => {
+    if (!input.trim()) return;
+    onSendMessage(id, input.trim());
+    setInput("");
+  };
+
   return (
     <div
       ref={popupRef}
       className="jarvis-popup"
       style={{
-        position: "fixed",
         left: pos.x,
         top: pos.y,
         zIndex,
-        userSelect: "none",
-        display: minimized ? "none" : "block", // ✅ MINIMIZE
+        display: minimized ? "none" : "flex",
       }}
     >
-      {/* HEADER = DRAG HANDLE */}
+      {/* ================= HEADER ================= */}
       <div
         className="jarvis-popup-header"
         onMouseDown={startDrag}
-        style={{ cursor: "grab", display: "flex", justifyContent: "space-between" }}
+        style={{ cursor: "grab" }}
       >
         <span>JARVIS RESPONSE</span>
 
         <div className="window-controls">
-          {/* ➖ MINIMIZE */}
-          <button
-            onClick={() => onMinimize(id)}
-            style={{ marginRight: "6px" }}
-          >
-            —
-          </button>
-
-          {/* ❌ CLOSE */}
+          <button onClick={() => onMinimize(id)}>—</button>
           <button onClick={() => onClose(id)}>✕</button>
         </div>
       </div>
 
+      {/* ================= CONTENT (SCROLL FIX) ================= */}
       <div className="jarvis-popup-content">
-        <ReactMarkdown
-          components={{
-            pre({ children }) {
-              return <>{children}</>;
-            },
-            code({ inline, children }) {
-              if (inline) return <code>{children}</code>;
-              return (
-                <JarvisCodeBlock>
-                  {String(children).trim()}
-                </JarvisCodeBlock>
-              );
-            },
-          }}
-        >
-          {content}
-        </ReactMarkdown>
+        <div className="jarvis-popup-scroll" ref={scrollRef}>
+          {messages.map((msg, index) => (
+            <div key={index} className={`msg ${msg.role}`}>
+              <ReactMarkdown
+                components={{
+                  pre({ children }) {
+                    return <>{children}</>;
+                  },
+                  code({ inline, children }) {
+                    if (inline) return <code>{children}</code>;
+                    return (
+                      <JarvisCodeBlock>
+                        {String(children).trim()}
+                      </JarvisCodeBlock>
+                    );
+                  },
+                }}
+              >
+                {msg.text}
+              </ReactMarkdown>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ================= INPUT ================= */}
+      <div className="jarvis-popup-input">
+        <input
+          type="text"
+          placeholder="Type here…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        />
+        <button onClick={handleSend}>SEND</button>
       </div>
     </div>
   );

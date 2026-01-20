@@ -28,6 +28,7 @@ function JarvisApp({ openLogin }) {
   const typingIntervalRef = useRef(null);
   const jarvisTextRef = useRef(null);
 const historyPanelRef = useRef(null); // 👈 ADD THIS
+const allowJarvisSpeechRef = useRef(true); // 🔊 MAIN JARVIS SPEECH FLAG
 
   const [listening, setListening] = useState(false);
   const [status, setStatus] = useState("Awaiting command");
@@ -45,14 +46,20 @@ const [showHistory, setShowHistory] = useState(false);
 const [isJarvisExpanded, setIsJarvisExpanded] = useState(false);
 const [showOverflow, setShowOverflow] = useState(false);
 
-const openNewWindow = (content) => {
+const openNewWindow = (replyText) => {
   setWindows((prev) => [
     ...prev,
     {
       id: Date.now() + Math.random(),
-      content,
-      title: lastCommand,   // ✅ ADD THIS LINE
+      title: lastCommand || "JARVIS",
       minimized: false,
+      messages: [
+        {
+          role: "assistant",
+          text: replyText,
+          time: Date.now(),
+        },
+      ],
     },
   ]);
 };
@@ -62,18 +69,19 @@ const openNewWindow = (content) => {
   // =========================
   // 🔊 FRONTEND JARVIS VOICE (DENIAL ONLY)
   // =========================
-  const speakFrontend = (text) => {
-    if (!window.speechSynthesis) return;
+ const speakFrontend = (text, shouldSpeak) => {
+  if (!shouldSpeak) return;
+  if (!window.speechSynthesis) return;
 
-    window.speechSynthesis.cancel();
+  window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 0.8;
-    utterance.volume = 1;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.9;
+  utterance.pitch = 0.8;
+  utterance.volume = 1;
 
-    window.speechSynthesis.speak(utterance);
-  };
+  window.speechSynthesis.speak(utterance);
+};
 
   // =========================
   // SPEECH RECOGNITION
@@ -184,14 +192,16 @@ useEffect(() => {
   // =========================
   // BACKEND CALL
   // =========================
-async function sendCommand(command) {
+async function sendCommand(command, source = "main") {
   if (!command || !command.trim()) return;
+
+  const shouldSpeak = source === "main";
 
   const token = sessionStorage.getItem("jarvis_token");
   const isGuest = !token;
 
-  // 🔒 Guest restriction (system commands only)
   const isSystemCommand = fuse.search(command.toLowerCase()).length > 0;
+
   if (isGuest && isSystemCommand) {
     const denyText =
       "Access denied. Guest users cannot execute system commands.";
@@ -200,12 +210,13 @@ async function sendCommand(command) {
     typeJarvisReply(
       "⛔ ACCESS DENIED — Guest users cannot execute system commands."
     );
-    speakFrontend(denyText);
+
+    if (shouldSpeak) {
+      speakFrontend(denyText);
+    }
 
     setShowRestriction(true);
     setTimeout(() => setShowRestriction(false), 3000);
-
-    // 🔥 IMPORTANT: reset status after showing restriction
     setStatus("Awaiting command");
     return;
   }
@@ -213,17 +224,11 @@ async function sendCommand(command) {
   try {
     let chatId = sessionStorage.getItem("active_chat_id");
 
-    // 🔥 Logged-in user → ensure chat exists
     if (token && !chatId) {
-      const chatRes = await fetch(
-        "http://127.0.0.1:8000/auth/new-chat",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const chatRes = await fetch("http://127.0.0.1:8000/auth/new-chat", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const chatData = await chatRes.json();
       if (chatData?.chat_id) {
@@ -232,16 +237,9 @@ async function sendCommand(command) {
       }
     }
 
-    // 🔥 FIX: Guest DOES NOT need chat_id
-    if (!token) {
-      chatId = null;
-    } else if (!chatId) {
-      // logged-in user but still no chat → stop safely
-      setStatus("Awaiting command");
-      return;
-    }
+    if (!token) chatId = null;
+    else if (!chatId) return;
 
-    // ✅ SEND COMMAND
     const res = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -250,7 +248,7 @@ async function sendCommand(command) {
       },
       body: JSON.stringify({
         command: command.trim(),
-        ...(token && { chat_id: chatId }), // only attach for users
+        ...(token && { chat_id: chatId }),
       }),
     });
 
@@ -261,14 +259,18 @@ async function sendCommand(command) {
     }
 
     const data = await res.json();
+
     setStatus("Responding…");
     typeJarvisReply(data.reply);
+
+    if (shouldSpeak) {
+      speakFrontend(data.reply);
+    }
 
   } catch (err) {
     console.error(err);
     typeJarvisReply("Something went wrong.");
   } finally {
-    // 🔥 THIS LINE FIXES THE STUCK "Processing…" ISSUE
     setStatus("Awaiting command");
   }
 }
@@ -309,6 +311,62 @@ const minimizedWindows = windows.filter(w => w.minimized);
 
 const visibleTabs = minimizedWindows.slice(0, MAX_VISIBLE_TABS);
 const overflowTabs = minimizedWindows.slice(MAX_VISIBLE_TABS);
+
+
+const handleWindowSend = async (windowId, text) => {
+  // 🔇 ABSOLUTE SILENCE FOR WINDOW TABS
+ 
+allowJarvisSpeechRef.current = false; // 🔇 HARD MUTE FOR WINDOW TABS
+
+  // 1️⃣ Add USER message to that window
+  setWindows(prev =>
+    prev.map(w =>
+      w.id === windowId
+        ? {
+            ...w,
+            messages: [
+              ...w.messages,
+              { role: "user", text, time: Date.now() }
+            ]
+          }
+        : w
+    )
+  );
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        command: text,
+        silent: true
+      }),
+    });
+
+    const data = await res.json();
+
+    // 2️⃣ Append response ONLY to that window
+    setWindows(prev =>
+      prev.map(w =>
+        w.id === windowId
+          ? {
+              ...w,
+              messages: [
+                ...w.messages,
+                {
+                  role: "assistant",
+                  text: data.reply,
+                  time: Date.now(),
+                },
+              ],
+            }
+          : w
+      )
+    );
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   // =========================
   // UI
@@ -463,9 +521,9 @@ const overflowTabs = minimizedWindows.slice(MAX_VISIBLE_TABS);
   <JarvisPopup
     key={win.id}
     id={win.id}
-    content={win.content}
-    minimized={win.minimized}   // ✅ ADD
-    onMinimize={(id) =>         // ✅ ADD
+    messages={win.messages}          // ✅ NEW
+    minimized={win.minimized}
+    onMinimize={(id) =>
       setWindows((prev) =>
         prev.map((w) =>
           w.id === id ? { ...w, minimized: true } : w
@@ -475,8 +533,10 @@ const overflowTabs = minimizedWindows.slice(MAX_VISIBLE_TABS);
     onClose={(id) =>
       setWindows((prev) => prev.filter((w) => w.id !== id))
     }
+    onSendMessage={handleWindowSend} // ✅ NEW
   />
 ))}
+
 
 {/* 🧭 TASKBAR (MINIMIZED WINDOWS) */}
 <div className="jarvis-taskbar">

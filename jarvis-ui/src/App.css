@@ -1423,12 +1423,6 @@ body {
   justify-content: center;
 }
 
-/* ================= POPUP CONTENT ================= */
-.jarvis-popup-content {
-  flex: 1;
-  padding: 18px;
-  overflow: auto;
-}
 
 /* ================= CODE BLOCKS ================= */
 .jarvis-card-content pre,
@@ -1465,8 +1459,7 @@ body {
 }
 
 /* ================= SCAN LINE EFFECT ================= */
-.jarvis-card::after,
-.jarvis-popup::after {
+.jarvis-card::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1762,4 +1755,63 @@ body {
 /* click feedback */
 .taskbar-close:active {
   transform: scale(0.85);
+}
+/* ================= FIX PER-WINDOW SCROLL ================= */
+
+/* Popup must be a strict column layout */
+.jarvis-popup {
+  display: flex;
+  flex-direction: column;
+  height: 72vh;
+  overflow: hidden;
+}
+
+.jarvis-popup-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+
+/* Input stays fixed */
+.jarvis-popup-input {
+  flex-shrink: 0;
+}
+/* ================= FULL WIDTH CODE BLOCK FIX ================= */
+
+/* =====================================================
+   FORCE CODE BLOCK TO FULL POPUP WIDTH (FINAL FIX)
+   ===================================================== */
+
+/* Chat message wrapper should not limit width */
+.jarvis-popup-content .msg {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* But text inside message stays readable */
+.jarvis-popup-content .msg > * {
+  max-width: 100%;
+}
+
+/* 🚨 THIS IS THE KEY PART */
+.jarvis-popup-content .msg pre {
+  width: 100vw;                 /* escape bubble */
+  max-width: calc(520px - 36px);/* popup width - padding */
+  margin-left: -18px;           /* cancel popup padding */
+  margin-right: -18px;
+
+  box-sizing: border-box;
+  display: block;
+}
+
+/* Code wrapper must stretch */
+.jarvis-code-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Prevent markdown from centering */
+.jarvis-popup-content pre {
+  align-self: stretch;
 }
