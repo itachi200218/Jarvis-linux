@@ -261,3 +261,9 @@ def get_memory_summary(user_name: str) -> str:
 
     return "; ".join(f"{k}: {v}" for k, v in facts.items())
 
+# ==============================
+# 📍 SET FACT EXPLICITLY (SAFE)
+# ==============================
+def set_fact(user_name: str, key: str, value: str):
+    clean_value = normalize_value(value)
+    return upsert_fact(user_name, key, clean_value)

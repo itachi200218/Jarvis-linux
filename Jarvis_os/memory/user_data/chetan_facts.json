@@ -1,5 +1,5 @@
 {
-  "name": "Adepu Chetan",
+  "name": "Chetan",
   "age": "23",
   "location": "Hyderabad",
   "role": "Full Stack Developer",
@@ -19,7 +19,10 @@
   "tools": [
     "linux",
     "vs Code",
-    "Git"
+    "Git",
+    "Tools",
+    "Github"
   ],
-  "career_goal": "Backend Developer"
+  "career_goal": "Backend Developer",
+  "default_location": "Is Mumbai"
 }

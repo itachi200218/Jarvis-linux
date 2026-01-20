@@ -20,7 +20,12 @@ from memory.memory_facts import detect_explicit_update
 
 from chatHistory.chathistory import load, save, add_message
 from memory.memory_facts import get_memory_summary
-
+from utils.text_utils import normalize_text
+from extractors.search_query_extractor import extract_search_query
+from systems.system_actions import play_video, search_web, set_location_route
+from config.location_keywords import LOCATION_KEYWORDS
+from extractors.location_set_extractor import extract_location_set
+from extractors.time_place_extractor import extract_time_place
 
 # =========
 # memory
@@ -28,8 +33,10 @@ from memory.memory_facts import get_memory_summary
 from memory.memory_facts import (
     learn_fact,
     get_fact,
-    detect_fact_query
+    detect_fact_query,
+    set_fact          # 👈 ADD THIS LINE
 )
+
 #===========
 #memory remove
 #============
@@ -95,6 +102,11 @@ SYSTEM_INTENTS = {
     "open_explorer",
     "open_settings",
 }
+MEDIA_INTENTS = {
+    "play_video",
+    "search_web",
+    "search_maps",   # 👈 NEW
+}
 
 # ==============================
 # 🧠 CHEAP REASONING KEYWORDS
@@ -135,21 +147,6 @@ def speak(text: str):
 
 def speak_async(text: str):
     threading.Thread(target=speak, args=(text,), daemon=True).start()
-
-# ==============================
-# NORMALIZE TEXT
-# ==============================
-STOP_WORDS = {
-    "please", "can", "you", "tell", "me", "the",
-    "a", "an", "is", "my", "what", "about"
-}
-
-def normalize_text(text: str) -> str:
-    text = text.lower()
-    text = re.sub(r"[^a-z0-9\s]", "", text)
-    words = text.split()
-    words = [w for w in words if w not in STOP_WORDS]
-    return " ".join(words)
 
 # ==============================
 # FUZZY MATCH
@@ -218,6 +215,7 @@ def extract_number(text: str, default: int = 10) -> int:
     if match:
         return int(match.group(1))
     return default
+
   # ==============================
 # COMMAND ROUTER (FINAL)
 # ==============================
@@ -227,7 +225,22 @@ def handle_command(command, user_role="guest", user_name=None, chat_id=None):
     intent = "unknown"
     confidence = 0
     response = "I am not sure."
+   # ==============================
+    # 🧑 NAME UPDATE (ADD THIS FIRST)
+    # ==============================
+    if user_name:
+        match = re.search(r"my name is (.+)", raw)
+        if match:
+            new_name = match.group(1).strip().title()
+            set_fact(user_name, "name", new_name)
 
+            response = f"Nice to meet you, {new_name} 😊"
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "name_update",
+                "confidence": 100
+            }
     # ==============================
     # 0️⃣ IDENTITY QUERY (who am I?)
     # ==============================
@@ -240,6 +253,7 @@ def handle_command(command, user_role="guest", user_name=None, chat_id=None):
             "intent": "identity",
             "confidence": 100
         }
+    
 # ==============================
 # 1️⃣ EXPLICIT FACT UPDATE
 # ==============================
@@ -309,27 +323,115 @@ def handle_command(command, user_role="guest", user_name=None, chat_id=None):
                     "confidence": 100
                 }
             # ❌ no else → fall through
+# ==============================
+# 📍 SET DEFAULT LOCATION
+# ==============================
+    location_value = extract_location_set(raw)
 
-    # # ==============================
-    # # 2️⃣ CASUAL FACT REFINEMENT
-    # # ==============================
-    # if user_name:
-    #     refine_key, refine_value = detect_fact_refinement(user_name, raw)
-    #     if refine_key and refine_value:
-    #         learn_fact(user_name, f"my {refine_key} is {refine_value}")
-    #         response = f"Got it 🙂 Your {refine_key} is now {refine_value}."
-    #         speak_async(response)
-    #         return {
-    #             "reply": response,
-    #             "intent": "fact_refined",
-    #             "confidence": 95
-    #         }
- 
+    if location_value:
+        # 🚫 GUEST BLOCK
+        if user_role == "guest":
+            response = "Please log in to use location commands."
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "guest_restricted",
+                "confidence": 100
+            }
 
+        # ✅ LOGGED-IN USER
+        set_fact(user_name, "default_location", location_value)
+
+        # 🔥 OPEN MAPS IN ROUTE MODE
+        set_location_route(location_value)
+
+        response = f"Okay 👍 I’ve set your location to {location_value.title()}."
+        speak_async(response)
+
+        return {
+            "reply": response,
+            "intent": "set_location",
+            "confidence": 100
+        }
+# ==============================
+# ⏰ TIME BY LOCATION
+# ==============================
+    place = extract_time_place(raw)
+
+    if place:
+        response = get_time_from_timezone_db(place)
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": "time_place",
+            "confidence": 100
+        }
+
+# ==============================
+# 🎥 MEDIA COMMAND HANDLER (EARLY) ✅
+# ==============================
+    media_intent, query = extract_search_query(raw)
+
+    # 🔥 FORCE MAPS FOR LOCATION QUERIES
+ # 🔥 FORCE MAPS FOR LOCATION QUERIES
+    raw_words = set(raw.split())
+
+    if raw_words & LOCATION_KEYWORDS:
+
+        media_intent = "search_maps"
+
+        saved_location = None
+        if user_name:
+            saved_location = get_fact(user_name, "default_location")
+
+        clean_query = raw.replace("search", "").strip()
+
+        if saved_location:
+            query = f"{clean_query} near {saved_location}"
+        else:
+            query = clean_query
+
+    if media_intent in MEDIA_INTENTS:
+        if user_role == "guest":
+            response = "Please log in to use media commands."
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "guest_restricted",
+                "confidence": 100
+            }
+
+        if not query:
+            response = "What should I search for?"
+            speak_async(response)
+            return {
+                "reply": response,
+                "intent": "media_missing_query",
+                "confidence": 100
+            }
+
+        if media_intent == "play_video":
+            response = play_video(query)
+        elif media_intent == "search_web":
+            response = search_web(query)
+        elif media_intent == "search_maps":
+            response = search_maps(query)
+
+        speak_async(response)
+        return {
+            "reply": response,
+            "intent": media_intent,
+            "confidence": 100
+        }
+
+# ==============================
+# INTENT DETECTION (ONCE)
+# ==============================
+    detected_intent, score = find_intent(command)
     # ==============================
     # 4️⃣ SYSTEM COMMAND HANDLER
     # ==============================
-    detected_intent, score = find_intent(command)
+  
 
     if detected_intent in SYSTEM_INTENTS:
         if user_role == "guest":

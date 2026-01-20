@@ -171,7 +171,7 @@ COMMANDS = [
             "tell me the date"
         ]
     },
-    {
+       {
         "intent": "exit",
         "patterns": [
             "exit",
@@ -179,7 +179,28 @@ COMMANDS = [
             "close jarvis",
             "quit"
         ]
+    },
+    {
+        "intent": "play_video",
+        "patterns": [
+            "play video",
+            "play video of",
+            "play youtube video",
+            "play",
+            "play video on youtube"
+        ]
+    },
+    {
+        "intent": "search_web",
+        "patterns": [
+            "search",
+            "search for",
+            "search web",
+            "google",
+            "google search"
+        ]
     }
+
 ]
 
 # ==============================

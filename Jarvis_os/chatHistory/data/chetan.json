@@ -1,482 +1,8 @@
 [
   {
-    "id": "99a8c1e2-ff4c-420c-9d48-7e7cc9382955",
-    "started_at": "2026-01-16T11:14:54.814379",
-    "messages": [
-      {
-        "role": "user",
-        "text": "my name is Chetan",
-        "time": "2026-01-16T11:15:00.908597"
-      },
-      {
-        "role": "jarvis",
-        "text": "Hello, Chetan! How can I assist you today?",
-        "time": "2026-01-16T11:15:00.908857"
-      },
-      {
-        "role": "user",
-        "text": "my age is 23",
-        "time": "2026-01-16T11:15:31.880780"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it! How can I assist you today?",
-        "time": "2026-01-16T11:15:31.881026"
-      },
-      {
-        "role": "user",
-        "text": "finding at Hyderabad",
-        "time": "2026-01-16T11:16:45.204336"
-      },
-      {
-        "role": "jarvis",
-        "text": "How can I assist you with finding something in Hyderabad? Are you looking for a specific place, information, or assistance with directions? Please provide more details so I can help you better.",
-        "time": "2026-01-16T11:16:45.204708"
-      },
-      {
-        "role": "user",
-        "text": "i live at hyderabad",
-        "time": "2026-01-16T11:16:59.990368"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
-        "time": "2026-01-16T11:16:59.990770"
-      },
-      {
-        "role": "user",
-        "text": "where do I live",
-        "time": "2026-01-16T11:17:15.231043"
-      },
-      {
-        "role": "jarvis",
-        "text": "I'm sorry, but I don't have that information. Could you please provide me with your current location or the city you live in?",
-        "time": "2026-01-16T11:17:15.231438"
-      },
-      {
-        "role": "user",
-        "text": "I live in Hyderabad",
-        "time": "2026-01-16T11:18:01.419572"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
-        "time": "2026-01-16T11:18:01.419792"
-      },
-      {
-        "role": "user",
-        "text": "I am a full stack developer",
-        "time": "2026-01-16T11:18:17.579620"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Full stack developers are in high demand these days. How can I assist you today with your development work or any related queries?",
-        "time": "2026-01-16T11:18:17.580061"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani",
-        "time": "2026-01-16T11:18:32.509321"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:18:32.509627"
-      },
-      {
-        "role": "user",
-        "text": "I dislike dal",
-        "time": "2026-01-16T11:18:49.322746"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it! I've noted that you dislike dal. Is there anything else you'd like to share or ask about?",
-        "time": "2026-01-16T11:18:49.323093"
-      }
-    ]
-  },
-  {
-    "id": "e8256ca4-2872-4090-a67a-56b75a2eb1c5",
-    "started_at": "2026-01-16T11:19:38.794359",
-    "messages": [
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-16T11:20:38.835952"
-      },
-      {
-        "role": "jarvis",
-        "text": "I encountered an issue accessing my AI intelligence.",
-        "time": "2026-01-16T11:20:38.838502"
-      },
-      {
-        "role": "user",
-        "text": "tell me a joke",
-        "time": "2026-01-16T11:20:48.282062"
-      },
-      {
-        "role": "jarvis",
-        "text": "Sure, here you go: Why couldn't the bicycle find its way home? Because it lost its bearings!",
-        "time": "2026-01-16T11:20:48.282694"
-      }
-    ]
-  },
-  {
-    "id": "c2cd9865-7b55-4615-abc5-b797d73cb567",
-    "started_at": "2026-01-16T11:21:30.714600",
-    "messages": [
-      {
-        "role": "user",
-        "text": "no I like mutton biryani",
-        "time": "2026-01-16T11:22:22.695591"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. You like mutton biryani. How can I assist you today?",
-        "time": "2026-01-16T11:22:22.696092"
-      },
-      {
-        "role": "user",
-        "text": "I only like mutton biryani remove chicken biryani",
-        "time": "2026-01-16T11:22:40.866865"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:22:40.867272"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani mutton biryani",
-        "time": "2026-01-16T11:31:01.455487"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:31:01.455777"
-      },
-      {
-        "role": "user",
-        "text": "remove chicken biryani",
-        "time": "2026-01-16T11:31:27.908815"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:31:27.909168"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani and mutton biryani",
-        "time": "2026-01-16T11:36:49.741466"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:36:49.741857"
-      },
-      {
-        "role": "user",
-        "text": "my name is adappu Chetan",
-        "time": "2026-01-16T11:37:17.245539"
-      },
-      {
-        "role": "jarvis",
-        "text": "Hello, Chetan! How can I assist you today?",
-        "time": "2026-01-16T11:37:17.246105"
-      },
-      {
-        "role": "user",
-        "text": "I like",
-        "time": "2026-01-16T11:37:50.164721"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. You like mutton biryani. How can I assist you today?",
-        "time": "2026-01-16T11:37:50.165221"
-      },
-      {
-        "role": "user",
-        "text": "I like mutton",
-        "time": "2026-01-16T11:37:58.171493"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. You like mutton biryani. How can I assist you today?",
-        "time": "2026-01-16T11:37:58.171859"
-      },
-      {
-        "role": "user",
-        "text": "what is my likes",
-        "time": "2026-01-16T11:38:07.594009"
-      },
-      {
-        "role": "jarvis",
-        "text": "I don't have that information. Could you please provide me with a list of your likes?",
-        "time": "2026-01-16T11:38:07.594536"
-      },
-      {
-        "role": "user",
-        "text": "I like mutton biryani",
-        "time": "2026-01-16T11:38:16.634648"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. You like mutton biryani. How can I assist you today?",
-        "time": "2026-01-16T11:38:16.635580"
-      },
-      {
-        "role": "user",
-        "text": "I know Java Python React",
-        "time": "2026-01-16T11:42:28.250849"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Java, Python, and React are valuable skills in the world of software development. How can I assist you with your expertise in these technologies?",
-        "time": "2026-01-16T11:42:28.251438"
-      },
-      {
-        "role": "user",
-        "text": "I use vs code Kitab get Linux",
-        "time": "2026-01-16T11:42:49.694114"
-      },
-      {
-        "role": "jarvis",
-        "text": "It's great to hear that you use VS Code, Kitab, and Linux for your development work. Is there anything specific you would like to know or discuss about these tools?",
-        "time": "2026-01-16T11:42:49.694536"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani mutton biryani",
-        "time": "2026-01-16T11:43:11.673272"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:43:11.673830"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani mutton biryani",
-        "time": "2026-01-16T11:44:35.560280"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:44:35.560675"
-      },
-      {
-        "role": "user",
-        "text": "I like chicken biryani mutton biryani",
-        "time": "2026-01-16T11:45:34.068235"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to hear! Chicken biryani is a delicious dish. Is there anything specific you would like to know or discuss about chicken biryani?",
-        "time": "2026-01-16T11:45:34.068841"
-      },
-      {
-        "role": "user",
-        "text": "my skills are Java Python spring boot",
-        "time": "2026-01-16T11:45:49.946123"
-      },
-      {
-        "role": "jarvis",
-        "text": "Great! It seems like you have a strong skill set in Java, Python, and Spring Boot. Is there anything specific you would like assistance with or any questions you have related to these skills?",
-        "time": "2026-01-16T11:45:49.946820"
-      },
-      {
-        "role": "user",
-        "text": "my skills are Java Python spring boot",
-        "time": "2026-01-16T11:46:50.181331"
-      },
-      {
-        "role": "jarvis",
-        "text": "Great! It seems like you have a strong skill set in Java, Python, and Spring Boot. Is there anything specific you would like assistance with or any questions you have related to these skills?",
-        "time": "2026-01-16T11:46:50.181944"
-      },
-      {
-        "role": "user",
-        "text": "I walk on tools like git",
-        "time": "2026-01-16T11:48:39.146005"
-      },
-      {
-        "role": "jarvis",
-        "text": "Got it. You like mutton biryani. How can I assist you today?",
-        "time": "2026-01-16T11:48:39.146649"
-      },
-      {
-        "role": "user",
-        "text": "I use PS code git",
-        "time": "2026-01-16T11:49:00.157557"
-      },
-      {
-        "role": "jarvis",
-        "text": "It sounds like you use Visual Studio Code (VS Code) for your coding, along with Git for version control. Is there anything specific you'd like to know or discuss about these tools?",
-        "time": "2026-01-16T11:49:00.158602"
-      },
-      {
-        "role": "user",
-        "text": "what tools I use",
-        "time": "2026-01-16T11:49:22.211785"
-      },
-      {
-        "role": "jarvis",
-        "text": "You mentioned that you use Linux, Code, and Git as tools in your work. If you need more information or assistance with these tools, feel free to ask!",
-        "time": "2026-01-16T11:49:22.212357"
-      },
-      {
-        "role": "user",
-        "text": "My goal is to become a backend developer",
-        "time": "2026-01-16T11:49:46.714191"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
-        "time": "2026-01-16T11:49:46.714941"
-      },
-      {
-        "role": "user",
-        "text": "I want to work in Hyderabad",
-        "time": "2026-01-16T11:50:32.907621"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to know! Hyderabad is a vibrant city with a rich history and culture. Is there something specific you would like to know or talk about regarding Hyderabad?",
-        "time": "2026-01-16T11:50:32.908351"
-      },
-      {
-        "role": "user",
-        "text": "I understand things better by doing projects",
-        "time": "2026-01-16T11:51:02.354255"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's a great way to learn and improve your skills! Hands-on projects can provide valuable experience and help solidify your understanding of concepts. Is there a specific project you're working on or thinking about starting?",
-        "time": "2026-01-16T11:51:02.354967"
-      },
-      {
-        "role": "user",
-        "text": "I want to become a backend developer",
-        "time": "2026-01-16T11:54:14.832430"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
-        "time": "2026-01-16T11:54:14.834016"
-      },
-      {
-        "role": "user",
-        "text": "my job location preference is Hyderabad",
-        "time": "2026-01-16T11:54:48.905682"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's great to know! Hyderabad is a popular location for tech jobs, especially in the IT industry. Is there anything specific you would like assistance with regarding your job location preference in Hyderabad?",
-        "time": "2026-01-16T11:54:48.906885"
-      },
-      {
-        "role": "user",
-        "text": "I preferred to learn through",
-        "time": "2026-01-16T11:55:11.415441"
-      },
-      {
-        "role": "jarvis",
-        "text": "It seems like your message got cut off. Could you please provide more details or complete your sentence?",
-        "time": "2026-01-16T11:55:11.416207"
-      },
-      {
-        "role": "user",
-        "text": "i perfer to learn through projects",
-        "time": "2026-01-16T11:55:31.511815"
-      },
-      {
-        "role": "jarvis",
-        "text": "It seems like your message got cut off. Could you please provide more details or complete your sentence?",
-        "time": "2026-01-16T11:55:31.512441"
-      },
-      {
-        "role": "user",
-        "text": "i learn b etter by projects",
-        "time": "2026-01-16T11:56:03.069641"
-      },
-      {
-        "role": "jarvis",
-        "text": "Learning by working on projects is a great way to improve your skills. It allows you to apply what you've learned in a practical way and helps you understand the concepts better. If you need any guidance or suggestions for project ideas, feel free to ask!",
-        "time": "2026-01-16T11:56:03.070465"
-      },
-      {
-        "role": "user",
-        "text": "my goal is to become a full",
-        "time": "2026-01-16T11:56:31.724587"
-      },
-      {
-        "role": "jarvis",
-        "text": "That's a great goal! As a Full Stack Developer, you already have a good foundation. To become a backend developer, you may want to focus more on server-side languages like Java or Python, along with frameworks like Spring or Flask. It would also be beneficial to deepen your understanding of databases and server management. Let me know if you need any specific advice or resources to help you achieve your goal.",
-        "time": "2026-01-16T11:56:31.725369"
-      }
-    ]
-  },
-  {
     "id": "f580446e-ca8d-40a0-9ffd-4385d1ed5143",
     "started_at": "2026-01-16T18:18:20.362568",
     "messages": []
-  },
-  {
-    "id": "8acfbb1e-fcdf-47b2-b3f2-2d9d6d8b8e31",
-    "started_at": "2026-01-17T11:10:52.902710",
-    "messages": [
-      {
-        "role": "user",
-        "text": "give basic code in java",
-        "time": "2026-01-17T11:10:54.224367"
-      },
-      {
-        "role": "jarvis",
-        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
-        "time": "2026-01-17T11:10:54.225095"
-      },
-      {
-        "role": "user",
-        "text": "give a basic code in java",
-        "time": "2026-01-17T11:16:16.351630"
-      },
-      {
-        "role": "jarvis",
-        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
-        "time": "2026-01-17T11:16:16.352383"
-      },
-      {
-        "role": "user",
-        "text": "give a code of basic java code",
-        "time": "2026-01-17T11:19:22.054755"
-      },
-      {
-        "role": "jarvis",
-        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
-        "time": "2026-01-17T11:19:22.055540"
-      },
-      {
-        "role": "user",
-        "text": "give a baic code in java",
-        "time": "2026-01-17T11:20:28.806574"
-      },
-      {
-        "role": "jarvis",
-        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
-        "time": "2026-01-17T11:20:28.807388"
-      },
-      {
-        "role": "user",
-        "text": "give basic code in java",
-        "time": "2026-01-17T11:23:33.557173"
-      },
-      {
-        "role": "jarvis",
-        "text": "Of course! Here is a basic \"Hello, World!\" program in Java:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nThis code simply prints \"Hello, World!\" to the console when executed. Let me know if you need any more help with Java or programming in general!",
-        "time": "2026-01-17T11:23:33.557971"
-      }
-    ]
   },
   {
     "id": "7ee2ef8a-9203-433c-987b-e7d03d4330c3",
@@ -487,5 +13,239 @@
     "id": "41ede6fa-27de-4fa6-82c3-1405da972670",
     "started_at": "2026-01-17T15:49:21.422264",
     "messages": []
+  },
+  {
+    "id": "a980b000-d3e8-4ea8-9299-3fe73ec85cf3",
+    "started_at": "2026-01-20T10:46:55.107665",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i am chetan",
+        "time": "2026-01-20T10:46:55.107675"
+      }
+    ]
+  },
+  {
+    "id": "98749d8a-b29e-4cdd-b931-ffbf228743d3",
+    "started_at": "2026-01-20T10:46:55.108028",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "Hello Chetan! How can I assist you today?",
+        "time": "2026-01-20T10:46:55.108034"
+      }
+    ]
+  },
+  {
+    "id": "80318b0d-d1f5-49b8-bbb4-94bf780bb81d",
+    "started_at": "2026-01-20T10:49:25.314559",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i like panner",
+        "time": "2026-01-20T10:49:25.314569"
+      }
+    ]
+  },
+  {
+    "id": "35622cca-7619-4271-a494-597a473d1735",
+    "started_at": "2026-01-20T10:49:25.314917",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "That's great to know! Paneer is a versatile ingredient enjoyed by many. Do you have a favorite paneer dish or recipe?",
+        "time": "2026-01-20T10:49:25.314922"
+      }
+    ]
+  },
+  {
+    "id": "2bdaea84-544f-42cd-8fa9-232c4dfb2093",
+    "started_at": "2026-01-20T10:50:19.116397",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i use tools github",
+        "time": "2026-01-20T10:50:19.116406"
+      }
+    ]
+  },
+  {
+    "id": "39e512c2-5e1e-4f23-b17f-fb114ef148da",
+    "started_at": "2026-01-20T10:50:19.116773",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! GitHub is a popular platform for version control and collaboration on software development projects. If you have any specific questions or need help with anything related to GitHub, feel free to ask!",
+        "time": "2026-01-20T10:50:19.116778"
+      }
+    ]
+  },
+  {
+    "id": "2bca43ce-d3d4-4f53-9b22-6e7c735b1909",
+    "started_at": "2026-01-20T10:51:25.437091",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i stay at mumbai",
+        "time": "2026-01-20T10:51:25.437100"
+      }
+    ]
+  },
+  {
+    "id": "5d54f340-982c-466c-87b6-58cfd8a48f38",
+    "started_at": "2026-01-20T10:51:25.437510",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "That's great to know! Mumbai is a vibrant city. Is there anything specific you would like to know or talk about regarding Mumbai?",
+        "time": "2026-01-20T10:51:25.437515"
+      }
+    ]
+  },
+  {
+    "id": "26e9df6a-7c4d-43b1-a6ac-bd1c5803b2d1",
+    "started_at": "2026-01-20T10:51:36.490185",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i stay at hyderabad",
+        "time": "2026-01-20T10:51:36.490198"
+      }
+    ]
+  },
+  {
+    "id": "ed8f05f2-ea95-4d8f-8103-faf6299cd08c",
+    "started_at": "2026-01-20T10:51:36.490799",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "Got it! How can I assist you today, Adepu?",
+        "time": "2026-01-20T10:51:36.490806"
+      }
+    ]
+  },
+  {
+    "id": "ca9f6201-c726-48d4-86d3-f74fe0b2b58a",
+    "started_at": "2026-01-20T10:51:55.252393",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i am chetan",
+        "time": "2026-01-20T10:51:55.252408"
+      }
+    ]
+  },
+  {
+    "id": "894aa36a-e527-47a9-87a8-83f287fd0679",
+    "started_at": "2026-01-20T10:51:55.253337",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "Hello Chetan! How can I assist you today?",
+        "time": "2026-01-20T10:51:55.253344"
+      }
+    ]
+  },
+  {
+    "id": "e2629244-e274-4a70-88fe-aaa8548e5964",
+    "started_at": "2026-01-20T10:52:07.253705",
+    "messages": [
+      {
+        "role": "user",
+        "text": "my role is backend developer",
+        "time": "2026-01-20T10:52:07.253713"
+      }
+    ]
+  },
+  {
+    "id": "f8380fa8-557a-44fa-a631-28b8d1dd7b07",
+    "started_at": "2026-01-20T10:52:07.254157",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "That's great to know! How can I assist you today with your role as a backend developer?",
+        "time": "2026-01-20T10:52:07.254161"
+      }
+    ]
+  },
+  {
+    "id": "b7a12208-f313-433a-93c0-2a6b3f45408b",
+    "started_at": "2026-01-20T10:52:18.160372",
+    "messages": [
+      {
+        "role": "user",
+        "text": "my role is full stack developer",
+        "time": "2026-01-20T10:52:18.160381"
+      }
+    ]
+  },
+  {
+    "id": "5f9b4634-3257-4c66-a9f1-1da36a72beb6",
+    "started_at": "2026-01-20T10:52:18.160969",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "Got it! How can I assist you today as a Full Stack Developer, Adepu Chetan?",
+        "time": "2026-01-20T10:52:18.160978"
+      }
+    ]
+  },
+  {
+    "id": "7625bcce-75db-4acf-aa17-5e84db3f4caf",
+    "started_at": "2026-01-20T10:57:54.747950",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i am chetan]",
+        "time": "2026-01-20T10:57:54.747959"
+      }
+    ]
+  },
+  {
+    "id": "afec6f07-cb47-487d-829b-979b2396d4da",
+    "started_at": "2026-01-20T10:57:54.750125",
+    "messages": [
+      {
+        "role": "jarvis",
+        "text": "Hello Chetan! How can I assist you today?",
+        "time": "2026-01-20T10:57:54.750132"
+      }
+    ]
+  },
+  {
+    "id": "fe115b50-02ea-447c-baeb-46a77999826c",
+    "started_at": "2026-01-20T10:58:29.054248",
+    "messages": [
+      {
+        "role": "user",
+        "text": "i stay at hyderabad",
+        "time": "2026-01-20T10:58:52.719845"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it! How can I assist you today?",
+        "time": "2026-01-20T10:58:52.720516"
+      },
+      {
+        "role": "user",
+        "text": "give code for basic java code",
+        "time": "2026-01-20T10:59:54.222415"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure, here is an example of a basic Java code snippet for a simple \"Hello, World!\" program:\n\n```java\npublic class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, World!\");\n    }\n}\n```\n\nYou can save this code in a file named `HelloWorld.java` and then compile and run it using a Java compiler. Let me know if you need any more help with Java programming!",
+        "time": "2026-01-20T10:59:54.222914"
+      },
+      {
+        "role": "user",
+        "text": "give code for palindrome in python",
+        "time": "2026-01-20T11:01:39.878550"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure, here is a simple Python code to check if a given string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    s = s.lower()  # Convert the string to lowercase\n    return s == s[::-1]\n\n# Test the function\ninput_string = \"Madam\"\nif is_palindrome(input_string):\n    print(\"Yes, it's a palindrome!\")\nelse:\n    print(\"No, it's not a palindrome.\")\n```\n\nThis code defines a function `is_palindrome` that takes a string `s`, converts it to lowercase, and then checks if the reversed string is equal to the original string to determine if it's a palindrome. Feel free to test it with different input strings.",
+        "time": "2026-01-20T11:01:39.879139"
+      }
+    ]
   }
 ]
