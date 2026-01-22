@@ -800,17 +800,6 @@ body {
 }
 
 
-/* @keyframes gridScan {
-  0% {
-    mask-position: 0% -100%, 100% 0%;
-  }
-  50% {
-    mask-position: 0% 100%, 0% 0%;
-  }
-  100% {
-    mask-position: 0% -100%, -100% 0%;
-  }
-} */
 
 @keyframes gridScanAdvanced {
   0% {
@@ -1568,6 +1557,7 @@ body {
     0 20px 50px rgba(0, 0, 0, 0.6),
     0 0 30px rgba(0, 255, 255, 0.35);
 }
+
 /* ================= TASKBAR ================= */
 
 .jarvis-taskbar {
@@ -1580,7 +1570,7 @@ body {
   gap: 10px;
 
   max-width: 92vw;          /* prevent disappearing */
-  flex-wrap: wrap;          /* allow wrapping if many tabs */
+  flex-wrap: nowrap;;          /* allow wrapping if many tabs */
 
   z-index: 9999;
 }
@@ -1591,11 +1581,11 @@ body {
   height: 28px;
   min-width: 90px;          /* rectangular */
   padding: 0 14px;
-
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+max-width: 220px;
   background: rgba(0, 25, 40, 0.85);
   border: 1px solid cyan;
   border-radius: 6px;
@@ -1677,12 +1667,13 @@ body {
 
 .taskbar-title {
   flex: 1;
-  font-size: 12px;
-  cursor: pointer;
+  max-width: 160px;        /* 🔥 THIS WAS MISSING */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 28px;       /* 🔥 vertically lock text */
 }
+
 /* ================= OVERFLOW CLOSE (RIGHT POPUP ❌) ================= */
 
 .overflow-close {

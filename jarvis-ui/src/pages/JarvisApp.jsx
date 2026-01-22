@@ -50,7 +50,7 @@ const openNewWindow = (replyText) => {
   setWindows((prev) => [
     ...prev,
     {
-      id: Date.now() + Math.random(),
+      id: crypto.randomUUID(), // ✅ STRING ID
       title: lastCommand || "JARVIS",
       minimized: false,
       messages: [
@@ -312,11 +312,9 @@ const minimizedWindows = windows.filter(w => w.minimized);
 const visibleTabs = minimizedWindows.slice(0, MAX_VISIBLE_TABS);
 const overflowTabs = minimizedWindows.slice(MAX_VISIBLE_TABS);
 
-
 const handleWindowSend = async (windowId, text) => {
   // 🔇 ABSOLUTE SILENCE FOR WINDOW TABS
- 
-allowJarvisSpeechRef.current = false; // 🔇 HARD MUTE FOR WINDOW TABS
+  allowJarvisSpeechRef.current = false;
 
   // 1️⃣ Add USER message to that window
   setWindows(prev =>
@@ -339,7 +337,8 @@ allowJarvisSpeechRef.current = false; // 🔇 HARD MUTE FOR WINDOW TABS
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         command: text,
-        silent: true
+        silent: true,
+        chat_id: windowId   // ✅ REQUIRED FOR PER-TAB MEMORY
       }),
     });
 
@@ -367,6 +366,7 @@ allowJarvisSpeechRef.current = false; // 🔇 HARD MUTE FOR WINDOW TABS
     console.error(err);
   }
 };
+
 
   // =========================
   // UI

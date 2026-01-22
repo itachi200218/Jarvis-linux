@@ -27,6 +27,11 @@ from config.location_keywords import LOCATION_KEYWORDS
 from extractors.location_set_extractor import extract_location_set
 from extractors.time_place_extractor import extract_time_place
 
+# ==============================
+# 🧠 PER-TAB MEMORY (IN-RAM)
+# ==============================
+TAB_MEMORY = {}
+
 # =========
 # memory
 # =========
@@ -59,6 +64,11 @@ db = client[DB_NAME]
 commands_col = db[COLLECTION_NAME]
 
 OS_NAME = platform.system()
+
+# ==============================
+# 🔒 INTENT CACHE (LOAD ONCE)
+# ==============================
+COMMAND_CACHE = list(commands_col.find())
 
 # ==============================
 # 🔐 GUEST RESTRICTION
@@ -107,6 +117,14 @@ MEDIA_INTENTS = {
     "search_web",
     "search_maps",   # 👈 NEW
 }
+# ==============================
+# 🧠 SHORT-LIVED INTENT CONTEXT
+# ==============================
+def get_tab_context(chat_id):
+    return TAB_MEMORY[chat_id]["context"]
+
+def get_tab_messages(chat_id):
+    return TAB_MEMORY[chat_id]["messages"]
 
 # ==============================
 # 🧠 CHEAP REASONING KEYWORDS
@@ -147,15 +165,14 @@ def speak(text: str):
 
 def speak_async(text: str):
     threading.Thread(target=speak, args=(text,), daemon=True).start()
-
 # ==============================
-# FUZZY MATCH
+# FUZZY MATCH (CACHED)
 # ==============================
 def find_intent(command: str):
     command = normalize_text(command)
     best_intent, best_score = None, 0
 
-    for doc in commands_col.find():
+    for doc in COMMAND_CACHE:
         for pattern in doc.get("patterns", []):
             score = (
                 fuzz.token_set_ratio(command, pattern) * 0.5 +
@@ -189,6 +206,17 @@ def is_identity_query(text: str) -> bool:
         if score >= 70:
             return True
     return False
+def force_language_guard(raw: str, chat_id: str) -> bool:
+    if chat_id not in TAB_MEMORY:
+        return False
+
+    ctx = TAB_MEMORY[chat_id]["context"]
+
+    return (
+        ctx.get("topic") == "coding"
+        and ctx.get("language") is not None
+        and any(k in raw for k in ["code", "reverse", "palindrome", "search", "sort"])
+    )
 
 # ==============================
 # CHEAP REASONING
@@ -216,60 +244,243 @@ def extract_number(text: str, default: int = 10) -> int:
         return int(match.group(1))
     return default
 
-  # ==============================
-# COMMAND ROUTER (FINAL)
+# ==============================
+# COMMAND DETECTION
+# ==============================
+def is_command(text: str) -> bool:
+    words = text.split()
+    return bool(words) and words[0] in COMMAND_VERBS
+
+
+def detect_topic(text: str):
+    if any(k in text for k in ["code", "program", "algorithm", "java", "python", "c++"]):
+        return "coding"
+    if any(k in text for k in ["travel", "trip", "visit", "place", "go"]):
+        return "travel"
+    if any(k in text for k in ["learn", "study", "explain", "what is", "how does"]):
+        return "learning"
+    return None
+
+# ==============================
+# HELPERS
+# ==============================
+def detect_language_switch(raw: str):
+    LANG_MAP = {
+        "java": "java",
+        "python": "python",
+        "py": "python",
+        "c++": "c++",
+        "cpp": "c++"
+    }
+
+    match = re.search(
+        r"(change|convert|rewrite|give|now).*?\b(java|python|py|c\+\+|cpp)\b",
+        raw
+    )
+
+    if match:
+        return LANG_MAP[match.group(2)]
+    return None
+
+
+def detect_focus_switch(raw: str):
+    DESTINATIONS = {
+        "north india": "north india",
+        "south india": "south india",
+        "usa": "usa",
+        "united states": "usa",
+        "america": "usa",
+        "india": "india"
+    }
+    for k, v in DESTINATIONS.items():
+        if k in raw:
+            return v
+    return None
+
+
+# ==============================
+# COMMAND ROUTER (FINAL — CORRECT)
 # ==============================
 def handle_command(
     command,
     user_role="guest",
     user_name=None,
     chat_id=None,
-    silent: bool = False   # ✅ ADD THIS
+    silent: bool = False
 ):
 
+    # ==============================
+    # INIT PER-TAB MEMORY
+    # ==============================
+    if chat_id not in TAB_MEMORY:
+        TAB_MEMORY[chat_id] = {
+            "messages": [],
+            "context": {
+                "topic": None,
+                "language": None,
+                "language_locked": False,
+                "focus": None
+            }
+        }
 
     raw = command.strip().lower()
-        # ==============================
+    ctx = TAB_MEMORY[chat_id]["context"]
+
+    # ==============================
+    # 🔁 EXPLICIT LANGUAGE SWITCH (ALWAYS OVERRIDES)
+    # ==============================
+    new_lang = detect_language_switch(raw)
+    if new_lang:
+        ctx["topic"] = "coding"
+        ctx["language"] = new_lang
+        ctx["language_locked"] = False   # 🔓 UNLOCK
+
+        return {
+            "reply": f"Okay 👍 Switching code to {new_lang}.",
+            "intent": "language_switch",
+            "confidence": 100
+        }
+
+    # ==============================
+    # 🔒 PERMANENT LANGUAGE LOCK
+    # ==============================
+    if "all code" in raw or "all codes" in raw:
+        match = re.search(r"(java|python|c\+\+|cpp)", raw)
+        if match:
+            lang = match.group(1)
+            lang = "c++" if lang == "cpp" else lang
+
+            ctx["topic"] = "coding"
+            ctx["language"] = lang
+            ctx["language_locked"] = True   # 🔒 LOCK
+
+            return {
+                "reply": f"Got it 👍 All code will be in {lang} for this tab.",
+                "intent": "language_lock",
+                "confidence": 100
+            }
+
+    # ==============================
+    # 🧭 FOCUS SWITCH (TRAVEL / CHAT)
+    # ==============================
+    focus = detect_focus_switch(raw)
+    if focus:
+        ctx["focus"] = focus
+        ctx["topic"] = "travel"
+
+    # ==============================
     # 🔇 WINDOW TAB RESTRICTIONS
     # ==============================
     if silent:
-        # ❌ Block identity & personal memory
         if is_identity_query(raw):
             return {
-                "reply": "This information is only available in the main Jarvis window.",
+                "reply": "This information is only available in the main window.",
                 "intent": "blocked",
                 "confidence": 100
             }
 
-        # ❌ Block system commands
         detected_intent, _ = find_intent(command)
         if detected_intent in SYSTEM_INTENTS:
             return {
-                "reply": "System commands are disabled in window tabs.",
+                "reply": "System commands are disabled here.",
                 "intent": "blocked",
                 "confidence": 100
             }
 
-        # ❌ Block media commands
         media_intent, _ = extract_search_query(raw)
         if media_intent in MEDIA_INTENTS:
             return {
-                "reply": "Media commands are disabled in window tabs.",
+                "reply": "Media commands are disabled here.",
                 "intent": "blocked",
                 "confidence": 100
             }
 
-        # ✅ ONLY AI CHAT ALLOWED
-        response = get_ai_response(command, "")
+        # ==============================
+        # ✅ AI RESPONSE (SMART)
+        # ==============================
+        topic = ctx.get("topic")
+        language = ctx.get("language")
+        locked = ctx.get("language_locked")
+        focus = ctx.get("focus")
+
+        intent_context = None
+
+        # 🔒 STRICT ONLY IF LOCKED
+        if topic == "coding" and language and locked:
+            intent_context = (
+                f"You MUST return code ONLY in {language}.\n"
+                "DO NOT change language unless user explicitly asks.\n"
+                "DO NOT explain unless asked.\n"
+            )
+
+        memory_summary = ""
+        if focus:
+            memory_summary = (
+                f"The user is currently talking about {focus}.\n"
+                "If they say 'there', it refers to this.\n"
+                "Stay on this topic.\n"
+            )
+
+        response = get_ai_response(
+            user_command=command,
+            memory_summary=memory_summary,
+            intent_context=intent_context
+        )
+
         return {
             "reply": response,
             "intent": "ai_window",
-            "confidence": 0
+            "confidence": 100
         }
 
-    intent = "unknown"
-    confidence = 0
-    response = "I am not sure."
+        # # ==============================
+        # # 🧠 CONTEXT-AWARE AI RESPONSE
+        # # ==============================
+        # topic = ctx.get("topic")
+        # language = ctx.get("language")
+        # focus = ctx.get("focus")
+
+        # intent_context = None
+
+        # # 🔐 HARD CODING ENFORCEMENT
+        # if topic == "coding" and language:
+        #     intent_context = (
+        #         f"You are a STRICT programming assistant.\n"
+        #         f"You MUST return code ONLY in {language}.\n"
+        #         "DO NOT switch languages.\n"
+        #         "DO NOT explain unless explicitly asked.\n"
+        #     )
+
+        # # 🌍 TRAVEL / GENERAL GROUNDING
+        # elif focus:
+        #     intent_context = (
+        #         f"The conversation context is: {focus}\n"
+        #         "Answer strictly based on this context.\n"
+        #         "Do NOT introduce unrelated places or topics.\n"
+        #     )
+
+        # memory_summary = (
+        #     f"Conversation so far: {focus}\n"
+        #     "Continue naturally."
+        #     if focus else ""
+        # )
+
+        # response = get_ai_response(
+        #     user_command=command,
+        #     memory_summary=memory_summary,
+        #     intent_context=intent_context
+        # )
+
+        # # Save messages per tab
+        # TAB_MEMORY[chat_id]["messages"].append({"role": "user", "text": raw})
+        # TAB_MEMORY[chat_id]["messages"].append({"role": "jarvis", "text": response})
+
+        # return {
+        #     "reply": response,
+        #     "intent": "ai_window",
+        #     "confidence": 100
+        # }
+
    # ==============================
     # 🧑 NAME UPDATE (ADD THIS FIRST)
     # ==============================
@@ -363,6 +574,24 @@ def handle_command(
         }
 
     # ==============================
+    # 🚫 BLOCK SYSTEM COMMANDS ONLY (SAFE)
+    # ==============================
+    if is_command(raw):
+        detected_intent, score = find_intent(command)
+
+        if detected_intent in SYSTEM_INTENTS:
+            response = "That action is not allowed here."
+            if not silent:
+                speak_async(response)
+            return {
+                "reply": response,
+                "intent": "blocked_system",
+                "confidence": score
+            }
+
+
+
+    # ==============================
     # FACT QUESTIONS (RECALL)
     # ==============================
     if user_name:
@@ -422,21 +651,28 @@ def handle_command(
             "intent": "time_place",
             "confidence": 100
         }
+# ==============================
+# 🎥 MEDIA COMMAND HANDLER
+# ==============================
+    media_intent, query = (None, None)
 
-    # ==============================
-    # 🎥 MEDIA COMMAND HANDLER
-    # ==============================
-    media_intent, query = extract_search_query(raw)
+    # ✅ Detect media intent ONLY if it is a real command
+    if is_command(raw):
+        media_intent, query = extract_search_query(raw)
 
     raw_words = set(raw.split())
 
-    if raw_words & LOCATION_KEYWORDS:
+    # ✅ LOCATION keywords should ALSO respect command intent
+    if is_command(raw) and (raw_words & LOCATION_KEYWORDS):
         media_intent = "search_maps"
         saved_location = get_fact(user_name, "default_location") if user_name else None
         clean_query = raw.replace("search", "").strip()
         query = f"{clean_query} near {saved_location}" if saved_location else clean_query
 
+    # ✅ Execute media intent if valid
     if media_intent in MEDIA_INTENTS:
+
+     
         if user_role == "guest":
             response = "Please log in to use media commands."
             if not silent:
@@ -466,18 +702,21 @@ def handle_command(
 
         if not silent:
             speak_async(response)
+
         return {
             "reply": response,
             "intent": media_intent,
             "confidence": 100
         }
 
-    # ==============================
-    # SYSTEM COMMANDS
-    # ==============================
+# ==============================
+# SYSTEM COMMANDS
+# ==============================
     detected_intent, score = find_intent(command)
 
     if detected_intent in SYSTEM_INTENTS:
+
+       
         if user_role == "guest":
             response = "Please log in to use system commands."
             if not silent:
@@ -496,20 +735,122 @@ def handle_command(
 
         if not silent:
             speak_async(response)
+
         return {
             "reply": response,
             "intent": detected_intent,
             "confidence": score
         }
 
-    # ==============================
-    # AI / MEMORY FALLBACK
-    # ==============================
-    response = get_ai_response(command, get_memory_summary(user_name) if user_name else "")
+   # ==============================
+# ⚡ CHEAP REASONING (BEFORE AI)
+# ==============================
+    cheap = cheap_reasoning(raw)
+    if cheap:
+        if not silent:
+            speak_async(cheap)
+        return {
+            "reply": cheap,
+            "intent": "cheap_reasoning",
+            "confidence": 80
+        }
+# ==============================
+# 🧠 PER-TAB CONTEXTUAL HANDLER
+# ==============================
+    tab_ctx = TAB_MEMORY[chat_id]["context"]
 
-    if user_role == "user" and user_name and chat_id:
-        add_message(chat_id, user_name, "user", command)
-        add_message(chat_id, user_name, "jarvis", response)
+    topic = detect_topic(raw)
+
+    # ✅ Set topic per tab
+    if topic:
+        tab_ctx["topic"] = topic
+
+    # ✅ Lock programming language per tab
+    if tab_ctx["topic"] == "coding":
+        if "java" in raw:
+            tab_ctx["language"] = "java"
+        elif "python" in raw:
+            tab_ctx["language"] = "python"
+        elif "c++" in raw or "cpp" in raw:
+            tab_ctx["language"] = "c++"
+
+    # ✅ Use per-tab context for AI
+    if tab_ctx["topic"] and (topic or len(raw.split()) <= 3):
+
+        language = tab_ctx.get("language")
+        topic = tab_ctx.get("topic")
+
+        intent_context = (
+            f"Current conversation topic: {topic}.\n"
+            f"Programming language: {language or 'not specified'}.\n"
+            "If a programming language is specified, ALL code MUST be in that language.\n"
+            "Do NOT switch languages.\n"
+            "Do NOT ask again for the programming language.\n"
+            "Provide only the requested code unless explanation is explicitly asked.\n"
+            "Continue the conversation naturally."
+        )
+
+        response = get_ai_response(
+            user_command=raw,
+            memory_summary=get_memory_summary(user_name) if user_name else "",
+            intent_context=intent_context
+        )
+
+        # 🔒 Save to tab memory
+        TAB_MEMORY[chat_id]["messages"].append({
+            "role": "user",
+            "text": raw
+        })
+        TAB_MEMORY[chat_id]["messages"].append({
+            "role": "jarvis",
+            "text": response
+        })
+
+        if not silent:
+            speak_async(response)
+
+        return {
+            "reply": response,
+            "intent": "contextual_ai",
+            "confidence": 100
+        }
+
+
+# ==============================
+# AI / MEMORY FALLBACK (LANGUAGE SAFE)
+# ==============================
+
+    ctx = TAB_MEMORY[chat_id]["context"]
+    language = ctx.get("language")
+    topic = ctx.get("topic")
+
+    intent_context = None
+
+    if topic == "coding" and language:
+        intent_context = (
+            "Programming task is active.\n"
+            f"Programming language is {language}.\n"
+            "ALL code MUST be written in that language.\n"
+            "Do NOT switch languages.\n"
+            "Do NOT ask for the programming language again.\n"
+            "Provide only code unless explanation is explicitly asked."
+        )
+
+    response = get_ai_response(
+        user_command=raw,
+        memory_summary=get_memory_summary(user_name) if user_name else "",
+        intent_context=intent_context
+    )
+
+    # save per-tab memory
+    TAB_MEMORY[chat_id]["messages"].append({
+        "role": "user",
+        "text": raw
+    })
+    TAB_MEMORY[chat_id]["messages"].append({
+        "role": "jarvis",
+        "text": response
+    })
 
     if not silent:
         speak_async(response)
