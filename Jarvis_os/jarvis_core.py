@@ -26,6 +26,7 @@ from systems.system_actions import play_video, search_web, set_location_route
 from config.location_keywords import LOCATION_KEYWORDS
 from extractors.location_set_extractor import extract_location_set
 from extractors.time_place_extractor import extract_time_place
+from chatHistory.context_builder import build_chat_context
 
 # ==============================
 # 🧠 PER-TAB MEMORY (IN-RAM)
@@ -118,6 +119,33 @@ MEDIA_INTENTS = {
     "search_maps",   # 👈 NEW
 }
 # ==============================
+# 🧠 COMMAND VERBS (ENTRY WORDS)
+# ==============================
+COMMAND_VERBS = {
+    "open",
+    "play",
+    "start",
+    "stop",
+    "search",
+    "find",
+    "go",
+    "navigate",
+    "set",
+    "increase",
+    "decrease",
+    "mute",
+    "unmute",
+    "shutdown",
+    "restart",
+    "show",
+    "tell",
+    "what",
+    "who",
+    "where",
+    "when"
+}
+
+# ==============================
 # 🧠 SHORT-LIVED INTENT CONTEXT
 # ==============================
 def get_tab_context(chat_id):
@@ -165,6 +193,20 @@ def speak(text: str):
 
 def speak_async(text: str):
     threading.Thread(target=speak, args=(text,), daemon=True).start()
+# ==============================
+# 💾 CHAT PERSISTENCE (FILE SAVE)
+# ==============================
+def persist_chat(user_id, chat_id, user_text, jarvis_text):
+    try:
+        if not user_id or not chat_id:
+            return
+
+        add_message(chat_id, user_id, "user", user_text)
+        add_message(chat_id, user_id, "jarvis", jarvis_text)
+
+    except Exception as e:
+        print("⚠️ Chat persistence failed:", e)
+
 # ==============================
 # FUZZY MATCH (CACHED)
 # ==============================
@@ -248,8 +290,11 @@ def extract_number(text: str, default: int = 10) -> int:
 # COMMAND DETECTION
 # ==============================
 def is_command(text: str) -> bool:
-    words = text.split()
-    return bool(words) and words[0] in COMMAND_VERBS
+    try:
+        words = text.strip().lower().split()
+        return bool(words) and words[0] in COMMAND_VERBS
+    except Exception:
+        return False
 
 
 def detect_topic(text: str):
@@ -264,6 +309,9 @@ def detect_topic(text: str):
 # ==============================
 # HELPERS
 # ==============================
+def is_continuation(raw: str) -> bool:
+    return len(raw.strip().split()) <= 3
+
 def detect_language_switch(raw: str):
     LANG_MAP = {
         "java": "java",
@@ -325,7 +373,12 @@ def handle_command(
 
     raw = command.strip().lower()
     ctx = TAB_MEMORY[chat_id]["context"]
-
+# ==============================
+# 🧠 BUILD CHAT CONTEXT (GLOBAL, SAFE)
+# ==============================
+    chat_context = ""
+    if user_name and chat_id:
+        chat_context = build_chat_context(user_name, chat_id)
     # ==============================
     # 🔁 EXPLICIT LANGUAGE SWITCH (ALWAYS OVERRIDES)
     # ==============================
@@ -368,6 +421,36 @@ def handle_command(
         ctx["focus"] = focus
         ctx["topic"] = "travel"
 
+   # ==============================
+# 🌍 TRAVEL CONTINUATION HANDLER (IMPORTANT)
+# ==============================
+  
+    if (
+        ctx.get("topic") == "travel"
+        and ctx.get("focus")
+        and is_continuation(raw)
+        and focus is None
+    ):
+        intent_context = (
+            f"The user is planning a trip to {ctx['focus']}.\n"
+            "This is a continuation of the same travel conversation.\n"
+            "DO NOT ask clarifying questions.\n"
+            "Provide direct suggestions related to the input.\n"
+        )
+
+        full_memory = (
+            f"Conversation so far:\n{chat_context}\n\n"
+            f"Travel destination: {ctx['focus']}"
+        )
+
+        response = get_ai_response(
+            user_command=raw,
+            memory_summary=full_memory,
+            intent_context=intent_context
+        )
+
+        return {...}
+
     # ==============================
     # 🔇 WINDOW TAB RESTRICTIONS
     # ==============================
@@ -395,91 +478,7 @@ def handle_command(
                 "confidence": 100
             }
 
-        # ==============================
-        # ✅ AI RESPONSE (SMART)
-        # ==============================
-        topic = ctx.get("topic")
-        language = ctx.get("language")
-        locked = ctx.get("language_locked")
-        focus = ctx.get("focus")
 
-        intent_context = None
-
-        # 🔒 STRICT ONLY IF LOCKED
-        if topic == "coding" and language and locked:
-            intent_context = (
-                f"You MUST return code ONLY in {language}.\n"
-                "DO NOT change language unless user explicitly asks.\n"
-                "DO NOT explain unless asked.\n"
-            )
-
-        memory_summary = ""
-        if focus:
-            memory_summary = (
-                f"The user is currently talking about {focus}.\n"
-                "If they say 'there', it refers to this.\n"
-                "Stay on this topic.\n"
-            )
-
-        response = get_ai_response(
-            user_command=command,
-            memory_summary=memory_summary,
-            intent_context=intent_context
-        )
-
-        return {
-            "reply": response,
-            "intent": "ai_window",
-            "confidence": 100
-        }
-
-        # # ==============================
-        # # 🧠 CONTEXT-AWARE AI RESPONSE
-        # # ==============================
-        # topic = ctx.get("topic")
-        # language = ctx.get("language")
-        # focus = ctx.get("focus")
-
-        # intent_context = None
-
-        # # 🔐 HARD CODING ENFORCEMENT
-        # if topic == "coding" and language:
-        #     intent_context = (
-        #         f"You are a STRICT programming assistant.\n"
-        #         f"You MUST return code ONLY in {language}.\n"
-        #         "DO NOT switch languages.\n"
-        #         "DO NOT explain unless explicitly asked.\n"
-        #     )
-
-        # # 🌍 TRAVEL / GENERAL GROUNDING
-        # elif focus:
-        #     intent_context = (
-        #         f"The conversation context is: {focus}\n"
-        #         "Answer strictly based on this context.\n"
-        #         "Do NOT introduce unrelated places or topics.\n"
-        #     )
-
-        # memory_summary = (
-        #     f"Conversation so far: {focus}\n"
-        #     "Continue naturally."
-        #     if focus else ""
-        # )
-
-        # response = get_ai_response(
-        #     user_command=command,
-        #     memory_summary=memory_summary,
-        #     intent_context=intent_context
-        # )
-
-        # # Save messages per tab
-        # TAB_MEMORY[chat_id]["messages"].append({"role": "user", "text": raw})
-        # TAB_MEMORY[chat_id]["messages"].append({"role": "jarvis", "text": response})
-
-        # return {
-        #     "reply": response,
-        #     "intent": "ai_window",
-        #     "confidence": 100
-        # }
 
    # ==============================
     # 🧑 NAME UPDATE (ADD THIS FIRST)
@@ -754,6 +753,7 @@ def handle_command(
             "intent": "cheap_reasoning",
             "confidence": 80
         }
+    
 # ==============================
 # 🧠 PER-TAB CONTEXTUAL HANDLER
 # ==============================
@@ -774,12 +774,18 @@ def handle_command(
         elif "c++" in raw or "cpp" in raw:
             tab_ctx["language"] = "c++"
 
-    # ✅ Use per-tab context for AI
-    if tab_ctx["topic"] and (topic or len(raw.split()) <= 3):
+    # ✅ Use per-tab context for AI (continuation-safe)
+    if (
+    tab_ctx["topic"]
+    and tab_ctx["topic"] != "travel"   # ⛔ block travel here
+    and (topic or len(raw.split()) <= 3)
+):
+
 
         language = tab_ctx.get("language")
         topic = tab_ctx.get("topic")
 
+        # 🔒 HARD RULES FOR AI
         intent_context = (
             f"Current conversation topic: {topic}.\n"
             f"Programming language: {language or 'not specified'}.\n"
@@ -787,16 +793,23 @@ def handle_command(
             "Do NOT switch languages.\n"
             "Do NOT ask again for the programming language.\n"
             "Provide only the requested code unless explanation is explicitly asked.\n"
-            "Continue the conversation naturally."
+            "Continue the conversation naturally.\n"
+        )
+
+        # 🧠 BUILD CONTINUOUS CHAT MEMORY
+
+        full_memory = (
+            f"Conversation so far:\n{chat_context}\n\n"
+            f"{get_memory_summary(user_name) if user_name else ''}"
         )
 
         response = get_ai_response(
             user_command=raw,
-            memory_summary=get_memory_summary(user_name) if user_name else "",
+            memory_summary=full_memory,
             intent_context=intent_context
         )
 
-        # 🔒 Save to tab memory
+        # 🔒 Save to per-tab memory
         TAB_MEMORY[chat_id]["messages"].append({
             "role": "user",
             "text": raw
@@ -805,6 +818,9 @@ def handle_command(
             "role": "jarvis",
             "text": response
         })
+
+        # 💾 Persist to file-based chat history
+        persist_chat(user_name, chat_id, raw, response)
 
         if not silent:
             speak_async(response)
@@ -815,11 +831,9 @@ def handle_command(
             "confidence": 100
         }
 
-
 # ==============================
-# AI / MEMORY FALLBACK (LANGUAGE SAFE)
+# 🤖 AI / MEMORY FALLBACK (CHAT HISTORY AWARE)
 # ==============================
-
     ctx = TAB_MEMORY[chat_id]["context"]
     language = ctx.get("language")
     topic = ctx.get("topic")
@@ -836,13 +850,17 @@ def handle_command(
             "Provide only code unless explanation is explicitly asked."
         )
 
+    full_memory = (
+        f"Conversation so far:\n{chat_context}\n\n"
+        f"{get_memory_summary(user_name) if user_name else ''}"
+    )
+
     response = get_ai_response(
         user_command=raw,
-        memory_summary=get_memory_summary(user_name) if user_name else "",
+        memory_summary=full_memory,
         intent_context=intent_context
     )
 
-    # save per-tab memory
     TAB_MEMORY[chat_id]["messages"].append({
         "role": "user",
         "text": raw
@@ -851,6 +869,8 @@ def handle_command(
         "role": "jarvis",
         "text": response
     })
+
+    persist_chat(user_name, chat_id, raw, response)
 
     if not silent:
         speak_async(response)
