@@ -1,0 +1,2139 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+:root {
+  --grid-hue: 190;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: white;
+  overflow-x: hidden;   /* prevent horizontal scroll only */
+}
+/* =========================
+   FULLSCREEN HOLOGRAPHIC GRID (JARVIS)
+========================= */
+.hud-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-color: #000;
+
+  isolation: isolate; /* 🔥 THIS IS THE KEY */
+}
+
+/* =========================
+   MULTI-PATTERN GRID SCAN
+========================= */
+.hud-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      rgba(0, 255, 255, 0.8) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 255, 255, 0.8) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+
+  /* default mask */
+  mask-image:
+    linear-gradient(to bottom, rgba(255,255,255,.2), white, rgba(255,255,255,.2)),
+    linear-gradient(to left, rgba(255,255,255,.2), white, rgba(255,255,255,.2));
+
+  mask-repeat: no-repeat;
+  mask-size: 100% 180%, 180% 100%;
+
+  filter: blur(1px);
+  opacity: 0.85;
+
+ animation:
+  gridPatternCycle 50s linear infinite,
+  gridRGBColors 20s linear infinite;
+
+}
+@keyframes gridRGBColors {
+  /* CYAN (original) */
+  0% {
+    filter: blur(1px) hue-rotate(0deg) saturate(1.2);
+  }
+
+  /* BLUE */
+  20% {
+    filter: blur(1px) hue-rotate(200deg) saturate(1.4);
+  }
+
+  /* 🔥 PURE RED (BOOSTED) */
+  40% {
+    filter: blur(1px) hue-rotate(330deg) saturate(2.5) contrast(1.2);
+  }
+
+  /* ORANGE */
+  60% {
+    filter: blur(1px) hue-rotate(25deg) saturate(2);
+  }
+
+  /* PURPLE */
+  80% {
+    filter: blur(1px) hue-rotate(270deg) saturate(1.6);
+  }
+
+  /* BACK TO CYAN */
+  100% {
+    filter: blur(1px) hue-rotate(360deg) saturate(1.2);
+  }
+}
+
+/* =========================
+   DIM BASE GRID (NEVER DISAPPEARS)
+========================= */
+.hud-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      rgba(0, 180, 255, 0.06) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 180, 255, 0.06) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+}
+/* =========================
+   BOX AMBIENT AURA (SUBTLE)
+========================= */
+.hud-grid .box-aura {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 200, 255, 0.06) 0px,
+      rgba(0, 200, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 64px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 200, 255, 0.06) 0px,
+      rgba(0, 200, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 64px
+    );
+
+  filter: blur(0.6px);
+  opacity: 0.35;
+
+  animation: boxAuraBreath 6s ease-in-out infinite;
+}
+@keyframes boxAuraBreath {
+  0% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 0.25;
+  }
+}
+
+
+
+/* =========================
+   HUD WRAPPER
+========================= */
+.hud {
+  position: relative;
+
+  height: 100vh;          /* exact viewport height */
+  overflow-y: auto;       /* 🔥 THIS makes only HUD scroll */
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-top: 100px;
+  padding-bottom: 140px;
+}
+
+/* =========================
+   SYSTEM AURA (ENERGY FIELD)
+========================= */
+/* =========================
+   ADVANCED SYSTEM AURA (AI CORE)
+========================= */
+.hud::before {
+  content: "";
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(0, 255, 255, 0.25),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 70% 70%,
+      rgba(147, 197, 253, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle,
+      rgba(37, 99, 235, 0.25),
+      transparent 70%
+    );
+
+  filter: blur(80px);
+  opacity: 0.85;
+
+  animation:
+    auraPulse 4s ease-in-out infinite,
+    auraDrift 14s linear infinite;
+
+  z-index: 0;
+}
+
+@keyframes auraPulse {
+  0%   { transform: scale(0.92); opacity: 0.55; }
+  50%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(0.92); opacity: 0.55; }
+}
+
+@keyframes auraDrift {
+  0%   { filter: blur(80px) hue-rotate(0deg); }
+  50%  { filter: blur(90px) hue-rotate(80deg); }
+  100% { filter: blur(80px) hue-rotate(0deg); }
+}
+
+/* =========================
+   3D BACKGROUND
+========================= */
+.three-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   HUD FRAME
+========================= */
+.hud-frame {
+  width: 480px;
+  max-width: 92%;
+  padding: 36px 28px 34px;
+  border-radius: 22px;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  box-shadow:
+    inset 0 0 40px rgba(96, 165, 250, 0.08),
+    0 0 90px rgba(37, 99, 235, 0.35);
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+   HUD HEADER
+========================= */
+.hud-header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.hud-title {
+  font-size: 28px;
+  letter-spacing: 5px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.hud-subtitle {
+  margin-top: 6px;
+  font-size: 11px;
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   MIC ORB
+========================= */
+.mic-orb {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2563eb, #1e3a8a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.6);
+  transition: transform 0.25s ease;
+}
+/* AI RINGS */
+.mic-orb::before,
+.mic-orb::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  opacity: 0.6;
+}
+
+.mic-orb::before {
+  animation: ringRotate 6s linear infinite;
+}
+
+.mic-orb::after {
+  inset: -28px;
+  border-color: rgba(147, 197, 253, 0.35);
+  animation: ringRotateReverse 10s linear infinite;
+}
+
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes ringRotateReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+/* Idle breathing */
+.mic-orb:not(.listening):not(.speaking) {
+  animation: idleBreath 4s ease-in-out infinite;
+}
+
+@keyframes idleBreath {
+  0% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.4); }
+  50% { box-shadow: 0 0 45px rgba(96, 165, 250, 0.7); }
+  100% { box-shadow: 0 0 25px rgba(37, 99, 235, 0.4); }
+}
+
+/* Listening pulse */
+.mic-orb.listening {
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* Speaking (voice reactive) */
+.mic-orb.speaking {
+  box-shadow:
+    0 0 40px rgba(0, 255, 255, 0.9),
+    0 0 90px rgba(147, 197, 253, 1),
+    0 0 160px rgba(96, 165, 250, 1);
+
+  animation: voiceSurge 0.9s ease-in-out infinite;
+}
+
+@keyframes voiceSurge {
+  0%   { transform: scale(1.05); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1.05); }
+}
+
+/* =========================
+   STATUS
+========================= */
+.status {
+  margin-top: 20px;
+  opacity: 0.75;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* =========================
+   COMMAND CARDS
+========================= */
+.command-box.jarvis {
+  position: relative;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(37, 99, 235, 0.95),
+      rgba(14, 165, 233, 0.9)
+    );
+
+  border-radius: 16px;
+  border: 1px solid rgba(147, 197, 253, 0.45);
+
+  box-shadow:
+    0 0 18px rgba(96, 165, 250, 0.45),
+    0 0 45px rgba(96, 165, 250, 0.25),
+    inset 0 0 25px rgba(255, 255, 255, 0.12);
+
+  animation:
+    jarvisBreath 3.2s ease-in-out infinite,
+    fadeUp 0.4s ease;
+}
+.command-box.jarvis::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+
+  opacity: 0.25;
+  pointer-events: none;
+}
+.command-box.jarvis::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 40%,
+      rgba(255,255,255,0.35),
+      transparent 60%
+    );
+
+  animation: jarvisScan 3.5s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes dataScan {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+.command-box {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 18px 22px;      /* MORE SPACE */
+  border-radius: 16px;
+
+  display: flex;
+  flex-direction: column;  /* STACK LABEL + TEXT */
+  align-items: flex-start;
+
+  animation: fadeUp 0.35s ease;
+}
+
+.command-box .label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.65;
+
+  display: block;          /* 🔥 IMPORTANT */
+  margin-bottom: 6px;      /* SPACE BELOW LABEL */
+}
+
+
+.command-box .text {
+  font-size: 14.5px;
+  line-height: 1.7;        /* READABLE */
+  margin-top: 2px;
+
+  word-break: break-word;
+}
+
+.command-box.user {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(2, 6, 23, 0.95),
+      rgba(15, 23, 42, 0.9)
+    );
+
+  border-radius: 14px;
+  border: 1px solid rgba(100, 116, 139, 0.45);
+
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.6),
+    0 0 12px rgba(0,0,0,0.45);
+
+  font-family: "Courier New", monospace;
+}
+
+.command-box.jarvis {
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  box-shadow: 0 12px 45px rgba(96, 165, 250, 0.65);
+  animation: fadeUp 0.4s ease, speakGlow 1.3s infinite alternate;
+}
+@keyframes jarvisBreath {
+  0% {
+    box-shadow:
+      0 0 16px rgba(96,165,250,0.4),
+      inset 0 0 18px rgba(255,255,255,0.12);
+  }
+  50% {
+    box-shadow:
+      0 0 32px rgba(147,197,253,0.8),
+      0 0 60px rgba(96,165,250,0.45),
+      inset 0 0 28px rgba(255,255,255,0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 16px rgba(96,165,250,0.4),
+      inset 0 0 18px rgba(255,255,255,0.12);
+  }
+}
+
+@keyframes speakGlow {
+  from { box-shadow: 0 10px 40px rgba(96, 165, 250, 0.5); }
+  to { box-shadow: 0 18px 70px rgba(147, 197, 253, 0.95); }
+}
+
+/* =========================
+   INPUT
+========================= */
+/* =========================
+   JARVIS COMMAND CONSOLE
+========================= */
+.text-input {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* =========================
+   TERMINAL INPUT
+========================= */
+.text-input input {
+  width: 260px;
+  padding: 12px 14px;
+
+  background: rgba(2, 6, 23, 0.85);
+  color: #7dd3fc;
+
+  font-family: "Courier New", monospace;
+  letter-spacing: 0.8px;
+
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.35);
+  outline: none;
+
+  box-shadow:
+    inset 0 0 12px rgba(0, 255, 255, 0.15),
+    0 0 10px rgba(0, 255, 255, 0.25);
+
+  transition: all 0.25s ease;
+}
+
+.text-input input::placeholder {
+  color: rgba(125, 211, 252, 0.45);
+  letter-spacing: 1px;
+}
+
+/* ACTIVE / FOCUS STATE */
+.text-input input:focus {
+  border-color: rgba(147, 197, 253, 0.9);
+  box-shadow:
+    inset 0 0 18px rgba(0, 255, 255, 0.35),
+    0 0 22px rgba(147, 197, 253, 0.85);
+}
+
+/* =========================
+   EXECUTE BUTTON
+========================= */
+.text-input button {
+  padding: 12px 20px;
+
+  font-family: monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  color: #e0f2fe;
+  background:
+    linear-gradient(
+      135deg,
+      #0ea5e9,
+      #2563eb
+    );
+
+  border-radius: 10px;
+  border: 1px solid rgba(147, 197, 253, 0.6);
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 12px rgba(0, 255, 255, 0.45),
+    inset 0 0 10px rgba(255,255,255,0.15);
+
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.25s ease;
+}
+
+/* SCAN LINE ON BUTTON */
+.text-input button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.35),
+      transparent
+    );
+  transform: translateX(-100%);
+}
+
+.text-input button:hover::after {
+  animation: buttonScan 0.8s linear;
+}
+
+@keyframes buttonScan {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+/* HOVER */
+.text-input button:hover {
+  box-shadow:
+    0 0 25px rgba(147, 197, 253, 0.95),
+    inset 0 0 14px rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+
+/* PRESS */
+.text-input button:active {
+  transform: scale(0.96);
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,0.4);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* =========================
+   DYNAMIC COLOR VARIABLES
+========================= */
+:root {
+  --ring-color-1: #60a5fa;
+  --ring-color-2: #22d3ee;
+  --ring-color-3: #a78bfa;
+}
+
+/* =========================
+   COLOR SHIFT ANIMATION
+========================= */
+@keyframes colorShift {
+  0% {
+    --ring-color-1: #60a5fa;
+    --ring-color-2: #22d3ee;
+    --ring-color-3: #2563eb;
+  }
+  50% {
+    --ring-color-1: #22d3ee;
+    --ring-color-2: #a78bfa;
+    --ring-color-3: #60a5fa;
+  }
+  100% {
+    --ring-color-1: #60a5fa;
+    --ring-color-2: #22d3ee;
+    --ring-color-3: #2563eb;
+  }
+}
+
+/* Apply to system aura */
+.hud::before {
+  animation:
+    auraPulse 4s ease-in-out infinite,
+    colorShift 6s linear infinite;
+  background: radial-gradient(
+    circle,
+    var(--ring-color-1),
+    var(--ring-color-2),
+    transparent 70%
+  );
+}
+
+/* Apply to mic orb */
+.mic-orb {
+  background: radial-gradient(
+    circle,
+    var(--ring-color-2),
+    var(--ring-color-3)
+  );
+  animation: colorShift 6s linear infinite;
+}
+/* =========================
+   STATE BASED COLORS
+========================= */
+
+/* LISTENING */
+.mic-orb.listening {
+  background: radial-gradient(circle, #22d3ee, #0ea5e9);
+}
+
+/* PROCESSING */
+.mic-orb.processing {
+  background: radial-gradient(circle, #a78bfa, #7c3aed);
+}
+
+/* SPEAKING */
+.mic-orb.speaking {
+  background: radial-gradient(circle, #60a5fa, #2563eb);
+}
+
+/* Aura reacts to state */
+.hud.processing::before {
+  background: radial-gradient(circle, #a78bfa, transparent 70%);
+}
+
+.hud.speaking::before {
+  background: radial-gradient(circle, #60a5fa, transparent 70%);
+}
+/* =========================
+   SCROLLABLE JARVIS REPLY
+========================= */
+
+.command-box .text {
+  max-height: 120px;       /* change to 140px if you want taller */
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Chrome / Edge scrollbar */
+.command-box .text::-webkit-scrollbar {
+  width: 5px;
+}
+
+.command-box .text::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+}
+
+.command-box .text::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+.command-box .text {
+  scrollbar-width: thin;
+}
+/* ===== HUD LOGIN (IRON MAN STYLE) ===== */
+.hud-login {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 14px;
+  border-radius: 20px;
+
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: #00f0ff;
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+
+  cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 0 8px rgba(0, 240, 255, 0.4),
+    inset 0 0 6px rgba(0, 240, 255, 0.2);
+
+  /* 🔥 CRITICAL FIXES */
+  transition: none;                 /* remove delay */
+  transform: translateZ(0);        /* GPU acceleration */
+  will-change: transform;          /* faster repaint */
+  backface-visibility: hidden;     /* prevents lag */
+
+  z-index: 9999;                   /* ensures hover detection */
+}
+
+.hud-login:hover {
+  background: rgba(0, 240, 255, 0.15);
+
+  box-shadow:
+    0 0 14px rgba(0, 240, 255, 0.9),
+    inset 0 0 10px rgba(0, 240, 255, 0.5);
+
+  transform: scale(1.03);
+}
+
+
+.hud-login-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px #00f0ff);
+}
+.hud-login-text {
+  font-family: monospace;
+  font-size: 10px;
+}
+
+@keyframes gridScanAdvanced {
+  0% {
+    mask-position:
+      0% -110%,
+      110% 0%;
+    opacity: 0.5;
+  }
+
+  20% {
+    opacity: 0.9;
+  }
+
+  50% {
+    mask-position:
+      0% 110%,
+      0% 0%;
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 0.85;
+  }
+
+  100% {
+    mask-position:
+      0% -110%,
+      -110% 0%;
+    opacity: 0.6;
+  }
+}
+@keyframes gridPatternCycle {
+
+  /* 1️⃣ LEFT → RIGHT */
+  0% {
+    mask-size: 0% 100%;
+    mask-position: left top;
+    opacity: 0.4;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  20% {
+    mask-size: 100% 100%;
+  }
+
+  /* PAUSE */
+  24% {
+    opacity: 0.8;
+  }
+
+  /* RESET */
+  25% {
+    mask-size: 0% 100%;
+    opacity: 0.4;
+  }
+
+  /* 2️⃣ RIGHT → LEFT */
+  30% {
+    mask-size: 100% 100%;
+    mask-position: right top;
+    opacity: 0.9;
+  }
+
+  /* PAUSE */
+  34% {
+    opacity: 0.8;
+  }
+
+  /* RESET */
+  35% {
+    mask-size: 0% 100%;
+    opacity: 0.4;
+  }
+
+  /* 3️⃣ TOP → BOTTOM */
+  50% {
+    mask-size: 100% 100%;
+    mask-position: left top;
+    opacity: 0.9;
+  }
+
+  /* RESET */
+  55% {
+    mask-size: 100% 0%;
+    opacity: 0.4;
+  }
+
+  /* 4️⃣ BOTTOM → TOP */
+  70% {
+    mask-size: 100% 100%;
+    mask-position: left bottom;
+    opacity: 0.9;
+  }
+
+  /* PAUSE */
+  74% {
+    opacity: 0.8;
+  }
+
+  /* IDLE */
+  100% {
+    opacity: 0.6;
+  }
+}
+@keyframes boxReactPulse {
+  0% {
+    opacity: 0.05;
+    filter: brightness(0.9);
+  }
+
+  25% {
+    opacity: 0.15;
+    filter: brightness(1.05);
+  }
+
+  50% {
+    opacity: 0.25;
+    filter: brightness(1.1);
+  }
+
+  75% {
+    opacity: 0.15;
+    filter: brightness(1.05);
+  }
+
+  100% {
+    opacity: 0.05;
+    filter: brightness(0.9);
+  }
+}
+
+/* =========================
+   PROFILE HUD – CORE
+========================= */
+.profile-hud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  /* 🖤 JARVIS CORE BLACK */
+  background:
+    radial-gradient(circle at center, rgba(0,255,255,0.06), transparent 45%),
+    linear-gradient(
+      180deg,
+      #000000,
+      #020617 40%,
+      #000000
+    );
+}
+
+
+.profile-frame {
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+}
+
+/* =========================
+   AVATAR CORE (AI NODE)
+========================= */
+.profile-avatar {
+  position: relative;
+  margin: 24px auto;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(0,255,255,0.7);
+  box-shadow:
+    0 0 25px rgba(0,255,255,0.4),
+    inset 0 0 18px rgba(0,255,255,0.3);
+  animation: ringRotate 7s linear infinite;
+}
+
+.avatar-ring::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(147,197,253,0.6);
+  animation: ringRotateReverse 12s linear infinite;
+}
+
+.avatar-icon {
+  font-size: 52px;
+  color: #e0f2fe;
+  text-shadow:
+    0 0 12px rgba(56,189,248,0.9),
+    0 0 28px rgba(0,255,255,0.6);
+  z-index: 1;
+}
+
+/* =========================
+   PROFILE CARD – HOLO PANEL
+========================= */
+.profile-card {
+  margin-top: 26px;
+  padding: 22px;
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(2, 6, 23, 0.9),
+      rgba(2, 6, 23, 0.65)
+    );
+  border: 1px solid rgba(147,197,253,0.35);
+  box-shadow:
+    0 0 40px rgba(56,189,248,0.12),
+    inset 0 0 25px rgba(0,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,255,255,0.08),
+      transparent
+    );
+  animation: holoSweep 5.5s linear infinite;
+}
+
+/* =========================
+   PROFILE ROWS – DATA LINES
+========================= */
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14px 0;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+.profile-row span {
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.profile-row strong {
+  font-weight: 600;
+  color: #e0f2fe;
+}
+
+/* Role tag */
+.tag {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.6);
+  box-shadow: inset 0 0 10px rgba(56,189,248,0.25);
+}
+
+/* Secure states */
+.secure {
+  color: #22c55e;
+  text-shadow: 0 0 8px rgba(34,197,94,0.6);
+}
+
+.insecure {
+  color: #ef4444;
+  text-shadow: 0 0 8px rgba(239,68,68,0.6);
+}
+
+/* =========================
+   ACTION BUTTONS – COMMANDS
+========================= */
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.profile-actions button {
+  padding: 11px 16px;
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, #0ea5e9, #2563eb);
+  border: 1px solid rgba(147,197,253,0.5);
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+
+  box-shadow:
+    0 0 18px rgba(56,189,248,0.45);
+
+  /* ⚡ INSTANT hover response */
+  transition:
+    transform 0.06s linear,
+    box-shadow 0.06s linear,
+    background 0.06s linear;
+}
+
+.profile-actions button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 32px rgba(56,189,248,1),
+    0 0 60px rgba(56,189,248,0.6);
+
+  transition-duration: 0.03s; /* instant */
+}
+.profile-actions button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Danger */
+.profile-actions .danger {
+  background:
+    linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow:
+    0 0 22px rgba(239,68,68,0.6);
+}
+
+/* =========================
+   FOOTER
+========================= */
+.profile-footer {
+  margin-top: 26px;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes ringRotateReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+@keyframes holoSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* =========================
+   HUD USER INFO
+========================= */
+.hud-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  color: #c8f9ff;
+}
+
+/* User text */
+.hud-user-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.9;
+}
+
+.hud-username {
+  color: #00f0ff;
+  font-weight: 600;
+}
+
+.hud-role {
+  margin-left: 6px;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+/* Divider */
+.hud-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(0, 255, 255, 0.4);
+}
+
+/* =========================
+   PROFILE BUTTON (HUD)
+========================= */
+.hud-profile-btn {
+  padding: 6px 14px;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+
+  color: #00f0ff;
+
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 255, 0.12),
+    rgba(0, 255, 255, 0.03)
+  );
+
+  border: 1px solid rgba(0, 255, 255, 0.6);
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.25),
+    inset 0 0 6px rgba(0, 255, 255, 0.2);
+
+  /* 🔥 FIX — instant hover response */
+  transition: none;
+
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+
+}
+
+.hud-profile-btn:hover {
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.8),
+    inset 0 0 10px rgba(0, 255, 255, 0.35);
+
+  transform: scale(1.04);
+}
+
+.hud-profile-btn:active {
+  transform: scale(0.96);
+
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.4),
+    inset 0 0 8px rgba(0, 255, 255, 0.3);
+}
+.hud-profile-btn:hover {
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.6),
+    inset 0 0 10px rgba(0, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.hud-profile-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.4),
+    inset 0 0 8px rgba(0, 255, 255, 0.3);
+}
+/* =========================
+   profile img upload button
+========================= */
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+  margin-bottom: 10px;
+}
+
+.avatar-upload-btn {
+  cursor: pointer;
+  font-size: 12px;
+  color: #00eaff;
+  border: 1px solid #00eaff;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.avatar-upload-btn:hover {
+  background: rgba(0, 234, 255, 0.15);
+}
+/* =========================
+   RESTRICTED ACCESS WARNING
+========================= */  
+.hud-system-status {
+  margin-top: 1px;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}
+
+.hud-system-status.enabled {
+  color: #00ffd5; /* cyan */
+  opacity: 0.9;
+}
+
+.hud-system-status.restricted {
+  color: #ff4d4d; /* red */
+  opacity: 0.9;
+}
+/* 🔥 ONLY CHAT HISTORY PAGE */
+.chat-history-page .hud-frame.chat-detail {
+  width: 100%;
+  max-width: 1100px;   /* 👈 control message width HERE */
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* make bubbles wider */
+.chat-history-page .command-box {
+  max-width: 95%;
+}
+.back-home-btn {
+  background: transparent;
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  color: #00e5ff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.back-home-btn:hover {
+  background: rgba(0, 229, 255, 0.1);
+}
+
+/*==================
+/*maximize and minimize
+/*===================*/
+/* ================= ROBOTIC GLASS BASE ================= */
+.jarvis-card,
+.jarvis-popup {
+  background: linear-gradient(
+    135deg,
+    rgba(20, 40, 80, 0.75),
+    rgba(5, 10, 25, 0.85)
+  );
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.25),
+    inset 0 0 20px rgba(0, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+/* ================= SMALL CARD ================= */
+.jarvis-card {
+  cursor: pointer;
+  height: 240px; /* 🔥 MEDIUM SIZE (was 160px) */
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.35s ease;
+}
+
+/* HOVER GLOW */
+.jarvis-card:hover {
+  box-shadow:
+    0 0 28px rgba(0, 255, 255, 0.45),
+    inset 0 0 25px rgba(0, 255, 255, 0.15);
+}
+
+/* ================= CARD CONTENT ================= */
+.jarvis-card-content {
+  height: calc(240px - 30px); /* 🔥 match card height */
+  overflow-y: auto;
+  padding-right: 6px;
+  position: relative;
+}
+/* ================= POPUP OVERLAY ================= */
+.jarvis-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(0, 255, 255, 0.15), transparent 60%),
+    rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 998;
+}
+
+/* ================= POPUP WINDOW ================= */
+.jarvis-popup {
+  width: 72vw;
+  max-width: 980px;
+  height: 72vh;
+  border-radius: 22px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  animation: jarvis-pop 0.35s ease;
+}
+
+/* POP ANIMATION */
+@keyframes jarvis-pop {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ================= POPUP HEADER ================= */
+.jarvis-popup-header {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #9ff;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+/* CLOSE BUTTON */
+.jarvis-popup-header button {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+
+  border: none;
+  border-radius: 4px;
+
+  background: transparent;
+  color: #9ff;
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ================= CODE BLOCKS ================= */
+.jarvis-card-content pre,
+.jarvis-popup-content pre {
+  background: rgba(0, 10, 25, 0.9);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+/* ================= ROBOTIC SCROLLBAR ================= */
+.jarvis-card-content::-webkit-scrollbar,
+.jarvis-popup-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.jarvis-card-content::-webkit-scrollbar-track,
+.jarvis-popup-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jarvis-card-content::-webkit-scrollbar-thumb,
+.jarvis-popup-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    #00f6ff,
+    #0077ff
+  );
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+/* ================= SCAN LINE EFFECT ================= */
+.jarvis-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 255, 255, 0.08),
+    transparent
+  );
+  animation: scan 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+/*copy past */
+
+/* ================= CODE WRAPPER ================= */
+.jarvis-code-wrapper {
+  position: relative;
+}
+
+/* ================= MINI ROBOTIC COPY BUTTON ================= */
+.jarvis-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+
+  width: 26px;
+  height: 26px;
+  padding: 0;
+
+  background: radial-gradient(
+    circle at top left,
+    #00f6ff,
+    #0077ff
+  );
+
+  border: 1px solid rgba(0, 255, 255, 0.6);
+  border-radius: 6px;
+
+  color: #001018;
+  font-size: 10px;
+  font-weight: bold;
+
+  cursor: pointer;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.7),
+    inset 0 0 6px rgba(255, 255, 255, 0.35);
+
+  transition: all 0.25s ease;
+}
+
+/* ICON LOOK (OPTIONAL TEXT REPLACED BY SYMBOL) */
+.jarvis-copy-btn::before {
+  content: "⧉";
+  font-size: 12px;
+}
+
+/* HOVER = ROBOT WAKE */
+.jarvis-copy-btn:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 0 18px rgba(0, 255, 255, 0.9),
+    inset 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* CLICK FEEDBACK */
+.jarvis-copy-btn:active {
+  transform: scale(0.95);
+}
+
+/* COPIED STATE */
+.jarvis-copy-btn.copied {
+  background: radial-gradient(circle, #00ff99, #00cc66);
+  box-shadow:
+    0 0 14px rgba(0, 255, 153, 0.9);
+}
+
+.jarvis-copy-btn.copied::before {
+  content: "✓";
+  font-size: 13px;
+}
+
+.jarvis-popup-overlay {
+  backdrop-filter: none;
+}
+.jarvis-popup {
+  position: fixed;
+  z-index: 1000;
+
+  /* ✅ ADD THESE LINES */
+  width: 520px;        /* 👈 reduce window width */
+  max-width: 90vw;     /* responsive on small screens */
+
+  /* optional window shadow */
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(0, 255, 255, 0.35);
+}
+
+/* ================= TASKBAR ================= */
+
+.jarvis-taskbar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 10px;
+
+  max-width: 92vw;          /* prevent disappearing */
+  flex-wrap: nowrap;;          /* allow wrapping if many tabs */
+
+  z-index: 9999;
+}
+
+/* ================= TASKBAR TAB ================= */
+
+.jarvis-taskbar-tab {
+  height: 28px;
+  min-width: 90px;          /* rectangular */
+  padding: 0 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+max-width: 220px;
+  background: rgba(0, 25, 40, 0.85);
+  border: 1px solid cyan;
+  border-radius: 6px;
+
+  cursor: pointer;
+  font-size: 12px;
+  color: cyan;
+
+  box-shadow: 0 0 8px rgba(0,255,255,0.4);
+}
+
+.jarvis-taskbar-tab:hover {
+  background: rgba(0, 60, 80, 0.95);
+}
+
+/* ================= OVERFLOW WRAPPER ================= */
+
+.jarvis-overflow-wrapper {
+  position: relative;   /* anchor for popup */
+}
+
+/* ================= OVERFLOW POPUP (+N) ================= */
+.jarvis-overflow-popup {
+  position: absolute;
+  bottom: 40px;         /* above +N */
+
+  right: 21%;           /* 👈 push popup left */
+  transform: translateX(50%);
+
+  width: 180px;
+
+  background: rgba(0, 18, 35, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.35);
+  border-radius: 10px;
+
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  z-index: 10000;
+
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.5),
+    0 20px 40px rgba(0,0,0,0.7);
+
+  backdrop-filter: blur(10px);
+}
+
+
+/* ================= OVERFLOW ITEM ================= */
+
+.overflow-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  background: rgba(0, 40, 60, 0.85);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+
+  color: #9ff;
+  font-size: 12px;
+  cursor: pointer;
+
+  box-shadow: inset 0 0 6px rgba(0,255,255,0.15);
+}
+
+.overflow-item:hover {
+  background: rgba(0, 80, 110, 0.95);
+  box-shadow:
+    0 0 10px rgba(0,255,255,0.6),
+    inset 0 0 8px rgba(0,255,255,0.25);
+}
+
+/* ================= TITLE ================= */
+
+.taskbar-title {
+  flex: 1;
+  max-width: 160px;        /* 🔥 THIS WAS MISSING */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 28px;       /* 🔥 vertically lock text */
+}
+
+/* ================= OVERFLOW CLOSE (RIGHT POPUP ❌) ================= */
+
+.overflow-close {
+  width: 12px;
+  height: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: 1px solid rgba(0, 255, 255, 0.35);
+  border-radius: 3px;
+
+  color: rgba(0, 255, 255, 0.75);
+  font-size: 8px;
+  line-height: 1;
+
+  cursor: pointer;
+  margin-left: 8px;
+
+  box-shadow: inset 0 0 4px rgba(0, 255, 255, 0.2);
+  transition: all 0.15s ease;
+}
+
+/* hover = warning */
+.overflow-close:hover {
+  color: #ff4d4d;
+  border-color: rgba(255, 80, 80, 0.8);
+  box-shadow: 0 0 6px rgba(255, 80, 80, 0.6);
+}
+
+/* click feedback */
+.overflow-close:active {
+  transform: scale(0.85);
+}
+
+/* ================= SUPER SMALL ROBOTIC CLOSE ================= */
+
+.taskbar-close {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  border-radius: 2px;
+
+  color: rgba(0, 255, 255, 0.8);
+  font-size: 7px;
+  line-height: 1;
+  padding: 0;
+
+  cursor: pointer;
+  margin-left: 6px;
+
+  transition: all 0.15s ease;
+}
+
+/* hover = system alert */
+.taskbar-close:hover {
+  color: #ff4d4d;
+  border-color: rgba(255, 80, 80, 0.8);
+  box-shadow: 0 0 4px rgba(255, 80, 80, 0.6);
+}
+
+/* click feedback */
+.taskbar-close:active {
+  transform: scale(0.85);
+}
+/* ================= FIX PER-WINDOW SCROLL ================= */
+
+/* Popup must be a strict column layout */
+.jarvis-popup {
+  display: flex;
+  flex-direction: column;
+  height: 72vh;
+  overflow: hidden;
+}
+
+.jarvis-popup-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+
+/* Input stays fixed */
+.jarvis-popup-input {
+  flex-shrink: 0;
+}
+/* ================= FULL WIDTH CODE BLOCK FIX ================= */
+
+/* =====================================================
+   FORCE CODE BLOCK TO FULL POPUP WIDTH (FINAL FIX)
+   ===================================================== */
+/* Message container must allow overflow */
+.workspace-message {
+  overflow: visible;
+}
+
+
+/* Code wrapper escapes bubble */
+.jarvis-code-wrapper {
+
+  position: relative;
+
+  width: calc(100% + 24px);
+
+  margin-left: -12px;
+  margin-right: -12px;
+
+  max-width: none;
+
+}
+
+
+/* Code block styling */
+.jarvis-code-wrapper pre {
+
+  width: 100%;
+
+  max-width: 100%;
+
+  background: #020617;
+
+  border: 1px solid #334155;
+
+  border-radius: 8px;
+
+  padding: 14px;
+
+  overflow-x: auto;
+
+  color: #22c55e;
+
+  font-family: Consolas, monospace;
+
+  font-size: 13px;
+
+  box-sizing: border-box;
+
+}
+
+
+/* Copy button positioning */
+.jarvis-copy-btn {
+
+  position: absolute;
+
+  top: 6px;
+
+  right: 6px;
+
+  background: #1e293b;
+
+  border: 1px solid #334155;
+
+  color: #cbd5e1;
+
+  padding: 4px 10px;
+
+  border-radius: 6px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  z-index: 2;
+
+}
+
+
+.jarvis-copy-btn:hover {
+
+  background: #334155;
+
+}
+
+
+/* Prevent parent flex from shrinking code */
+.workspace-chat-box pre {
+  flex-shrink: 0;
+}
+
+
+/* Allow full width inside chat */
+.workspace-chat-box .workspace-message {
+  max-width: 100%;
+}
+.hud-support {
+  top: auto;          /* cancel top */
+  bottom: 30px;       /* position at bottom */
+  right: 22px;        /* keep aligned */
+}
+.hud-support .hud-login-icon {
+  width: 34px;
+  height: 34px;
+  transform: translateY(-1px);
+}
+
+/* ================================
+   JARVIS CAPABILITIES TOGGLE
+================================ */
+/* ================================
+   JARVIS CAPABILITIES TOGGLE
+================================ */
+
+.jarvis-capabilities-toggle {
+  position: relative;        /* required */
+  overflow: hidden;          /* hide spark overflow */
+
+  align-self: flex-start;
+  width: auto;
+  display: inline-block;
+
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  padding: 6px 14px;
+  border-radius: 18px;
+
+  color: #00f0ff;
+  border: 1px solid rgba(0,240,255,0.45);
+  background: rgba(0,0,0,0.45);
+
+  box-shadow:
+    0 0 8px rgba(0,240,255,0.35),
+    inset 0 0 6px rgba(0,240,255,0.15);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover Glow */
+.jarvis-capabilities-toggle:hover {
+  box-shadow:
+    0 0 16px rgba(0,240,255,0.85),
+    inset 0 0 10px rgba(0,240,255,0.3);
+
+  transform: scale(1.05);
+}
+
+/* 🔥 SPARK EFFECT */
+.jarvis-capabilities-toggle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(0,240,255,0.6),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+  animation: sparkMove 2.5s linear infinite;
+}
+
+/* Spark Animation */
+@keyframes sparkMove {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 140%;
+  }
+}
+/* =================================
+   CAPABILITIES PANEL (HOLOGRAPHIC)
+================================= */
+
+.jarvis-capabilities-panel {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(0,10,20,0.85),
+    rgba(0,30,60,0.65)
+  );
+
+  border: 1px solid rgba(0,240,255,0.35);
+
+  box-shadow:
+    0 0 25px rgba(0,240,255,0.35),
+    inset 0 0 25px rgba(0,240,255,0.08);
+
+  backdrop-filter: blur(10px);
+
+  font-size: 11px;
+
+  animation: capSlideDown 0.35s ease;
+}
+
+/* Slide animation */
+@keyframes capSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =================================
+   GROUP TITLE
+================================= */
+
+.cap-group {
+  margin-bottom: 16px;
+}
+
+.cap-title {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #00f0ff;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 8px rgba(0,240,255,0.8);
+}
+
+/* =================================
+   COMMAND ITEMS
+================================= */
+
+.cap-item {
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  margin-left: 6px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  background: transparent;
+
+  transition: none;          /* 🔥 no animation */
+}
+
+
+/* Hover effect */
+.cap-item:hover {
+  opacity: 1;
+  color: #00f0ff;
+
+  background: rgba(0,240,255,0.12);
+
+  box-shadow:
+    0 0 14px rgba(0,240,255,0.9),
+    inset 0 0 10px rgba(0,240,255,0.35);
+
+  transform: translateX(3px);
+}
+
+/* Click feedback */
+.cap-item:active {
+  transform: translateX(2px) scale(0.98);
+}
+/* ===============================
+   LEFT SIDE CAPABILITIES PANEL
+================================ */
+
+.jarvis-capabilities-container {
+  position: fixed;
+  top: 120px;          /* adjust based on your layout */
+  left: 25px;
+
+  width: 240px;
+  z-index: 9998;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toggle Button */
+.jarvis-capabilities-toggle {
+  text-align: center;
+}
+
+/* ===============================
+   LEFT FLOATING CAPABILITY PANEL
+================================ */
+
+.jarvis-capabilities-container {
+  position: fixed;
+  top: 30px;
+  left: 15px;
+
+  width: 260px;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 9999;
+}
+
+/* Panel */
+.jarvis-capabilities-panel {
+  margin-top: 10px;
+  max-height: 70vh;
+  overflow-y: auto;
+}

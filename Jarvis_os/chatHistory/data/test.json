@@ -1,0 +1,18 @@
+[
+  {
+    "id": "53d4a312-18b9-4dfd-8ae7-3db43fee5810",
+    "started_at": "2026-02-06T20:26:20.964529",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-02-06T20:26:27.872641"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure, here's one for you: Why couldn't the bicycle find its way home? Because it lost its bearings!",
+        "time": "2026-02-06T20:26:27.873044"
+      }
+    ]
+  }
+]

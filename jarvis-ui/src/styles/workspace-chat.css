@@ -1,0 +1,3157 @@
+/* ===== GLOBAL HEIGHT FIX ===== */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: #050812;
+}
+html, body {
+  overflow: hidden;   /* 🔥 STOP PAGE SNAP */
+}
+
+/* ===== ROOT CONTAINER ===== */
+.workspace-chat {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top, #0d1b2a, #050812);
+  overflow: hidden;
+
+  padding-top: 30px;   /* 👈 moves entire page down */
+}
+
+/* ===== HEADER ===== */
+.workspace-chat-header {
+  height: 48px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;        /* ✅ vertical alignment */
+  justify-content: space-between; /* ✅ left vs right */
+
+  background: rgba(11, 15, 26, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.25);
+}
+
+/* ===== FORCE SMALL HEADER BUTTONS ===== */
+.workspace-chat-header .back-btn {
+  padding: 4px 10px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+
+  font-size: 12px !important;
+  line-height: 1 !important;
+
+  border-radius: 8px !important;
+}
+
+
+/* =========================
+   JARVIS NAV BUTTON
+========================= */
+
+.back-btn {
+
+  position: relative;
+
+  padding: 6px 14px;
+  height: 32px;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(0,212,255,0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.04s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 10px rgba(0,212,255,0.25),
+    0 0 8px rgba(0,212,255,0.2);
+
+}
+.back-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 16px rgba(0,212,255,0.45),
+    0 0 18px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+.back-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.back-btn:hover::before {
+
+  opacity: 1;
+
+animation: jarvisScan 0.45s linear infinite;
+}
+
+@keyframes jarvisScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+.workspace-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e6f1ff;
+}
+.leave-btn {
+
+  border: 1px solid rgba(239,68,68,0.45);
+
+  color: #ef4444;
+
+  box-shadow:
+    inset 0 0 10px rgba(239,68,68,0.25),
+    0 0 8px rgba(239,68,68,0.2);
+
+}
+
+.leave-btn:hover {
+
+  border-color: #ef4444;
+
+  box-shadow:
+    inset 0 0 16px rgba(239,68,68,0.45),
+    0 0 18px rgba(239,68,68,0.65),
+    0 0 28px rgba(239,68,68,0.35);
+
+}
+/* ===== CHAT BOX ===== */
+.workspace-chat-box {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+
+  background: rgba(11, 15, 26, 0.85);
+  backdrop-filter: blur(14px);
+
+  margin: 6px 8px;              /* 🔥 smaller margin */
+  border-radius: 12px;          /* 🔥 less curve */
+
+  border: 1px solid rgba(0, 212, 255, 0.3);
+
+  box-shadow:
+    inset 0 0 35px rgba(0, 212, 255, 0.1),
+    0 0 30px rgba(0, 212, 255, 0.15);
+}
+.workspace-chat-box {
+  min-height: 0;      /* 🔥 FLEX SCROLL FIX */
+}
+
+/* ===== SCROLLBAR ===== */
+.workspace-chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace-chat-box::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.45);
+  border-radius: 10px;
+}
+
+/* ===== MESSAGE BASE ===== */
+.workspace-message {
+  max-width: 70%;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+
+  font-size: 15px;
+  line-height: 1.6;
+  color: #e6f1ff;
+  word-wrap: break-word;
+
+  animation: messageIn 0.35s ease-out;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== USER MESSAGE ===== */
+.workspace-message.user {
+  margin-left: auto;
+  text-align: right;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 170, 0.22),
+    rgba(0, 255, 170, 0.08)
+  );
+
+  border-right: 4px solid #00ffaa;
+}
+
+/* ===== JARVIS MESSAGE ===== */
+.workspace-message.jarvis {
+  margin-right: auto;
+  position: relative;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 140, 255, 0.28),
+    rgba(0, 140, 255, 0.12)
+  );
+
+  border-left: 4px solid #00d4ff;
+}
+
+.workspace-message.jarvis::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #00d4ff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 14px #00d4ff;
+}
+
+/* ===== SENDER ===== */
+.workspace-message b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7dd3ff;
+}
+
+
+/* ===== INPUT FIELD ===== */
+.workspace-input input {
+  flex: 1;
+  padding: 16px 18px;
+  font-size: 15px;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 14px;
+  outline: none;
+}
+
+.workspace-input input::placeholder {
+  color: #6b7280;
+}
+
+.workspace-input input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.55);
+}
+
+/* ===== SEND BUTTON ===== */
+.workspace-input button {
+  padding: 16px 28px;
+  font-size: 15px;
+  font-weight: 600;
+
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  color: white;
+
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.45);
+  transition: all 0.2s ease;
+}
+
+.workspace-input button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 35px rgba(0, 212, 255, 0.75);
+}
+
+.workspace-input button:active {
+  transform: scale(0.96);
+}
+/* ===== INVITE AREA ===== */
+.invite-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* BIG EMAIL INPUT */
+.invite-input {
+  width: 320px;            /* 🔥 VERY BIG */
+  height: 36px;            /* 🔥 TALL */
+  padding: 0 14px;
+
+  font-size: 14px;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.45);
+  border-radius: 10px;
+  outline: none;
+}
+
+.invite-input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
+}
+
+/* INVITE BUTTON (MEDIUM) */
+/* =========================
+   JARVIS INVITE BUTTON (ROBOTIC CYAN CORE)
+========================= */
+
+.invite-btn {
+
+  position: relative;
+
+  height: 38px;
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(0,212,255,0.4);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.25s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 12px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.2);
+
+}
+.invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 18px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+.invite-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.invite-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisScan 1.5s linear infinite;
+
+}
+.invite-btn:disabled {
+
+  opacity: 0.4;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+
+  transform: none;
+
+}
+/* =========================
+   BIG INVITE INPUT (FINAL)
+========================= */
+
+.workspace-chat-header .invite-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 🔥 VERY BIG EMAIL INPUT */
+.workspace-chat-header .invite-input {
+  width: 420px !important;      /* ⬅️ BIG WIDTH */
+  height: 42px !important;      /* ⬅️ BIG HEIGHT */
+
+  padding: 0 18px !important;
+  font-size: 15px !important;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.5);
+  border-radius: 12px;
+  outline: none;
+}
+
+.workspace-chat-header .invite-input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.65);
+}
+
+/* 🔥 INVITE BUTTON (NORMAL SIZE) */
+.workspace-chat-header .invite-btn {
+
+  position: relative;
+
+  height: 32px;        /* smaller height */
+  padding: 0 10px;     /* 🔥 reduced width */
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(0,212,255,0.4);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.9),
+      rgba(2,6,23,0.7)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 12px;     /* slightly smaller text */
+  font-weight: 500;
+
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 10px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.25);
+
+}
+.workspace-chat-header .invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 22px rgba(0,212,255,0.65),
+    0 0 32px rgba(0,212,255,0.35);
+
+}
+.workspace-chat-header .invite-btn {
+
+  height: 32px;
+  padding: 0 12px;
+
+  font-size: 12px;
+
+  width: auto;        /* ✅ important */
+  flex: 0 0 auto;     /* ✅ STOP flex stretching */
+
+  white-space: nowrap; /* ✅ keep text compact */
+
+}
+/* ======================================
+   ADVANCED POLISH (NO STRUCTURE CHANGES)
+====================================== */
+
+/* Subtle depth for entire chat page */
+.workspace-chat {
+  box-shadow:
+    inset 0 0 60px rgba(0, 212, 255, 0.08),
+    inset 0 0 120px rgba(0, 212, 255, 0.04);
+}
+
+/* Header feels more premium */
+.workspace-chat-header {
+  box-shadow:
+    inset 0 -1px rgba(0, 212, 255, 0.25),
+    0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* Buttons feel more tactile */
+.back-btn {
+  box-shadow: inset 0 0 0 rgba(0, 212, 255, 0);
+}
+
+.back-btn:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0, 212, 255, 0.25),
+    0 0 12px rgba(0, 212, 255, 0.35);
+}
+
+/* Chat box feels like a screen */
+.workspace-chat-box {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.02),
+      transparent 120px
+    );
+}
+
+/* Messages feel slightly elevated */
+.workspace-message {
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* Jarvis messages get subtle emphasis */
+.workspace-message.jarvis {
+  box-shadow:
+    0 0 14px rgba(0, 212, 255, 0.25);
+}
+
+/* Input area feels grounded */
+.workspace-input {
+   position: relative;
+  box-shadow:
+    0 -2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Inputs feel responsive but calm */
+.workspace-input input:focus {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.45),
+    0 0 12px rgba(0, 212, 255, 0.35);
+}
+.workspace-highlight {
+
+  animation: workspaceFlash 2s ease;
+
+}
+
+@keyframes workspaceFlash {
+
+  0% {
+    background-color: transparent;
+  }
+
+  25% {
+    background-color: rgba(0, 150, 255, 0.35);
+    box-shadow: 0 0 60px rgba(0,150,255,1);
+  }
+
+  50% {
+    background-color: rgba(0, 150, 255, 0.25);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+
+}
+.workspace-chat-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 12px 20px;
+
+  border-bottom: 1px solid rgba(0,150,255,0.2);
+
+}
+
+
+/* LEFT */
+.workspace-header-left {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+
+/* CENTER */
+.workspace-header-center {
+
+  flex: 1;
+
+  text-align: center;
+
+}
+
+
+/* MAIN TITLE */
+/* =========================
+   JARVIS GROUP TITLE CORE
+========================= */
+
+.workspace-title-main {
+
+  font-size: 22px;
+
+  font-weight: 600;
+
+  color: #00d4ff;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  position: relative;
+
+  text-shadow:
+    0 0 6px #00d4ff,
+    0 0 14px rgba(0,212,255,0.8),
+    0 0 28px rgba(0,212,255,0.6);
+
+  animation: jarvisTitleGlow 2.5s ease-in-out infinite alternate;
+
+}
+.workspace-header-center {
+
+  flex: 1;
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 1;
+
+  pointer-events: none; /* prevents blocking buttons */
+
+}
+.workspace-header-left,
+.workspace-header-right {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+@keyframes jarvisTitleGlow {
+
+  0% {
+    text-shadow:
+      0 0 2px #00d4ff,
+      0 0 4px rgba(0,212,255,0.4),
+      0 0 8px rgba(0,212,255,0.3);
+  }
+
+  50% {
+    text-shadow:
+      0 0 4px #00d4ff,
+      0 0 10px rgba(0,212,255,0.7),
+      0 0 18px rgba(0,212,255,0.5);
+  }
+
+  100% {
+    text-shadow:
+      0 0 2px #00d4ff,
+      0 0 6px rgba(0,212,255,0.4),
+      0 0 10px rgba(0,212,255,0.3);
+  }
+
+}
+.workspace-title-main::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -4px;
+
+  width: 100%;
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #00d4ff,
+      transparent
+    );
+
+  animation: jarvisTitleScan 3s linear infinite;
+
+}
+@keyframes jarvisTitleScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* SUB TEXT */
+.workspace-title-sub {
+
+  font-size: 11px;
+
+  color: rgba(0,212,255,0.7);
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 6px rgba(0,212,255,0.6);
+
+}
+/* RIGHT */
+.workspace-header-right {
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+}
+/* BASE */
+.workspace-chat-box {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* wallpaper layer */
+.workspace-chat-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0.18; /* Jarvis style subtle */
+
+  z-index: -1;
+}
+
+
+/* ===============================
+   WALLPAPER BASE
+================================ */
+.workspace-chat-box {
+  position: relative;
+  z-index: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* overlay */
+.workspace-chat-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(2,6,23,0.55);
+
+  z-index: -1;
+}
+
+/* wallpapers */
+
+.workspace-chat-box.wap1 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+    url("/wallpapers/wap1.jpg");
+}
+
+.workspace-chat-box.wap2 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)),
+    url("/wallpapers/wap2.jpg");
+}
+
+.workspace-chat-box.wap3 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.5), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap3.jpg");
+}
+
+.workspace-chat-box.wap4 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.7)),
+    url("/wallpapers/wap4.jpg");
+}
+
+.workspace-chat-box.wap5 {
+  background-image:
+    linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.7)),
+    url("/wallpapers/wap5.jpg");
+}
+
+.workspace-chat-box.wap6 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
+    url("/wallpapers/wap6.jpg");
+    
+.wap7 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap7.jpg");
+}
+
+.wap8 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap8.jpeg");
+}
+
+.wap9 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap9.jpeg");
+}
+
+.wap10 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap10.jpeg");
+}
+
+
+}
+
+/* =========================
+   JARVIS WALLPAPER BUTTON
+========================= */
+
+.wallpaper-open-btn {
+
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(0,212,255,0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+ transition: all 0.04s linear;
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 12px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.2);
+
+}
+
+
+/* hover glow */
+.wallpaper-open-btn:hover {
+
+  border-color: #00d4ff;
+
+  transform: scale(1.1);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 16px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+
+
+/* click effect */
+.wallpaper-open-btn:active {
+
+  transform: scale(0.95);
+
+  box-shadow:
+    inset 0 0 20px rgba(0,212,255,0.7);
+
+}
+
+
+/* =========================
+   ICON GLOW CORE
+========================= */
+
+.wallpaper-open-btn {
+
+  text-shadow:
+    0 0 6px #00d4ff,
+    0 0 14px #00d4ff,
+    0 0 24px rgba(0,212,255,0.8);
+
+}
+
+
+/* =========================
+   JARVIS SCAN EFFECT
+========================= */
+
+.wallpaper-open-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.4),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.wallpaper-open-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisWallpaperScan 1.5s linear infinite;
+
+}
+
+
+@keyframes jarvisWallpaperScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* =========================
+   ADVANCED INSTAGRAM + JARVIS TYPING
+========================= */
+
+.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 8px 14px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  animation:
+    typingPop 0.25s ease,
+    typingFloat 3s ease-in-out infinite;
+}
+
+
+
+/* username text */
+.typing-text {
+  font-size: 13px;
+  color: #7dd3ff;
+  font-weight: 500;
+
+  text-shadow:
+    0 0 6px rgba(0,212,255,0.6);
+}
+
+
+/* dots container */
+.typing-dots {
+  display: flex;
+  gap: 5px;
+}
+
+
+/* individual dots */
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    #00d4ff,
+    #0284c7
+  );
+
+  box-shadow:
+    0 0 6px #00d4ff,
+    0 0 12px rgba(0,212,255,0.6);
+
+  animation: instaTyping 1.4s infinite ease-in-out;
+}
+
+
+/* delays */
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+/* bounce animation */
+@keyframes instaTyping {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
+
+
+/* smooth appearance */
+@keyframes typingPop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* subtle floating effect like Instagram */
+@keyframes typingFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+
+/* =========================
+   ADVANCED MENTION POPUP
+========================= */
+.mention-box {
+
+  position: absolute;
+
+  /* appear above input safely */
+  bottom: 56px;
+  left: 0;
+
+  min-width: 240px;
+  max-width: 320px;
+
+  /* prevent covering typing */
+  max-height: 180px;
+  overflow-y: auto;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.96),
+      rgba(2,6,23,0.92)
+    );
+
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 14px;
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 0 25px rgba(0,212,255,0.25),
+    0 12px 35px rgba(0,0,0,0.7),
+    inset 0 0 12px rgba(0,212,255,0.08);
+
+  padding: 6px;
+
+  z-index: 9999;
+
+  animation: mentionPopup 0.18s ease;
+
+}
+
+
+/* =========================
+   MENTION ITEMS
+========================= */
+
+.mention-item {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 12px;
+
+  cursor: pointer;
+
+  color: #7dd3ff;
+  font-size: 14px;
+  font-weight: 500;
+
+  border-radius: 10px;
+
+  transition: all 0.18s ease;
+}
+
+
+/* hover effect */
+.mention-item:hover {
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,212,255,0.18),
+      rgba(0,212,255,0.08)
+    );
+
+  box-shadow:
+    0 0 10px rgba(0,212,255,0.35);
+
+  transform: translateX(2px);
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.mention-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mention-box::-webkit-scrollbar-thumb {
+  background: rgba(0,212,255,0.35);
+  border-radius: 10px;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes mentionPopup {
+
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+/* =========================
+   Jarvis mention (AI)
+========================= */
+.mention-jarvis {
+
+  color: #ef4444;   /* clean modern red */
+
+  font-weight: 600;
+
+  background: rgba(239, 68, 68, 0.12);
+
+  padding: 2px 6px;
+
+  border-radius: 6px;
+
+  text-shadow: none;
+
+}
+
+
+/* =========================
+   User mention
+========================= */
+.mention-user {
+
+  color: #2563eb;   /* clean professional blue */
+
+  font-weight: 600;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  padding: 2px 6px;
+
+  border-radius: 6px;
+
+  text-shadow: none;
+
+}
+/* =========================
+   JARVIS ROBOTIC BASE BUTTON
+========================= */
+
+.call-btn,
+.video-btn,
+.invite-btn {
+
+  position: relative;
+
+  height: 38px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(0,212,255,0.35);
+
+  color: #e6f1ff;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+ transition: all 0.04s linear;
+
+  overflow: hidden;
+
+}
+
+
+/* =========================
+   CALL BUTTON (GREEN ENERGY)
+========================= */
+
+.call-btn {
+
+  width: 38px;
+
+  box-shadow:
+    inset 0 0 12px rgba(34,197,94,0.25),
+    0 0 10px rgba(34,197,94,0.25);
+
+}
+
+.call-btn:hover {
+
+  border-color: #22c55e;
+
+  box-shadow:
+    inset 0 0 18px rgba(34,197,94,0.45),
+    0 0 14px rgba(34,197,94,0.65),
+    0 0 28px rgba(34,197,94,0.35);
+
+  transform: scale(1.08);
+
+}
+
+
+/* =========================
+   VIDEO BUTTON (BLUE ENERGY)
+========================= */
+
+.video-btn {
+
+  width: 38px;
+
+  box-shadow:
+    inset 0 0 12px rgba(59,130,246,0.25),
+    0 0 10px rgba(59,130,246,0.25);
+
+}
+
+.video-btn:hover {
+
+  border-color: #3b82f6;
+
+  box-shadow:
+    inset 0 0 18px rgba(59,130,246,0.45),
+    0 0 14px rgba(59,130,246,0.65),
+    0 0 28px rgba(59,130,246,0.35);
+
+  transform: scale(1.08);
+
+}
+
+
+/* /* =========================
+   INVITE BUTTON (CYAN JARVIS CORE)
+========================= */
+.invite-btn {
+
+  height: 32px;          /* slightly smaller height */
+  padding: 0 10px;       /* 🔥 reduces width */
+
+  font-size: 12px;       /* smaller text */
+
+  border-radius: 10px;
+
+}
+.invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 14px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+  transform: scale(1.05);
+
+}
+ */
+
+/* =========================
+   JARVIS SCAN LINE EFFECT
+========================= */
+
+.call-btn::before,
+.video-btn::before,
+.invite-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+
+}
+
+.call-btn:hover::before,
+.video-btn:hover::before,
+.invite-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisScan 1.5s linear infinite;
+
+}
+
+
+@keyframes jarvisScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* =========================
+   ICON VISIBILITY FIX
+========================= */
+
+.call-btn,
+.video-btn {
+
+  font-size: 18px;   /* bigger icon */
+
+  color: #ffffff;    /* pure white core */
+
+  text-shadow:
+    0 0 4px currentColor,
+    0 0 8px currentColor,
+    0 0 14px currentColor;
+
+}
+
+
+/* GREEN CALL ICON ENERGY */
+.call-btn {
+
+  color: #22c55e;
+
+  text-shadow:
+    0 0 6px #22c55e,
+    0 0 14px #22c55e,
+    0 0 24px rgba(34,197,94,0.8);
+
+}
+
+
+/* BLUE VIDEO ICON ENERGY */
+.video-btn {
+
+  color: #3b82f6;
+
+  text-shadow:
+    0 0 6px #3b82f6,
+    0 0 14px #3b82f6,
+    0 0 24px rgba(59,130,246,0.8);
+
+}
+
+/* =========================
+   CLICK EFFECT
+========================= */
+
+.call-btn:active,
+.video-btn:active,
+.invite-btn:active {
+
+  transform: scale(0.95);
+
+  box-shadow:
+    inset 0 0 20px rgba(0,212,255,0.6);
+
+}
+/* ===== GLOBAL HEIGHT FIX ===== */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: #050812;
+}
+html, body {
+  overflow-x: hidden;
+}
+
+/* ===== ROOT CONTAINER ===== */
+.workspace-chat {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top, #0d1b2a, #050812);
+  overflow: hidden;
+
+  padding-top: 30px;   /* 👈 moves entire page down */
+}
+
+/* ===== HEADER ===== */
+.workspace-chat-header {
+  height: 48px;
+  padding: 0 12px;
+
+  display: flex;
+  align-items: center;        /* ✅ vertical alignment */
+  justify-content: space-between; /* ✅ left vs right */
+
+  background: rgba(11, 15, 26, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.25);
+}
+
+/* ===== FORCE SMALL HEADER BUTTONS ===== */
+.workspace-chat-header .back-btn {
+  padding: 4px 10px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+
+  font-size: 12px !important;
+  line-height: 1 !important;
+
+  border-radius: 8px !important;
+}
+
+
+/* =========================
+   JARVIS NAV BUTTON
+========================= */
+
+.back-btn {
+
+  position: relative;
+
+  padding: 6px 14px;
+  height: 32px;
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(0,212,255,0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.25s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 10px rgba(0,212,255,0.25),
+    0 0 8px rgba(0,212,255,0.2);
+
+}
+.back-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 16px rgba(0,212,255,0.45),
+    0 0 18px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+.back-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.back-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisScan 1.5s linear infinite;
+
+}
+
+@keyframes jarvisScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+.workspace-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e6f1ff;
+}
+.leave-btn {
+
+  border: 1px solid rgba(239,68,68,0.45);
+
+  color: #ef4444;
+
+  box-shadow:
+    inset 0 0 10px rgba(239,68,68,0.25),
+    0 0 8px rgba(239,68,68,0.2);
+
+}
+
+.leave-btn:hover {
+
+  border-color: #ef4444;
+
+  box-shadow:
+    inset 0 0 16px rgba(239,68,68,0.45),
+    0 0 18px rgba(239,68,68,0.65),
+    0 0 28px rgba(239,68,68,0.35);
+
+}
+/* ===== CHAT BOX ===== */
+.workspace-chat-box {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+
+  background: rgba(11, 15, 26, 0.85);
+  backdrop-filter: blur(14px);
+
+  margin: 6px 8px;              /* 🔥 smaller margin */
+  border-radius: 12px;          /* 🔥 less curve */
+
+  border: 1px solid rgba(0, 212, 255, 0.3);
+
+  box-shadow:
+    inset 0 0 35px rgba(0, 212, 255, 0.1),
+    0 0 30px rgba(0, 212, 255, 0.15);
+}
+.workspace-chat-box {
+  min-height: 0;      /* 🔥 FLEX SCROLL FIX */
+}
+
+/* ===== SCROLLBAR ===== */
+.workspace-chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.workspace-chat-box::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.45);
+  border-radius: 10px;
+}
+
+/* ===== MESSAGE BASE ===== */
+.workspace-message {
+  max-width: 70%;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+
+  font-size: 15px;
+  line-height: 1.6;
+  color: #e6f1ff;
+  word-wrap: break-word;
+
+  animation: messageIn 0.35s ease-out;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===== USER MESSAGE ===== */
+.workspace-message.user {
+  margin-left: auto;
+  text-align: right;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 170, 0.22),
+    rgba(0, 255, 170, 0.08)
+  );
+
+  border-right: 4px solid #00ffaa;
+}
+
+/* ===== JARVIS MESSAGE ===== */
+.workspace-message.jarvis {
+  margin-right: auto;
+  position: relative;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 140, 255, 0.28),
+    rgba(0, 140, 255, 0.12)
+  );
+
+  border-left: 4px solid #00d4ff;
+}
+
+.workspace-message.jarvis::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #00d4ff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 14px #00d4ff;
+}
+
+/* ===== SENDER ===== */
+.workspace-message b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7dd3ff;
+}
+
+
+/* ===== INPUT FIELD ===== */
+.workspace-input input {
+  flex: 1;
+  padding: 16px 18px;
+  font-size: 15px;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 14px;
+  outline: none;
+}
+
+.workspace-input input::placeholder {
+  color: #6b7280;
+}
+
+.workspace-input input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.55);
+}
+
+/* ===== SEND BUTTON ===== */
+.workspace-input button {
+  padding: 16px 28px;
+  font-size: 15px;
+  font-weight: 600;
+
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  color: white;
+
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.45);
+  transition: all 0.2s ease;
+}
+
+.workspace-input button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 35px rgba(0, 212, 255, 0.75);
+}
+
+.workspace-input button:active {
+  transform: scale(0.96);
+}
+/* ===== INVITE AREA ===== */
+.invite-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* BIG EMAIL INPUT */
+.invite-input {
+  width: 320px;            /* 🔥 VERY BIG */
+  height: 36px;            /* 🔥 TALL */
+  padding: 0 14px;
+
+  font-size: 14px;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.45);
+  border-radius: 10px;
+  outline: none;
+}
+
+.invite-input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
+}
+
+/* INVITE BUTTON (MEDIUM) */
+/* =========================
+   JARVIS INVITE BUTTON (ROBOTIC CYAN CORE)
+========================= */
+
+.invite-btn {
+
+  position: relative;
+
+  height: 38px;
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(0,212,255,0.4);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.25s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 12px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.2);
+
+}
+.invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 18px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+.invite-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.invite-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisScan 1.5s linear infinite;
+
+}
+.invite-btn:disabled {
+
+  opacity: 0.4;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+
+  transform: none;
+
+}
+/* =========================
+   BIG INVITE INPUT (FINAL)
+========================= */
+
+.workspace-chat-header .invite-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 🔥 VERY BIG EMAIL INPUT */
+.workspace-chat-header .invite-input {
+  width: 420px !important;      /* ⬅️ BIG WIDTH */
+  height: 42px !important;      /* ⬅️ BIG HEIGHT */
+
+  padding: 0 18px !important;
+  font-size: 15px !important;
+
+  background: #0f1629;
+  color: #e6f1ff;
+
+  border: 1px solid rgba(0, 212, 255, 0.5);
+  border-radius: 12px;
+  outline: none;
+}
+
+.workspace-chat-header .invite-input:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.65);
+}
+
+/* 🔥 INVITE BUTTON (NORMAL SIZE) */
+.workspace-chat-header .invite-btn {
+
+  position: relative;
+
+  height: 32px;        /* smaller height */
+  padding: 0 10px;     /* 🔥 reduced width */
+
+  border-radius: 10px;
+
+  border: 1px solid rgba(0,212,255,0.4);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.9),
+      rgba(2,6,23,0.7)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 12px;     /* slightly smaller text */
+  font-weight: 500;
+
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 10px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.25);
+
+}
+.workspace-chat-header .invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  color: #7dd3ff;
+
+  transform: scale(1.05);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 22px rgba(0,212,255,0.65),
+    0 0 32px rgba(0,212,255,0.35);
+
+}
+.workspace-chat-header .invite-btn {
+
+  height: 32px;
+  padding: 0 12px;
+
+  font-size: 12px;
+
+  width: auto;        /* ✅ important */
+  flex: 0 0 auto;     /* ✅ STOP flex stretching */
+
+  white-space: nowrap; /* ✅ keep text compact */
+
+}
+/* ======================================
+   ADVANCED POLISH (NO STRUCTURE CHANGES)
+====================================== */
+
+/* Subtle depth for entire chat page */
+.workspace-chat {
+  box-shadow:
+    inset 0 0 60px rgba(0, 212, 255, 0.08),
+    inset 0 0 120px rgba(0, 212, 255, 0.04);
+}
+
+/* Header feels more premium */
+.workspace-chat-header {
+  box-shadow:
+    inset 0 -1px rgba(0, 212, 255, 0.25),
+    0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+/* Buttons feel more tactile */
+.back-btn {
+  box-shadow: inset 0 0 0 rgba(0, 212, 255, 0);
+}
+
+.back-btn:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0, 212, 255, 0.25),
+    0 0 12px rgba(0, 212, 255, 0.35);
+}
+
+/* Chat box feels like a screen */
+.workspace-chat-box {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.02),
+      transparent 120px
+    );
+}
+
+/* Messages feel slightly elevated */
+.workspace-message {
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+/* Jarvis messages get subtle emphasis */
+.workspace-message.jarvis {
+  box-shadow:
+    0 0 14px rgba(0, 212, 255, 0.25);
+}
+
+/* Input area feels grounded */
+.workspace-input {
+   position: relative;
+  box-shadow:
+    0 -2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Inputs feel responsive but calm */
+.workspace-input input:focus {
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.45),
+    0 0 12px rgba(0, 212, 255, 0.35);
+}
+.workspace-highlight {
+
+  animation: workspaceFlash 2s ease;
+
+}
+
+@keyframes workspaceFlash {
+
+  0% {
+    background-color: transparent;
+  }
+
+  25% {
+    background-color: rgba(0, 150, 255, 0.35);
+    box-shadow: 0 0 60px rgba(0,150,255,1);
+  }
+
+  50% {
+    background-color: rgba(0, 150, 255, 0.25);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+
+}
+.workspace-chat-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 12px 20px;
+
+  border-bottom: 1px solid rgba(0,150,255,0.2);
+
+}
+
+
+/* LEFT */
+.workspace-header-left {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+
+/* CENTER */
+.workspace-header-center {
+
+  flex: 1;
+
+  text-align: center;
+
+}
+
+
+/* MAIN TITLE */
+/* =========================
+   JARVIS GROUP TITLE CORE
+========================= */
+
+.workspace-title-main {
+
+  font-size: 22px;
+
+  font-weight: 600;
+
+  color: #00d4ff;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  position: relative;
+
+  text-shadow:
+    0 0 6px #00d4ff,
+    0 0 14px rgba(0,212,255,0.8),
+    0 0 28px rgba(0,212,255,0.6);
+
+  animation: jarvisTitleGlow 2.5s ease-in-out infinite alternate;
+
+}
+.workspace-header-center {
+
+  flex: 1;
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 1;
+
+  pointer-events: none; /* prevents blocking buttons */
+
+}
+.workspace-header-left,
+.workspace-header-right {
+
+  position: relative;
+
+  z-index: 2;
+
+}
+@keyframes jarvisTitleGlow {
+
+  0% {
+    text-shadow:
+      0 0 2px #00d4ff,
+      0 0 4px rgba(0,212,255,0.4),
+      0 0 8px rgba(0,212,255,0.3);
+  }
+
+  50% {
+    text-shadow:
+      0 0 4px #00d4ff,
+      0 0 10px rgba(0,212,255,0.7),
+      0 0 18px rgba(0,212,255,0.5);
+  }
+
+  100% {
+    text-shadow:
+      0 0 2px #00d4ff,
+      0 0 6px rgba(0,212,255,0.4),
+      0 0 10px rgba(0,212,255,0.3);
+  }
+
+}
+.workspace-title-main::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -4px;
+
+  width: 100%;
+  height: 2px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #00d4ff,
+      transparent
+    );
+
+  animation: jarvisTitleScan 3s linear infinite;
+
+}
+@keyframes jarvisTitleScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* SUB TEXT */
+.workspace-title-sub {
+
+  font-size: 11px;
+
+  color: rgba(0,212,255,0.7);
+
+  letter-spacing: 1.5px;
+
+  text-transform: uppercase;
+
+  text-shadow:
+    0 0 6px rgba(0,212,255,0.6);
+
+}
+/* RIGHT */
+.workspace-header-right {
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+}
+/* BASE */
+.workspace-chat-box {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* wallpaper layer */
+.workspace-chat-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: 0.18; /* Jarvis style subtle */
+
+  z-index: -1;
+}
+
+
+/* ===============================
+   WALLPAPER BASE
+================================ */
+.workspace-chat-box {
+  position: relative;
+  z-index: 0;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* overlay */
+.workspace-chat-box::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(2,6,23,0.55);
+
+  z-index: -1;
+}
+
+/* wallpapers */
+
+.workspace-chat-box.wap1 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+    url("/wallpapers/wap1.jpg");
+}
+
+.workspace-chat-box.wap2 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)),
+    url("/wallpapers/wap2.jpg");
+}
+
+.workspace-chat-box.wap3 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.5), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap3.jpg");
+}
+
+.workspace-chat-box.wap4 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.7)),
+    url("/wallpapers/wap4.jpg");
+}
+
+.workspace-chat-box.wap5 {
+  background-image:
+    linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.7)),
+    url("/wallpapers/wap5.jpg");
+}
+
+.workspace-chat-box.wap6 {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
+    url("/wallpapers/wap6.jpg");
+    
+.wap7 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap7.jpg");
+}
+
+.wap8 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap8.jpeg");
+}
+
+.wap9 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap9.jpeg");
+}
+
+.wap10 {
+  background-image:
+    linear-gradient(rgba(2,6,23,0.55), rgba(2,6,23,0.7)),
+    url("/wallpapers/wap10.jpeg");
+}
+
+
+}
+
+/* =========================
+   JARVIS WALLPAPER BUTTON
+========================= */
+
+.wallpaper-open-btn {
+
+  position: relative;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(0,212,255,0.35);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  color: #00d4ff;
+
+  font-size: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  overflow: hidden;
+
+  box-shadow:
+    inset 0 0 12px rgba(0,212,255,0.25),
+    0 0 10px rgba(0,212,255,0.2);
+
+}
+
+
+/* hover glow */
+.wallpaper-open-btn:hover {
+
+  border-color: #00d4ff;
+
+  transform: scale(1.1);
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 16px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+}
+
+
+/* click effect */
+.wallpaper-open-btn:active {
+
+  transform: scale(0.95);
+
+  box-shadow:
+    inset 0 0 20px rgba(0,212,255,0.7);
+
+}
+
+
+/* =========================
+   ICON GLOW CORE
+========================= */
+
+.wallpaper-open-btn {
+
+  text-shadow:
+    0 0 6px #00d4ff,
+    0 0 14px #00d4ff,
+    0 0 24px rgba(0,212,255,0.8);
+
+}
+
+
+/* =========================
+   JARVIS SCAN EFFECT
+========================= */
+
+.wallpaper-open-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.4),
+      transparent
+    );
+
+  opacity: 0;
+
+}
+
+.wallpaper-open-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisWallpaperScan 1.5s linear infinite;
+
+}
+
+
+@keyframes jarvisWallpaperScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* =========================
+   ADVANCED INSTAGRAM + JARVIS TYPING
+========================= */
+
+.typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 8px 14px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  animation:
+    typingPop 0.25s ease,
+    typingFloat 3s ease-in-out infinite;
+}
+
+
+
+/* username text */
+.typing-text {
+  font-size: 13px;
+  color: #7dd3ff;
+  font-weight: 500;
+
+  text-shadow:
+    0 0 6px rgba(0,212,255,0.6);
+}
+
+
+/* dots container */
+.typing-dots {
+  display: flex;
+  gap: 5px;
+}
+
+
+/* individual dots */
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    #00d4ff,
+    #0284c7
+  );
+
+  box-shadow:
+    0 0 6px #00d4ff,
+    0 0 12px rgba(0,212,255,0.6);
+
+  animation: instaTyping 1.4s infinite ease-in-out;
+}
+
+
+/* delays */
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+/* bounce animation */
+@keyframes instaTyping {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
+
+
+/* smooth appearance */
+@keyframes typingPop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* subtle floating effect like Instagram */
+@keyframes typingFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+
+/* =========================
+   ADVANCED MENTION POPUP
+========================= */
+.mention-box {
+
+  position: absolute;
+
+  /* appear above input safely */
+  bottom: 56px;
+  left: 0;
+
+  min-width: 240px;
+  max-width: 320px;
+
+  /* prevent covering typing */
+  max-height: 180px;
+  overflow-y: auto;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.96),
+      rgba(2,6,23,0.92)
+    );
+
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 14px;
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 0 25px rgba(0,212,255,0.25),
+    0 12px 35px rgba(0,0,0,0.7),
+    inset 0 0 12px rgba(0,212,255,0.08);
+
+  padding: 6px;
+
+  z-index: 9999;
+
+  animation: mentionPopup 0.18s ease;
+
+}
+
+
+/* =========================
+   MENTION ITEMS
+========================= */
+
+.mention-item {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 12px;
+
+  cursor: pointer;
+
+  color: #7dd3ff;
+  font-size: 14px;
+  font-weight: 500;
+
+  border-radius: 10px;
+
+  transition: all 0.18s ease;
+}
+
+
+/* hover effect */
+.mention-item:hover {
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,212,255,0.18),
+      rgba(0,212,255,0.08)
+    );
+
+  box-shadow:
+    0 0 10px rgba(0,212,255,0.35);
+
+  transform: translateX(2px);
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.mention-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mention-box::-webkit-scrollbar-thumb {
+  background: rgba(0,212,255,0.35);
+  border-radius: 10px;
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes mentionPopup {
+
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+/* =========================
+   Jarvis mention (AI)
+========================= */
+.mention-jarvis {
+
+  color: #ef4444;   /* clean modern red */
+
+  font-weight: 600;
+
+  background: rgba(239, 68, 68, 0.12);
+
+  padding: 2px 6px;
+
+  border-radius: 6px;
+
+  text-shadow: none;
+
+}
+
+
+/* =========================
+   User mention
+========================= */
+.mention-user {
+
+  color: #2563eb;   /* clean professional blue */
+
+  font-weight: 600;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  padding: 2px 6px;
+
+  border-radius: 6px;
+
+  text-shadow: none;
+
+}
+/* =========================
+   JARVIS ROBOTIC BASE BUTTON
+========================= */
+
+.call-btn,
+.video-btn,
+.invite-btn {
+
+  position: relative;
+
+  height: 38px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(0,212,255,0.35);
+
+  color: #e6f1ff;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(2,6,23,0.85),
+      rgba(2,6,23,0.65)
+    );
+
+  backdrop-filter: blur(10px);
+
+  transition: all 0.25s ease;
+
+  overflow: hidden;
+
+}
+
+
+/* =========================
+   CALL BUTTON (GREEN ENERGY)
+========================= */
+
+.call-btn {
+
+  width: 38px;
+
+  box-shadow:
+    inset 0 0 12px rgba(34,197,94,0.25),
+    0 0 10px rgba(34,197,94,0.25);
+
+}
+
+.call-btn:hover {
+
+  border-color: #22c55e;
+
+  box-shadow:
+    inset 0 0 18px rgba(34,197,94,0.45),
+    0 0 14px rgba(34,197,94,0.65),
+    0 0 28px rgba(34,197,94,0.35);
+
+  transform: scale(1.08);
+
+}
+
+
+/* =========================
+   VIDEO BUTTON (BLUE ENERGY)
+========================= */
+
+.video-btn {
+
+  width: 38px;
+
+  box-shadow:
+    inset 0 0 12px rgba(59,130,246,0.25),
+    0 0 10px rgba(59,130,246,0.25);
+
+}
+
+.video-btn:hover {
+
+  border-color: #3b82f6;
+
+  box-shadow:
+    inset 0 0 18px rgba(59,130,246,0.45),
+    0 0 14px rgba(59,130,246,0.65),
+    0 0 28px rgba(59,130,246,0.35);
+
+  transform: scale(1.08);
+
+}
+
+
+/* /* =========================
+   INVITE BUTTON (CYAN JARVIS CORE)
+========================= */
+.invite-btn {
+
+  height: 32px;          /* slightly smaller height */
+  padding: 0 10px;       /* 🔥 reduces width */
+
+  font-size: 12px;       /* smaller text */
+
+  border-radius: 10px;
+
+}
+.invite-btn:hover {
+
+  border-color: #00d4ff;
+
+  box-shadow:
+    inset 0 0 18px rgba(0,212,255,0.45),
+    0 0 14px rgba(0,212,255,0.65),
+    0 0 28px rgba(0,212,255,0.35);
+
+  transform: scale(1.05);
+
+}
+ */
+
+/* =========================
+   JARVIS SCAN LINE EFFECT
+========================= */
+
+.call-btn::before,
+.video-btn::before,
+.invite-btn::before {
+
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(0,212,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+
+}
+
+.call-btn:hover::before,
+.video-btn:hover::before,
+.invite-btn:hover::before {
+
+  opacity: 1;
+
+  animation: jarvisScan 1.5s linear infinite;
+
+}
+
+
+@keyframes jarvisScan {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+
+}
+/* =========================
+   ICON VISIBILITY FIX
+========================= */
+
+.call-btn,
+.video-btn {
+
+  font-size: 18px;   /* bigger icon */
+
+  color: #ffffff;    /* pure white core */
+
+  text-shadow:
+    0 0 4px currentColor,
+    0 0 8px currentColor,
+    0 0 14px currentColor;
+
+}
+
+
+/* GREEN CALL ICON ENERGY */
+.call-btn {
+
+  color: #22c55e;
+
+  text-shadow:
+    0 0 6px #22c55e,
+    0 0 14px #22c55e,
+    0 0 24px rgba(34,197,94,0.8);
+
+}
+
+
+/* BLUE VIDEO ICON ENERGY */
+.video-btn {
+
+  color: #3b82f6;
+
+  text-shadow:
+    0 0 6px #3b82f6,
+    0 0 14px #3b82f6,
+    0 0 24px rgba(59,130,246,0.8);
+
+}
+
+/* =========================
+   CLICK EFFECT
+========================= */
+
+.call-btn:active,
+.video-btn:active,
+.invite-btn:active {
+
+  transform: scale(0.95);
+
+  box-shadow:
+    inset 0 0 20px rgba(0,212,255,0.6);
+
+}
+@media (max-width: 768px) {
+
+  /* Remove top padding */
+  .workspace-chat {
+    padding-top: 0;
+  }
+
+  /* Header becomes tighter */
+  .workspace-chat-header {
+    height: 52px;
+    padding: 0 10px;
+  }
+
+  /* Hide large invite input on small screens */
+  .workspace-chat-header .invite-input {
+    display: none;
+  }
+
+  /* Make header buttons smaller */
+  .call-btn,
+  .video-btn,
+  .wallpaper-open-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  /* Reduce title size */
+  .workspace-title-main {
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  .workspace-title-sub {
+    font-size: 9px;
+  }
+
+  /* Chat padding smaller */
+  .workspace-chat-box {
+    padding: 12px;
+    margin: 4px;
+  }
+
+  /* Messages take more width */
+  .workspace-message {
+    max-width: 88%;
+    font-size: 14px;
+  }
+
+  /* Input area tighter */
+  .workspace-input input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .workspace-input button {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  /* Mention popup adjust */
+  .mention-box {
+    left: 10px;
+    right: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+
+}

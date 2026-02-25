@@ -1,0 +1,18 @@
+[
+  {
+    "id": "47eec93e-eeed-4d4c-b501-1669421b664d",
+    "started_at": "2026-02-07T11:52:35.072864",
+    "messages": [
+      {
+        "role": "user",
+        "text": "swarch for mouse",
+        "time": "2026-02-07T11:55:31.786749"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-02-07T11:55:31.787252"
+      }
+    ]
+  }
+]

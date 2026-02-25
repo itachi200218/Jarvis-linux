@@ -1,0 +1,264 @@
+/* =========================
+   PAGE BACKGROUND
+========================= */
+.support-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background:
+    radial-gradient(circle at top, #0a1a1f, #05070d 60%);
+}
+/* =========================
+   MAIN SUPPORT LAYOUT
+========================= */
+.support-layout {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 120px); /* header + footer safe */
+  overflow: hidden;
+}
+
+/* =========================
+   SUPPORT CARD
+========================= */
+.support-container {
+  max-width: 520px;
+  margin: auto;
+  padding: 32px;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 20, 0.95),
+    rgba(10, 10, 10, 0.98)
+  );
+
+  color: #eaeaea;
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(0, 255, 255, 0.15);
+}
+
+/* =========================
+   TITLE
+========================= */
+.support-title {
+  text-align: center;
+  margin-bottom: 22px;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  color: #00f6ff;
+}
+
+/* =========================
+   TEXTAREA
+========================= */
+.support-textarea {
+  width: 100%;
+  height: 140px;
+  padding: 14px;
+  margin-bottom: 16px;
+
+  resize: none;
+  background: #020409;
+  color: #00f6ff;
+
+  border: 1px solid rgba(0, 246, 255, 0.4);
+  border-radius: 10px;
+
+  font-size: 0.95rem;
+}
+
+.support-textarea:focus {
+  outline: none;
+  border-color: #00f6ff;
+  box-shadow: 0 0 12px rgba(0, 246, 255, 0.4);
+}
+/* ===============================
+   TICKETS SIDEBAR
+================================ */
+
+.ticket-list {
+  width: 280px;
+  background: #0b0f14;
+  padding: 16px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+/* TITLE */
+.ticket-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* SECTION (Pending / Solved) */
+.ticket-section {
+  margin-bottom: 14px;
+}
+
+/* SECTION HEADER */
+.ticket-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #00f6ff;
+  background: rgba(0, 246, 255, 0.08);
+}
+
+.ticket-section-header:hover {
+  background: rgba(0, 246, 255, 0.15);
+}
+
+/* SOLVED HEADER */
+.ticket-section-header.solved {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.ticket-section-header.solved:hover {
+  background: rgba(0, 255, 136, 0.15);
+}
+
+/* TICKET ITEM */
+.ticket-item {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  color: #e5e7eb;
+  font-size: 13px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* OPEN TICKET */
+.ticket-item.open {
+  border-left-color: #00f6ff;
+}
+
+.ticket-item.open:hover {
+  background: rgba(0, 246, 255, 0.12);
+}
+
+/* CLOSED TICKET */
+.ticket-item.closed {
+  border-left-color: #00ff88;
+  opacity: 0.6;
+}
+
+.ticket-item.closed:hover {
+  background: rgba(0, 255, 136, 0.12);
+}
+
+/* EMPTY TEXT */
+.no-tickets {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+  padding-left: 4px;
+}
+.ticket-list::-webkit-scrollbar,
+.ticket-chat::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ticket-list::-webkit-scrollbar-thumb,
+.ticket-chat::-webkit-scrollbar-thumb {
+  background: rgba(0, 246, 255, 0.4);
+  border-radius: 10px;
+}
+
+.ticket-list::-webkit-scrollbar-track,
+.ticket-chat::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.support-button {
+  width: 100%;
+  padding: 14px;
+
+  background: linear-gradient(135deg, #6a00ff, #00d4ff);
+  color: #fff;
+
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.support-button:hover {
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+}
+
+.support-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   STATUS
+========================= */
+.support-status {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #00ff9c;
+}
+
+/* =========================
+   FOOTER (INDUSTRY STYLE)
+========================= */
+.support-footer {
+  margin-top: auto;
+  padding: 22px 0;
+  text-align: center;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+.footer-brand {
+  color: #00f6ff;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.footer-links {
+  margin: 8px 0;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-links span {
+  cursor: pointer;
+}
+
+.footer-links span:hover {
+  color: #00f6ff;
+}
+
+.footer-meta {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}

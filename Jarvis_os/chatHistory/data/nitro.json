@@ -1,0 +1,68 @@
+[
+  {
+    "id": "3f662c5e-a9c0-4935-9754-83936c9cf73c",
+    "started_at": "2026-01-29T12:57:00.542867",
+    "messages": [
+      {
+        "role": "user",
+        "text": "my age 23",
+        "time": "2026-01-29T12:57:12.211321"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-29T12:57:12.223556"
+      },
+      {
+        "role": "user",
+        "text": "my age is 23",
+        "time": "2026-01-29T12:57:23.340627"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-29T12:57:23.353031"
+      },
+      {
+        "role": "user",
+        "text": "i am a laptop",
+        "time": "2026-01-29T12:57:29.266593"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-29T12:57:29.277747"
+      },
+      {
+        "role": "user",
+        "text": "i am a fullstavk dev",
+        "time": "2026-01-29T12:57:38.808139"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-29T12:57:38.821712"
+      },
+      {
+        "role": "user",
+        "text": "my role is laptop",
+        "time": "2026-01-29T12:58:47.457266"
+      },
+      {
+        "role": "jarvis",
+        "text": "I encountered an issue accessing my AI intelligence.",
+        "time": "2026-01-29T12:58:47.471288"
+      },
+      {
+        "role": "user",
+        "text": "my role is laptop",
+        "time": "2026-01-29T13:01:11.497383"
+      },
+      {
+        "role": "jarvis",
+        "text": "Got it! How can I assist you today, Nitro?",
+        "time": "2026-01-29T13:01:11.508263"
+      }
+    ]
+  }
+]

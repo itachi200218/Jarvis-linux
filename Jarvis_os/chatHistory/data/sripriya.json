@@ -1,0 +1,84 @@
+[
+  {
+    "id": "89abcb28-3c92-486c-b86e-427fbab87d8d",
+    "started_at": "2026-01-16T18:11:45.520878",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-16T18:11:47.483513"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure, here's a classic one for you: Why couldn't the bicycle stand up by itself? Because it was two tired!",
+        "time": "2026-01-16T18:11:47.483907"
+      },
+      {
+        "role": "user",
+        "text": "what is anime",
+        "time": "2026-01-16T18:11:58.100345"
+      },
+      {
+        "role": "jarvis",
+        "text": "Anime is a style of animation that originated in Japan and has become popular worldwide. It covers a wide range of genres and can be aimed at different age groups. Anime often features colorful artwork, fantastical themes, and vibrant characters.",
+        "time": "2026-01-16T18:11:58.100669"
+      },
+      {
+        "role": "user",
+        "text": "what is petty cashbook",
+        "time": "2026-01-16T18:12:27.412194"
+      },
+      {
+        "role": "jarvis",
+        "text": "A petty cashbook is a record of small, day-to-day expenses of a business that are paid in cash. It is used to track and manage minor expenses like office supplies, postage, or small repairs. The petty cashbook helps in maintaining transparency and accountability for these small cash transactions within the organization.",
+        "time": "2026-01-16T18:12:27.412466"
+      },
+      {
+        "role": "user",
+        "text": "I am a backend developer",
+        "time": "2026-01-16T18:14:30.481261"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Is there anything specific you would like assistance with regarding backend development?",
+        "time": "2026-01-16T18:14:30.481595"
+      }
+    ]
+  },
+  {
+    "id": "7fba2a67-2658-472a-abae-5f2e505c1a80",
+    "started_at": "2026-01-16T18:22:52.323597",
+    "messages": [
+      {
+        "role": "user",
+        "text": "hi my name is Divya",
+        "time": "2026-01-16T18:22:53.536965"
+      },
+      {
+        "role": "jarvis",
+        "text": "Hello, Divya! How can I assist you today?",
+        "time": "2026-01-16T18:22:53.537493"
+      },
+      {
+        "role": "user",
+        "text": "I am a backend developer",
+        "time": "2026-01-16T18:24:39.502238"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to hear! Is there anything specific you would like assistance with regarding backend development?",
+        "time": "2026-01-16T18:24:39.502896"
+      },
+      {
+        "role": "user",
+        "text": "my role is back end developer",
+        "time": "2026-01-16T18:24:51.679785"
+      },
+      {
+        "role": "jarvis",
+        "text": "That's great to know! How can I assist you today with your role as a back end developer?",
+        "time": "2026-01-16T18:24:51.680098"
+      }
+    ]
+  }
+]

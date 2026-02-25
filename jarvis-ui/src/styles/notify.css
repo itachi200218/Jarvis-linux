@@ -1,0 +1,93 @@
+/* ===============================
+   🤖 JARVIS SYSTEM NOTIFICATION
+   =============================== */
+
+.jarvis-notify {
+  position: fixed;
+  top: 24px;                 /* ✅ moved to top */
+  left: 50%;                 /* ✅ center horizontally */
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  min-width: 280px;
+  max-width: 360px;
+
+  padding: 14px 16px;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    145deg,
+    #020617,
+    #020617
+  );
+
+  color: #e5e7eb;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+
+  border: 1px solid #1e293b;
+  box-shadow:
+    0 0 18px rgba(56, 189, 248, 0.15),
+    inset 0 0 12px rgba(2, 132, 199, 0.05);
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  animation: jarvis-slide-down 0.35s ease-out;
+}
+
+/* 🤖 Prefix (JARVIS:) */
+.jarvis-prefix {
+  color: #38bdf8;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+/* ===============================
+   STATES
+   =============================== */
+
+.jarvis-notify.success {
+  border-color: #22c55e;
+  box-shadow:
+    0 0 20px rgba(34, 197, 94, 0.35),
+    inset 0 0 12px rgba(34, 197, 94, 0.08);
+}
+
+.jarvis-notify.error {
+  border-color: #ef4444;
+  box-shadow:
+    0 0 20px rgba(239, 68, 68, 0.35),
+    inset 0 0 12px rgba(239, 68, 68, 0.08);
+}
+
+.jarvis-notify.info {
+  border-color: #38bdf8;
+  box-shadow:
+    0 0 20px rgba(56, 189, 248, 0.35),
+    inset 0 0 12px rgba(56, 189, 248, 0.08);
+}
+
+.jarvis-notify.warn {
+  border-color: #facc15;
+  color: #fef9c3;
+  box-shadow:
+    0 0 20px rgba(250, 204, 21, 0.35),
+    inset 0 0 12px rgba(250, 204, 21, 0.08);
+}
+
+/* ===============================
+   ANIMATION
+   =============================== */
+
+@keyframes jarvis-slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}

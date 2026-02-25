@@ -1,0 +1,28 @@
+[
+  {
+    "id": "c4ad38f6-c4f8-4a9a-9a84-509d6be5da8c",
+    "started_at": "2026-01-22T15:49:24.179003",
+    "messages": []
+  },
+  {
+    "id": "9b4eaf37-313c-4b3c-91af-1910652088fa",
+    "started_at": "2026-01-30T14:11:13.579732",
+    "messages": [
+      {
+        "role": "user",
+        "text": "tell me a joke",
+        "time": "2026-01-30T14:11:59.272947"
+      },
+      {
+        "role": "jarvis",
+        "text": "Sure! Here's one for you: Why don't scientists trust atoms? Because they make up everything!",
+        "time": "2026-01-30T14:11:59.273250"
+      }
+    ]
+  },
+  {
+    "id": "bd7d3e04-2a60-4a95-b1e0-ec1a1d2b2640",
+    "started_at": "2026-01-30T14:29:37.484950",
+    "messages": []
+  }
+]
