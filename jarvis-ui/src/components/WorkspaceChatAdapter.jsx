@@ -111,8 +111,7 @@ const [workspaceName, setWorkspaceName] = useState("");
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviting, setInviting] = useState(false);
-  const [typingUser, setTypingUser] = useState(null);
-  const [members, setMembers] = useState([]);
+const [typingUsers, setTypingUsers] = useState([]);  const [members, setMembers] = useState([]);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
 
   const bottomRef = useRef(null);
@@ -270,7 +269,7 @@ useEffect(() => {
 
     const interval = setInterval(async () => {
       const res = await getTyping(workspaceId);
-      setTypingUser(res.data?.user || null);
+setTypingUsers(res.data?.typing || []);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -648,57 +647,57 @@ const formatMentions = (text) => {
 /* ============================
    CALL SIGNAL LISTENER (CRITICAL FIX)
 ============================ */
-useEffect(() => {
+// useEffect(() => {
 
-  if (!ws) return;
+//   if (!ws) return;
 
-  const handleCallSignal = (event) => {
+//   const handleCallSignal = (event) => {
 
-    try {
+//     try {
 
-      const data = JSON.parse(event.data);
+//       const data = JSON.parse(event.data);
 
-      console.log("📞 Call signal received:", data);
+//       console.log("📞 Call signal received:", data);
 
-      // ✅ CALL REJECTED FIX
-      if (data.type === "call_rejected") {
+//       // ✅ CALL REJECTED FIX
+//       if (data.type === "call_rejected") {
 
-        console.log("❌ Call rejected by other user");
+//         console.log("❌ Call rejected by other user");
 
-        if (callManagerRef.current) {
-          callManagerRef.current.cleanupCall();
-        }
+//         if (callManagerRef.current) {
+//           callManagerRef.current.cleanupCall();
+//         }
 
-        showNotification("Call rejected", "error");
+//         showNotification("Call rejected", "error");
 
-      }
+//       }
 
-      // ✅ CALL END FIX
-      if (data.type === "call_end") {
+//       // ✅ CALL END FIX
+//       if (data.type === "call_end") {
 
-        console.log("📴 Call ended by other user");
+//         console.log("📴 Call ended by other user");
 
-        if (callManagerRef.current) {
-          callManagerRef.current.cleanupCall();
-        }
+//         if (callManagerRef.current) {
+//           callManagerRef.current.cleanupCall();
+//         }
 
-        showNotification("Call ended", "info");
+//         showNotification("Call ended", "info");
 
-      }
+//       }
 
-    } catch (err) {
-      console.error("Call signal error:", err);
-    }
+//     } catch (err) {
+//       console.error("Call signal error:", err);
+//     }
 
-  };
+//   };
 
-  ws.addEventListener("message", handleCallSignal);
+//   ws.addEventListener("message", handleCallSignal);
 
-  return () => {
-    ws.removeEventListener("message", handleCallSignal);
-  };
+//   return () => {
+//     ws.removeEventListener("message", handleCallSignal);
+//   };
 
-}, [ws, callManagerRef]);
+// }, [ws, callManagerRef]);
 
   return (
     <div className="workspace-chat">
@@ -767,7 +766,14 @@ useEffect(() => {
       return;
     }
 
-    const target = members.find(m => m.email !== myEmail);
+    const target = members.find(
+  m => m.email?.toLowerCase().trim() !== myEmail?.toLowerCase().trim()
+);
+
+console.log("👤 MY EMAIL:", myEmail);
+console.log("👥 MEMBERS:", members);
+console.log("🎯 SELECTED TARGET:", target);
+console.log("🎯 TARGET ID:", target?._id);
 
     if (!target) {
       alert("No target");
@@ -1091,17 +1097,21 @@ style={{
   </div>
 
 ))}
-  {typingUser && typingUser !== myEmail && (
-<div className="typing">
-  <span className="typing-text">{typingUser} is typing</span>
+ {typingUsers.length > 0 && (
+  <div className="typing">
+    <span className="typing-text">
+      {typingUsers.length === 1
+        ? `${typingUsers[0]} is typing`
+        : `${typingUsers.join(", ")} are typing`}
+    </span>
 
-  <span className="typing-dots">
-    <span></span>
-    <span></span>
-    <span></span>
-  </span>
-</div>
-  )}
+    <span className="typing-dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </div>
+)}
     <div ref={bottomRef} />
   </div>
 

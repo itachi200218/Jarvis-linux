@@ -1,9 +1,11 @@
 # ai_fallback.py
+
 import os
 import requests
 from dotenv import load_dotenv
 from typing import Optional
 
+# Load environment variables
 load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -27,6 +29,9 @@ BAD_AI_PATTERNS = [
 
 
 def _is_bad_ai_response(text: str) -> bool:
+    """
+    Detect generic/unhelpful AI responses.
+    """
     text = text.lower()
     return any(pattern in text for pattern in BAD_AI_PATTERNS)
 
@@ -37,21 +42,27 @@ def get_ai_response(
     intent_context: Optional[str] = None,
 ) -> str:
     """
-    AI fallback responder (stateless but context-aware).
+    AI fallback responder.
 
     Rules:
     - Memory is READ-ONLY
-    - Intent context is SHORT-LIVED (not stored permanently)
-    - AI must continue the active task if context exists
+    - Intent context is SHORT-LIVED
+    - AI continues the active task when context exists
     - Bad AI responses are discarded
+    - Detailed API errors are logged for debugging
     """
 
+    # -----------------------------
+    # Validate API key
+    # -----------------------------
     if not OPENROUTER_API_KEY:
+        print("🔥 AI ERROR: OPENROUTER_API_KEY is not configured.")
         return CONFIG_ERROR_MSG
 
     try:
+
         # -----------------------------
-        # System prompt (STRICT)
+        # System prompt
         # -----------------------------
         system_prompt = (
             "You are JARVIS, a calm, confident, intelligent assistant. "
@@ -81,15 +92,30 @@ def get_ai_response(
                 f"{memory_summary}"
             )
 
+        # -----------------------------
+        # OpenRouter request payload
+        # -----------------------------
         payload = {
             "model": "openai/gpt-3.5-turbo",
             "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_command.strip()},
+                {
+                    "role": "system",
+                    "content": system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": user_command.strip(),
+                },
             ],
             "temperature": 0.6,
+
+            # Keep token usage below current OpenRouter credit limit
+            "max_tokens": 2000,
         }
 
+        # -----------------------------
+        # API request
+        # -----------------------------
         response = requests.post(
             OPENROUTER_URL,
             headers={
@@ -100,11 +126,34 @@ def get_ai_response(
             timeout=10,
         )
 
+        # -----------------------------
+        # Debug non-200 responses
+        # -----------------------------
         if response.status_code != 200:
+
+            print("\n" + "=" * 60)
+            print("🔥 OPENROUTER API ERROR")
+            print("=" * 60)
+            print("Status Code:", response.status_code)
+            print("Response:", response.text)
+            print("=" * 60 + "\n")
+
             return NETWORK_ERROR_MSG
 
-        data = response.json()
+        # -----------------------------
+        # Parse JSON response
+        # -----------------------------
+        try:
+            data = response.json()
 
+        except ValueError as e:
+            print("\n🔥 AI JSON ERROR:", repr(e))
+            print("🔥 Raw Response:", response.text)
+            return NETWORK_ERROR_MSG
+
+        # -----------------------------
+        # Extract AI content
+        # -----------------------------
         content = (
             data.get("choices", [{}])[0]
             .get("message", {})
@@ -113,15 +162,88 @@ def get_ai_response(
         )
 
         # -----------------------------
-        # Validate AI output
+        # Debug empty response
         # -----------------------------
-        if not content or len(content) < 4:
+        if not content:
+
+            print("\n" + "=" * 60)
+            print("🔥 AI EMPTY RESPONSE")
+            print("=" * 60)
+            print("OpenRouter Response:", data)
+            print("=" * 60 + "\n")
+
             return EMPTY_RESPONSE_MSG
 
-        if _is_bad_ai_response(content):
+        # -----------------------------
+        # Validate response length
+        # -----------------------------
+        if len(content) < 4:
+            print("🔥 AI response too short:", repr(content))
             return EMPTY_RESPONSE_MSG
+
+        # -----------------------------
+        # Reject bad AI responses
+        # -----------------------------
+        if _is_bad_ai_response(content):
+            print("⚠️ Bad AI response discarded:", repr(content))
+            return EMPTY_RESPONSE_MSG
+
+        # -----------------------------
+        # Successful response
+        # -----------------------------
+        print("🤖 JARVIS AI response received successfully.")
 
         return content
 
-    except Exception:
+    # -----------------------------
+    # Timeout
+    # -----------------------------
+    except requests.exceptions.Timeout as e:
+
+        print("\n" + "=" * 60)
+        print("🔥 OPENROUTER TIMEOUT")
+        print("=" * 60)
+        print(repr(e))
+        print("=" * 60 + "\n")
+
+        return NETWORK_ERROR_MSG
+
+    # -----------------------------
+    # Connection error
+    # -----------------------------
+    except requests.exceptions.ConnectionError as e:
+
+        print("\n" + "=" * 60)
+        print("🔥 OPENROUTER CONNECTION ERROR")
+        print("=" * 60)
+        print(repr(e))
+        print("=" * 60 + "\n")
+
+        return NETWORK_ERROR_MSG
+
+    # -----------------------------
+    # Other request errors
+    # -----------------------------
+    except requests.exceptions.RequestException as e:
+
+        print("\n" + "=" * 60)
+        print("🔥 OPENROUTER REQUEST ERROR")
+        print("=" * 60)
+        print(repr(e))
+        print("=" * 60 + "\n")
+
+        return NETWORK_ERROR_MSG
+
+    # -----------------------------
+    # Unexpected exception
+    # -----------------------------
+    except Exception as e:
+
+        print("\n" + "=" * 60)
+        print("🔥 UNEXPECTED AI ERROR")
+        print("=" * 60)
+        print("Error Type:", type(e).__name__)
+        print("Error:", repr(e))
+        print("=" * 60 + "\n")
+
         return NETWORK_ERROR_MSG

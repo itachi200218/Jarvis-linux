@@ -31,17 +31,12 @@ const location = useLocation();
   // =========================
   // INIT CALL MANAGER
   // =========================
-  useEffect(() => {
+// =========================
+// INIT / UPDATE CALL MANAGER
+// =========================
+useEffect(() => {
 
   if (!ws) return;
-
-  // ✅ CRITICAL FIX: do NOT recreate CallManager if already exists
-  if (callManagerRef.current) {
-    console.log("CallManager already exists, skipping re-init");
-    return;
-  }
-
-  console.log("Initializing GLOBAL CallManager");
 
   const token = sessionStorage.getItem("jarvis_token");
 
@@ -49,19 +44,32 @@ const location = useLocation();
   let myName = null;
 
   if (token) {
-
     const payload = JSON.parse(atob(token.split(".")[1]));
-
     myEmail = payload.sub;
     myName = payload.name;
+  }
+
+  if (!callManagerRef.current) {
+
+    console.log("Initializing GLOBAL CallManager");
+
+    callManagerRef.current =
+      new CallManager(ws, myName, myEmail);
+
+  } else {
+
+    console.log("Resetting + Updating CallManager after WS reconnect");
+
+    // 🔥 VERY IMPORTANT
+    callManagerRef.current.resetState();
+
+    callManagerRef.current.ws = ws;
+    callManagerRef.current.myEmail = myEmail;
+    callManagerRef.current.myName = myName;
 
   }
 
-  callManagerRef.current =
-    new CallManager(ws, myName, myEmail);
-
 }, [ws]);
-
   // =========================
   // GLOBAL WS LISTENER
   // =========================

@@ -63,7 +63,7 @@ async def notifications_ws(websocket: WebSocket):
                 "call_answer",
                 "call_candidate",
                 "call_end",
-                "call_rejcted"
+                "call_rejected"
             ]:
 
                 await manager.send_to_user(
@@ -73,7 +73,9 @@ async def notifications_ws(websocket: WebSocket):
                         "from": user_id
                     }
                 )
-
+            else:
+                    # ✅ ADD IT HERE
+                    print(f"⚠️ Unknown WS event type: {event_type}")
     except WebSocketDisconnect:
 
         print(f"🔕 WS disconnected: {user_id}")

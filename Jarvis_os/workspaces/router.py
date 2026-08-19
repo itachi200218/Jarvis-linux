@@ -446,28 +446,71 @@ def mark_message_seen(
 @router.post("/{workspace_id}/typing")
 def set_typing(
     workspace_id: str,
-    current_user: dict = Depends(track_presence)  # ✅ keep user online
+    current_user: dict = Depends(track_presence)
 ):
-    typing_users[workspace_id] = {
-        "user": current_user["email"],
-        "time": datetime.utcnow()
-    }
+    # 🔐 Verify workspace exists
+    ws = workspaces_col.find_one({
+        "_id": ObjectId(workspace_id)
+    })
+
+    if not ws:
+        raise HTTPException(404, "Workspace not found")
+
+    # 🔐 Verify current user is a workspace member
+    if current_user["email"] not in [
+        m["user_id"] for m in ws.get("members", [])
+    ]:
+        raise HTTPException(403, "Access denied")
+
+    # 🧠 Keep typing state separately for each user
+    if workspace_id not in typing_users:
+        typing_users[workspace_id] = {}
+
+    typing_users[workspace_id][current_user["email"]] = datetime.utcnow()
+
     return {"status": "typing"}
 
 @router.get("/{workspace_id}/typing")
 def get_typing(
     workspace_id: str,
-    current_user: dict = Depends(track_presence)  # ✅ CHANGED HERE
+    current_user: dict = Depends(track_presence)
 ):
-    data = typing_users.get(workspace_id)
-    if not data:
-        return None
+    # 🔐 Verify workspace exists and user is a member
+    ws = workspaces_col.find_one({
+        "_id": ObjectId(workspace_id)
+    })
 
-    if (datetime.utcnow() - data["time"]).total_seconds() > 2:
+    if not ws:
+        raise HTTPException(404, "Workspace not found")
+
+    if current_user["email"] not in [
+        m["user_id"] for m in ws.get("members", [])
+    ]:
+        raise HTTPException(403, "Access denied")
+
+    workspace_typing = typing_users.get(workspace_id, {})
+
+    now = datetime.utcnow()
+    active_users = []
+
+    # Remove stale typing states
+    for email, timestamp in list(workspace_typing.items()):
+
+        if (now - timestamp).total_seconds() > 2:
+            del workspace_typing[email]
+            continue
+
+        # Don't show the current user as typing
+        if email != current_user["email"]:
+            active_users.append(email)
+
+    # Clean empty workspace entry
+    if not workspace_typing:
         typing_users.pop(workspace_id, None)
-        return None
 
-    return data
+    return {
+        "typing": active_users
+    }
 # =====================================================
 # 🔥 NEW — LEAVE WORKSPACE (ANYTIME)
 # =====================================================
