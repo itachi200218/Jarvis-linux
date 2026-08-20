@@ -13,20 +13,33 @@ import Support from "./components/Support";
 import ResetPassword from "./pages/ResetPassword";
 import WallpaperPicker from "./components/WallpaperPicker";
 import CallPage from "./pages/CallPage";
+
 import { playNotificationSound } from "./utils/soundManager";
 import { CallProvider } from "./context/CallContext";
 import { JarvisNotifyProvider } from "./context/JarvisNotifyContext";
 import { unlockAudioOnFirstInteraction } from "./utils/soundManager";
+
 // import {
 //   connectNotificationSocket,
 //   disconnectNotificationSocket
 // } from "./ws/notificationsSocket";
 
+
 function App() {
-useEffect(() => {
-  unlockAudioOnFirstInteraction();
-}, []);
+
+  useEffect(() => {
+
+    unlockAudioOnFirstInteraction();
+
+  }, []);
+
+
   usePresence();
+
+
+  // ==============================
+  // OLD NOTIFICATION SOCKET
+  // ==============================
 
   // useEffect(() => {
 
@@ -49,7 +62,6 @@ useEffect(() => {
   // }, []);
 
 
-
   return (
 
     <JarvisNotifyProvider>
@@ -58,37 +70,119 @@ useEffect(() => {
 
         <Routes>
 
-          <Route path="/" element={<JarvisApp />} />
+          {/* ==============================
+              MAIN APPLICATION
+          ============================== */}
 
-          <Route path="/auth" element={<Login />} />
+          <Route
+            path="/"
+            element={<JarvisApp />}
+          />
 
-          <Route path="/login" element={<Login />} />
 
-          <Route path="/reset-password" element={<ResetPassword />} />
+          {/* ==============================
+              AUTH
+          ============================== */}
 
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/auth"
+            element={<Login />}
+          />
 
-          <Route path="/profile/:email" element={<Profile />} />
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-          <Route path="/chat" element={<ChatPage />} />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
+          />
 
-          <Route path="/chat/:chatId" element={<ChatDetail />} />
 
-          <Route path="/workspaces" element={<WorkspacesPage />} />
+          {/* ==============================
+              PROFILE
+          ============================== */}
 
-          <Route path="/workspaces/:workspaceId" element={<WorkspacesPage />} />
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
+          <Route
+            path="/profile/:email"
+            element={<Profile />}
+          />
+
+
+          {/* ==============================
+              CHAT
+          ============================== */}
+
+          <Route
+            path="/chat"
+            element={<ChatPage />}
+          />
+
+          <Route
+            path="/chat/:chatId"
+            element={<ChatDetail />}
+          />
+
+
+          {/* ==============================
+              WORKSPACES
+          ============================== */}
+
+          <Route
+            path="/workspaces"
+            element={<WorkspacesPage />}
+          />
+
+          <Route
+            path="/workspaces/:workspaceId"
+            element={<WorkspacesPage />}
+          />
 
           <Route
             path="/workspaces/:workspaceId/wallpaper"
             element={<WallpaperPicker />}
           />
 
-          <Route path="/support" element={<Support />} />
 
-          <Route path="/support/:ticketId" element={<Support />} />
+          {/* ==============================
+              SUPPORT
+          ============================== */}
 
-          {/* CALL PAGE */}
-          <Route path="/call/:userId" element={<CallPage />} />
+          <Route
+            path="/support"
+            element={<Support />}
+          />
+
+          <Route
+            path="/support/:ticketId"
+            element={<Support />}
+          />
+
+
+          {/* ==============================
+              1-TO-1 CALL
+          ============================== */}
+
+          <Route
+            path="/call/:userId"
+            element={<CallPage />}
+          />
+
+
+          {/* ==============================
+              GROUP CALL
+          ============================== */}
+
+          <Route
+            path="/call/group/:callId"
+            element={<CallPage />}
+          />
 
         </Routes>
 
@@ -99,5 +193,6 @@ useEffect(() => {
   );
 
 }
+
 
 export default App;

@@ -1,3 +1,4 @@
+import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime
 from bson import ObjectId
@@ -25,7 +26,10 @@ workspaces_col = db["workspaces"]
 messages_col = db["workspace_messages"]
 invites_col = db["workspace_invites"]
 
-
+# ==============================
+# ACTIVE GROUP CALLS
+# ==============================
+group_calls = {}
     
 
 def track_presence(current_user: dict = Depends(get_current_user)):
@@ -40,6 +44,8 @@ class CreateWorkspaceRequest(BaseModel):
     invites: Optional[List[str]] = []
     range: Optional[str] = "private"
 
+class StartGroupCallRequest(BaseModel):
+    participant_ids: List[str]
 # ==============================
 # CREATE WORKSPACE (FIXED)
 # ==============================
@@ -243,6 +249,127 @@ def reject_invite(invite_id: str, current_user: dict = Depends(get_current_user)
 
     return {"message": "Invite rejected"}
 
+# ==============================
+# START GROUP CALL
+# ==============================
+@router.post("/{workspace_id}/group-call/start")
+def start_group_call(
+    workspace_id: str,
+    data: StartGroupCallRequest,
+    current_user: dict = Depends(get_current_user)
+):
+
+    # Find workspace
+    ws = workspaces_col.find_one({
+        "_id": ObjectId(workspace_id)
+    })
+
+    if not ws:
+        raise HTTPException(
+            status_code=404,
+            detail="Workspace not found"
+        )
+
+    # Verify caller is a member
+    if current_user["email"] not in [
+        m["user_id"] for m in ws.get("members", [])
+    ]:
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied"
+        )
+
+    # Find selected users by Mongo ID
+    selected_users = []
+
+    for member_id in data.participant_ids:
+
+        try:
+            user = users_collection.find_one({
+                "_id": ObjectId(member_id)
+            })
+        except Exception:
+            continue
+
+        if not user:
+            continue
+
+        email = user["email"]
+
+        # Make sure selected user is actually
+        # a member of this workspace
+        workspace_member = any(
+            m["user_id"] == email
+            for m in ws.get("members", [])
+        )
+
+        if workspace_member:
+            selected_users.append({
+                "user_id": str(user["_id"]),
+                "email": email,
+                "name": user.get(
+                    "name",
+                    email.split("@")[0]
+                )
+            })
+
+    if not selected_users:
+        raise HTTPException(
+            status_code=400,
+            detail="No valid participants selected"
+        )
+
+    # Current caller
+    caller = users_collection.find_one({
+        "email": current_user["email"]
+    })
+
+    if not caller:
+        raise HTTPException(
+            status_code=404,
+            detail="Caller not found"
+        )
+
+    caller_id = str(caller["_id"])
+
+    # Create unique group call ID
+    call_id = str(uuid.uuid4())
+
+    group_calls[call_id] = {
+        "call_id": call_id,
+        "workspace_id": workspace_id,
+        "host": caller_id,
+        "participants": [
+            {
+                "user_id": caller_id,
+                "email": current_user["email"],
+                "name": current_user.get(
+                    "name",
+                    current_user["email"].split("@")[0]
+                )
+            },
+            *selected_users
+        ],
+        "created_at": datetime.utcnow()
+    }
+
+    print("📞 ==============================")
+    print("📞 GROUP CALL CREATED")
+    print("📞 Call ID:", call_id)
+    print("📞 Host:", current_user["email"])
+    print(
+        "📞 Participants:",
+        [u["email"] for u in selected_users]
+    )
+    print("📞 ==============================")
+
+    return {
+        "status": "created",
+        "call_id": call_id,
+        "workspace_id": workspace_id,
+        "host": caller_id,
+        "participants": group_calls[call_id]["participants"]
+    }
 # ==============================
 # GET WORKSPACE
 # ==============================

@@ -12,7 +12,10 @@ import {
   deleteMessage       // ✅ ADD
 } from "../api/workspace";
 import { JarvisCodeBlock } from "../components/JarvisCodeBlock";
-
+import {
+  connectNotificationSocket,
+  sendNotificationSignal
+} from "../ws/notificationsSocket";
 import LeaveWorkspaceNotification from "./LeaveWorkspaceNotification";
 import "../styles/workspace-chat.css";
 import "../styles/workspace-members.css";
@@ -129,7 +132,8 @@ const inputRef = useRef(null);
 const mentionRef = useRef(null);
 const wsRef = useRef(null);
 const callManagerRef = useCallManager();
-const [callReady, setCallReady] = useState(false);
+const [showGroupCall, setShowGroupCall] = useState(false);
+const [selectedCallMembers, setSelectedCallMembers] = useState([]);
 // const [incomingCall, setIncomingCall] = useState(null);
 
   const navigate = useNavigate();
@@ -144,8 +148,11 @@ try {
 } catch (e) {
   myEmail = null;
 }
-const { showNotification, ws } = useNotification();
-
+const {
+  showNotification,
+  ws,
+  sendNotificationSignal
+} = useNotification();
 const [showSeenPopup, setShowSeenPopup] = useState(false);
 const [seenUsers, setSeenUsers] = useState([]);
 
@@ -644,61 +651,26 @@ const formatMentions = (text) => {
   });
 
 };
-/* ============================
-   CALL SIGNAL LISTENER (CRITICAL FIX)
-============================ */
-// useEffect(() => {
+// ============================
+// GROUP CALL MEMBER SELECTION
+// ============================
+const toggleCallMember = (memberId) => {
 
-//   if (!ws) return;
+  setSelectedCallMembers((prev) => {
 
-//   const handleCallSignal = (event) => {
+    if (prev.includes(memberId)) {
+      return prev.filter((id) => id !== memberId);
+    }
 
-//     try {
+    return [...prev, memberId];
+  });
+};
 
-//       const data = JSON.parse(event.data);
 
-//       console.log("📞 Call signal received:", data);
-
-//       // ✅ CALL REJECTED FIX
-//       if (data.type === "call_rejected") {
-
-//         console.log("❌ Call rejected by other user");
-
-//         if (callManagerRef.current) {
-//           callManagerRef.current.cleanupCall();
-//         }
-
-//         showNotification("Call rejected", "error");
-
-//       }
-
-//       // ✅ CALL END FIX
-//       if (data.type === "call_end") {
-
-//         console.log("📴 Call ended by other user");
-
-//         if (callManagerRef.current) {
-//           callManagerRef.current.cleanupCall();
-//         }
-
-//         showNotification("Call ended", "info");
-
-//       }
-
-//     } catch (err) {
-//       console.error("Call signal error:", err);
-//     }
-
-//   };
-
-//   ws.addEventListener("message", handleCallSignal);
-
-//   return () => {
-//     ws.removeEventListener("message", handleCallSignal);
-//   };
-
-// }, [ws, callManagerRef]);
-
+const closeGroupCall = () => {
+  setShowGroupCall(false);
+  setSelectedCallMembers([]);
+};
   return (
     <div className="workspace-chat">
       <LeaveWorkspaceNotification
@@ -834,7 +806,16 @@ console.log("🎯 TARGET ID:", target?._id);
 >
 📹
 </button>
-
+<button
+  className="group-call-btn"
+  onMouseEnter={playHoverSound}
+  onClick={() => {
+    setSelectedCallMembers([]);
+    setShowGroupCall(true);
+  }}
+>
+  👥
+</button>
   <input
     className="invite-input"
     value={inviteEmail}
@@ -1168,6 +1149,287 @@ style={{
           </div>
         </div>
       )}
+   {showGroupCall && (
+  <div
+    onClick={closeGroupCall}
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 99999,
+      pointerEvents: "auto"
+    }}
+  >
+
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        position: "fixed",
+        top: "75px",
+        right: "80px",
+
+        width: "340px",
+        maxHeight: "430px",
+
+        boxSizing: "border-box",
+        padding: "18px",
+
+        background: "#07101f",
+        border: "1px solid #00d9ff",
+        borderRadius: "16px",
+
+        color: "white",
+
+        boxShadow:
+          "0 0 25px rgba(0,217,255,0.25), 0 15px 45px rgba(0,0,0,0.7)",
+
+        overflow: "hidden",
+
+        pointerEvents: "auto"
+      }}
+    >
+
+      <h3
+        style={{
+          margin: "0 0 6px 0",
+          fontSize: "20px"
+        }}
+      >
+        👥 Start Group Call
+      </h3>
+
+      <p
+        style={{
+          margin: "0 0 14px 0",
+          color: "#94a3b8",
+          fontSize: "13px"
+        }}
+      >
+        Select members to invite
+      </p>
+
+      <div
+        style={{
+          maxHeight: "260px",
+          overflowY: "auto",
+          width: "100%"
+        }}
+      >
+
+        {members
+          .filter(
+            (m) =>
+              m.email?.toLowerCase().trim() !==
+              myEmail?.toLowerCase().trim()
+          )
+          .map((member) => {
+
+            const selected =
+              selectedCallMembers.includes(member._id);
+
+            return (
+              <div
+                key={member._id}
+                onClick={() =>
+                  toggleCallMember(member._id)
+                }
+                style={{
+                  width: "100%",
+                  minHeight: "48px",
+                  boxSizing: "border-box",
+
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+
+                  padding: "9px 10px",
+                  marginBottom: "7px",
+
+                  borderRadius: "9px",
+
+                  background: selected
+                    ? "#0d3145"
+                    : "#0d1a2d",
+
+                  border: selected
+                    ? "1px solid #00d9ff"
+                    : "1px solid #1d344d",
+
+                  cursor: "pointer"
+                }}
+              >
+
+                <input
+                  type="checkbox"
+                  checked={selected}
+                  onChange={() =>
+                    toggleCallMember(member._id)
+                  }
+                  onClick={(e) =>
+                    e.stopPropagation()
+                  }
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    flexShrink: 0
+                  }}
+                />
+
+                <div
+                  style={{
+                    minWidth: 0
+                  }}
+                >
+
+                  <strong
+                    style={{
+                      display: "block",
+                      fontSize: "14px"
+                    }}
+                  >
+                    {member.name}
+                  </strong>
+
+                  <small
+                    style={{
+                      display: "block",
+                      marginTop: "2px",
+                      color: "#8fa3b8",
+                      fontSize: "11px"
+                    }}
+                  >
+                    {member.email}
+                  </small>
+
+                </div>
+
+              </div>
+            );
+          })}
+
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: "8px",
+          marginTop: "14px"
+        }}
+      >
+
+        <button
+          onClick={closeGroupCall}
+          style={{
+            width: "90px",
+            minWidth: "90px",
+            height: "36px",
+            padding: "0 12px",
+            margin: 0,
+            flex: "none",
+            borderRadius: "8px",
+            cursor: "pointer"
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          disabled={selectedCallMembers.length === 0}
+          onClick={async () => {
+  if (selectedCallMembers.length === 0) {
+    return;
+  }
+
+  try {
+    console.log("📞 Starting group call...");
+    console.log("👥 Selected members:", selectedCallMembers);
+    console.log("🏢 Workspace:", workspaceId);
+
+    // ==============================
+    // CREATE GROUP CALL
+    // ==============================
+    const res = await API.post(
+      `/workspace/${workspaceId}/group-call/start`,
+      {
+        participant_ids: selectedCallMembers
+      }
+    );
+
+    const callId = res.data.call_id;
+    const participants = res.data.participants;
+
+    console.log("✅ GROUP CALL CREATED");
+    console.log("📞 Call ID:", callId);
+    console.log("👥 Participants:", participants);
+navigate(`/call/group/${callId}`, {
+  state: {
+    callId,
+    workspaceId,
+    participants,
+    isHost: true
+  }
+});
+    // ==============================
+    // SEND INVITATION TO EACH USER
+    // ==============================
+    participants.forEach((participant) => {
+
+      // Don't invite yourself
+      if (participant.user_id === res.data.host) {
+        return;
+      }
+
+      const sent = sendNotificationSignal({
+        type: "group_call_invite",
+        target: participant.user_id,
+        call_id: callId,
+        workspace_id: workspaceId,
+        host: res.data.host,
+        participants: participants
+      });
+
+      console.log(
+        sent
+          ? `📤 Group call invite sent to ${participant.email}`
+          : `❌ Failed to send invite to ${participant.email}`
+      );
+    });
+
+    closeGroupCall();
+
+  } catch (err) {
+
+    console.error(
+      "❌ Group call creation failed:",
+      err?.response?.data || err
+    );
+
+    alert(
+      err?.response?.data?.detail ||
+      "Failed to start group call"
+    );
+  }
+}}
+          style={{
+            width: "110px",
+            minWidth: "110px",
+            height: "36px",
+            padding: "0 12px",
+            margin: 0,
+            flex: "none",
+            borderRadius: "8px",
+            cursor: "pointer"
+          }}
+        >
+          📞 Start Call
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
       {menu && (
 
   <div

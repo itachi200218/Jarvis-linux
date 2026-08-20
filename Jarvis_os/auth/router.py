@@ -117,13 +117,13 @@ def get_my_profile(current_user: dict = Depends(get_current_user)):
     )
 
     return {
+        "user_id": str(current_user["_id"]),
         "name": current_user["name"],
         "email": current_user["email"],
         "role": current_user.get("role", "user"),
         "secure_mode": current_user.get("secure_mode", False),
         "avatar": current_user.get("avatar")
     }
-
 # ==============================
 # 🔴 MARK USER OFFLINE
 # ==============================

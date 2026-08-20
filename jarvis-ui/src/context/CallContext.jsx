@@ -6,11 +6,20 @@ import {
   useState
 } from "react";
 
+import GroupCallManager from "../call/GroupCallManager";
+
 import { useNotification } from "../components/NotificationContext";
+
 import { useNavigate } from "react-router-dom";
+
 import CallManager from "../call/CallManager";
-import { getUserProfile } from "../api/profileApi";
+
+import {
+  getUserProfile,
+  getMyProfile
+} from "../api/profileApi";
 import "../styles/incoming-call.css";
+
 import { useLocation } from "react-router-dom";
 
 const CallContext = createContext();
@@ -20,56 +29,160 @@ export function CallProvider({ children }) {
   const { ws } = useNotification();
   const navigate = useNavigate();
 
-  const callManagerRef = useRef(null);
+const callManagerRef = useRef(null);
+const groupCallManagerRef = useRef(null);
 
+const [groupCallManager, setGroupCallManager] =
+  useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
   const [activeCallUser, setActiveCallUser] = useState(null);
   const [incomingCallerInfo, setIncomingCallerInfo] = useState(null);
 const location = useLocation();
 
+const [myUserId, setMyUserId] = useState(null);
 
+useEffect(() => {
+  const loadMyUserId = async () => {
+    try {
+      const profile = await getMyProfile();
+
+      console.log(
+        "👤 CURRENT USER PROFILE:",
+        profile
+      );
+
+      const id = profile.user_id;
+
+      console.log(
+        "👤 Current user UUID:",
+        id
+      );
+
+      setMyUserId(id);
+
+    } catch (error) {
+      console.error(
+        "❌ Failed to load current user ID:",
+        error
+      );
+    }
+  };
+
+  loadMyUserId();
+}, []);
+
+const ensureGroupCallManager = () => {
+  if (groupCallManagerRef.current) {
+    return groupCallManagerRef.current;
+  }
+
+  if (!ws || !myUserId) {
+    console.warn(
+      "⏳ Cannot create GroupCallManager yet:",
+      {
+        ws: !!ws,
+        myUserId
+      }
+    );
+
+    return null;
+  }
+
+  console.log(
+    "🛠️ Creating GroupCallManager on demand:",
+    myUserId
+  );
+
+  const manager = new GroupCallManager(
+    ws,
+    myUserId
+  );
+
+  groupCallManagerRef.current = manager;
+  setGroupCallManager(manager);
+
+  console.log(
+    "👥 GroupCallManager ready:",
+    myUserId
+  );
+
+  return manager;
+};
+
+
+// useEffect(() => {
+//   if (!ws || !myUserId) return;
+
+//   const manager = new GroupCallManager(
+//     ws,
+//     myUserId
+//   );
+
+//   groupCallManagerRef.current = manager;
+//   setGroupCallManager(manager);
+
+//   console.log(
+//     "👥 GroupCallManager ready:",
+//     myUserId
+//   );
+
+//   return () => {
+//     manager.endCall();
+//     groupCallManagerRef.current = null;
+//     setGroupCallManager(null);
+//   };
+// }, [ws, myUserId]);
   // =========================
-  // INIT CALL MANAGER
-  // =========================
-// =========================
-// INIT / UPDATE CALL MANAGER
+// GROUP CALL INVITE
 // =========================
 useEffect(() => {
 
-  if (!ws) return;
+  const handleGroupCallInvite = (event) => {
 
-  const token = sessionStorage.getItem("jarvis_token");
+    const data = event.detail;
 
-  let myEmail = null;
-  let myName = null;
+    console.log(
+      "📞 GROUP CALL INVITE RECEIVED IN CALL CONTEXT:",
+      data
+    );
 
-  if (token) {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    myEmail = payload.sub;
-    myName = payload.name;
-  }
+    setIncomingCall({
 
-  if (!callManagerRef.current) {
+      type: "group",
 
-    console.log("Initializing GLOBAL CallManager");
+      callId: data.call_id,
 
-    callManagerRef.current =
-      new CallManager(ws, myName, myEmail);
+      workspaceId: data.workspace_id,
 
-  } else {
+      callerId: data.from,
 
-    console.log("Resetting + Updating CallManager after WS reconnect");
+      name: data.hostName || "Group Call",
 
-    // 🔥 VERY IMPORTANT
-    callManagerRef.current.resetState();
+      email: data.hostEmail || "",
 
-    callManagerRef.current.ws = ws;
-    callManagerRef.current.myEmail = myEmail;
-    callManagerRef.current.myName = myName;
+      participants: data.participants || [],
 
-  }
+      callType: "group"
+    });
 
-}, [ws]);
+  };
+
+  window.addEventListener(
+    "group-call-invite",
+    handleGroupCallInvite
+  );
+
+  return () => {
+
+    window.removeEventListener(
+      "group-call-invite",
+      handleGroupCallInvite
+    );
+
+  };
+
+}, []);
+// INIT / UPDATE CALL MANAGERS
   // =========================
   // GLOBAL WS LISTENER
   // =========================
@@ -81,8 +194,12 @@ useEffect(() => {
 
       const data = JSON.parse(event.data);
 
-      if (!callManagerRef.current) return;
-
+if (
+  !callManagerRef.current &&
+  data.type !== "group_call_end"
+) {
+  return;
+}
       console.log("GLOBAL CALL EVENT:", data.type);
 
 
@@ -165,11 +282,23 @@ if (data.type === "call_answer") {
       // =========================
       // CALL REJECTED
       // =========================
- if (data.type === "call_rejected") {
+if (data.type === "call_rejected") {
+
+  // 🚫 IMPORTANT:
+  // Ignore 1-to-1 rejection events while
+  // inside a group call.
+  if (location.pathname.startsWith("/call/group/")) {
+
+    console.log(
+      "👥 Ignoring 1-to-1 call_rejected during group call"
+    );
+
+    return;
+  }
 
   console.log("User is busy");
 
-  callManagerRef.current.endCall(null, false); // ✅ FIX
+  callManagerRef.current.endCall(null, false);
 
   const busyAudio = new Audio("/sounds/busy.mp3");
   busyAudio.play().catch(() => {});
@@ -199,7 +328,29 @@ if (data.type === "call_answer") {
 
   return;
 }
+// =========================
+// GROUP CALL ENDED
+// =========================
+if (data.type === "group_call_end") {
+  console.log("👥 Group call ended globally");
 
+  if (groupCallManagerRef.current) {
+    console.log("🧹 Cleaning up GroupCallManager");
+
+    groupCallManagerRef.current.endCall();
+
+    groupCallManagerRef.current = null;
+    setGroupCallManager(null);
+  }
+
+  cleanupAndExit();
+
+  window.dispatchEvent(
+    new Event("CALL_ENDED")
+  );
+
+  return;
+}
     };
 
     ws.addEventListener("message", handleMessage);
@@ -239,25 +390,76 @@ if (data.type === "call_answer") {
   }, []);
 
 
-  // =========================
-  // CLEANUP FUNCTION
-  // =========================
-  const cleanupAndExit = () => {
+ // =========================
+// CLEANUP FUNCTION
+// =========================
+const cleanupAndExit = () => {
 
-    setIncomingCall(null);
-    setActiveCallUser(null);
+  // 👥 GROUP CALL CLEANUP
+  if (groupCallManagerRef.current) {
 
-  };
+    console.log(
+      "🧹 Cleaning up GroupCallManager"
+    );
+
+    groupCallManagerRef.current.endCall();
+
+    groupCallManagerRef.current = null;
+    setGroupCallManager(null);
+  }
+
+  setIncomingCall(null);
+  setActiveCallUser(null);
+};
 
 
   // =========================
   // ACCEPT CALL (FIXED FOR VIDEO)
   // =========================
-const acceptCall = async () => {
+  const acceptCall = async () => {
 
   if (!incomingCall) return;
 
-  // set call type
+  // ==============================
+  // GROUP CALL
+  // ==============================
+  if (incomingCall.type === "group") {
+
+    console.log(
+      "👥 ACCEPTING GROUP CALL:",
+      incomingCall.callId
+    );
+
+    // Close incoming popup
+    setIncomingCall(null);
+
+    // Store active group call information
+    setActiveCallUser(incomingCall.callerId);
+
+    const previousPage =
+      window.location.pathname;
+
+    navigate(
+      `/call/group/${incomingCall.callId}`,
+      {
+        state: {
+          callId: incomingCall.callId,
+          workspaceId: incomingCall.workspaceId,
+          host: incomingCall.callerId,
+          participants: incomingCall.participants,
+          previousPage
+        }
+      }
+    );
+
+    return;
+  }
+
+
+  // ==============================
+  // EXISTING 1-TO-1 CALL
+  // ==============================
+
   callManagerRef.current.callType =
     incomingCall.callType || "audio";
 
@@ -271,12 +473,14 @@ const acceptCall = async () => {
     incomingCall.email
   );
 
-  setActiveCallUser(incomingCall.callerId);
+  setActiveCallUser(
+    incomingCall.callerId
+  );
 
-  // ✅ CRITICAL FIX: clear popup FIRST
   setIncomingCall(null);
 
-  const previousPage = window.location.pathname;
+  const previousPage =
+    window.location.pathname;
 
   navigate(
     `/call/${incomingCall.callerId}`,
@@ -288,43 +492,78 @@ const acceptCall = async () => {
       }
     }
   );
-
 };
+// =========================
+// REJECT CALL
+// =========================
+const rejectCall = () => {
 
-  // =========================
-  // REJECT CALL
-  // =========================
-  const rejectCall = () => {
+  if (!incomingCall) return;
 
-    if (!incomingCall) return;
+
+  // ==============================
+  // GROUP CALL REJECT
+  // ==============================
+  if (incomingCall.type === "group") {
 
     console.log(
-      "Sending call_rejected to caller"
+      "👥 Rejecting group call:",
+      incomingCall.callId
     );
 
-    ws.send(JSON.stringify({
-
-      type: "call_rejected",
-
-      target: incomingCall.callerId
-
-    }));
-
-    callManagerRef.current.resetState();
-
-    window.dispatchEvent(
-      new Event("CALL_ENDED")
+    ws.send(
+      JSON.stringify({
+        type: "group_call_reject",
+        target: incomingCall.callerId,
+        call_id: incomingCall.callId,
+        workspace_id: incomingCall.workspaceId
+      })
     );
+
+    // ❌ DO NOT reset CallManager
+    // ❌ DO NOT dispatch CALL_ENDED
+    // ❌ DO NOT affect the host
 
     cleanupAndExit();
 
-  };
+    return;
+  }
 
+
+  // ==============================
+  // EXISTING 1-TO-1 REJECT
+  // ==============================
+
+  console.log(
+    "Sending call_rejected to caller"
+  );
+
+  ws.send(
+    JSON.stringify({
+      type: "call_rejected",
+      target: incomingCall.callerId
+    })
+  );
+
+  callManagerRef.current.resetState();
+
+  window.dispatchEvent(
+    new Event("CALL_ENDED")
+  );
+
+  cleanupAndExit();
+};
 
   return (
 
-    <CallContext.Provider value={callManagerRef}>
-
+<CallContext.Provider
+ value={{
+  callManagerRef,
+  groupCallManagerRef,
+  groupCallManager,
+  ensureGroupCallManager
+}}
+>
       {children}
 
       {/* GLOBAL POPUP */}
@@ -334,17 +573,24 @@ const acceptCall = async () => {
   <div className="incoming-call-popup">
 
     <h3>
-      {incomingCall.callType === "video"
-        ? "📹 Incoming Video Call"
-        : "📞 Incoming Voice Call"}
-    </h3>
+  {incomingCall.type === "group"
+    ? "👥 Incoming Group Call"
+    : incomingCall.callType === "video"
+      ? "📹 Incoming Video Call"
+      : "📞 Incoming Voice Call"}
+</h3>
 
     <p>
-      User:
-      {incomingCall.name ||
-       incomingCall.email ||
-       incomingCall.callerId}
-    </p>
+  {incomingCall.type === "group"
+    ? `Group call • ${
+        incomingCall.participants?.length || 0
+      } participants`
+    : `User: ${
+        incomingCall.name ||
+        incomingCall.email ||
+        incomingCall.callerId
+      }`}
+</p>
 
     <button
       onClick={acceptCall}
